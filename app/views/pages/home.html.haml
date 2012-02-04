@@ -1,0 +1,9 @@
+%h1 
+  Welcome to #{GlobalSettings.site_name}
+  %small This shit's about to get real
+
+%h3 Create a new Freed!
+=form_for(@forum, :url=>spawn_path) do |f|
+  =f.text_field :title, :placeholder=>"Give it a title!"
+  =f.submit "Create!", :class=>"btn-warning"
+

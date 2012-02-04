@@ -1,0 +1,25 @@
+-# vim: filetype=javascript
+:javascript
+  $(function(){
+      //comment post toggles
+      $('.comment-post-form').collapse({toggle:false})
+      $('.comment-post-header').click(function(){
+          $(this).siblings('.comment-post-form').collapse('toggle')
+      })
+
+      //turn text into links
+      $('.linkify').each(function(){
+          $(this).html(text_to_link($(this).html()));
+      })
+  })
+
+  function text_to_link(text) {
+    if(text){
+      var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
+      return text.replace(exp,"<a href='$1' target='_blank'>$1</a>")
+    }else{
+      return "";
+    }
+  }
+  
+

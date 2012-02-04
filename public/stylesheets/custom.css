@@ -1,0 +1,86 @@
+body{
+  padding-top:50px;
+  padding-bottom:50px;
+}
+
+@media (max-width: 980px) {
+
+  /* Remove any padding from the body */
+  body {
+    padding-top: 0;
+  }
+}
+
+/********************************** Forum page ***********************************/
+.name{
+  font-weight:bold;
+}
+
+#create-post-box{
+  border:solid 1px #555;
+  background:#eee;
+  padding:10px;
+  border-radius:5px;
+  margin-bottom:20px;
+}
+
+#create-post-box a{
+  display:block;
+  color:black;
+  cursor:pointer;
+}
+
+#create-post-area textarea{
+  width:100%;
+  height:64px;
+}
+#create-post-area input[type="submit"]{
+  padding-left:20px;
+  padding-right:20px;
+}
+
+.post-area {
+  position:relative;
+  padding:20px;
+  margin-bottom:20px;
+  background:#ddd;
+  border-radius:5px;
+}
+
+.post .name{
+  position:absolute;
+  top:3px;
+  left:5px;
+}
+
+.post .comment{
+  font-style:italic;
+  padding:20px;
+}
+
+.post .content{
+  background:white;
+  padding:20px;
+}
+
+.comments{
+  padding-top:10px;
+  padding-left:20px;
+  padding-right:20px;
+}
+
+.comments-header{
+  border-bottom:solid 1px #555;
+  width:100%;
+}
+
+.comments form{
+  margin-bottom:0px;
+}
+
+/*
+.comments textarea{
+  width:400px;
+}
+  */
+
