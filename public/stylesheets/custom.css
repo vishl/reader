@@ -4,11 +4,34 @@ body{
 }
 
 @media (max-width: 980px) {
-
   /* Remove any padding from the body */
   body {
     padding-top: 0;
   }
+}
+
+.pull-right-forreal{
+  float:right;
+}
+
+
+/********************************** Header **************************************/
+.navbar form{
+  margin-bottom:0px;
+}
+
+.navbar .forum_title{
+  float:left;
+  color: white;
+  padding: 10px 10px 11px;
+  line-height:19px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.navbar input{
+  width:100%;
 }
 
 /********************************** Forum page ***********************************/
@@ -31,7 +54,7 @@ body{
 }
 
 #create-post-area textarea{
-  width:100%;
+  width:97%;
   height:64px;
 }
 #create-post-area input[type="submit"]{

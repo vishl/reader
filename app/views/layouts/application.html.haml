@@ -4,13 +4,14 @@
     %title 
       #{GlobalSettings.site_name}
     = csrf_meta_tag
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     = render 'layouts/stylesheets', :enable_mobile=>false
     = render 'layouts/scripts'
     -#%link{:rel=>"shortcut icon", :type=>"image/x-icon", :href=>"/images/icons/favicon.png"}
   %body
     = render 'layouts/header'
     = yield :header
-    .container  
+    .container-fluid
       - flash.each do |key, value|
         %div{:class => ["alert-message fade in", key], 'data-alert'=>"alert"}
           %a.close(href="#") &times;

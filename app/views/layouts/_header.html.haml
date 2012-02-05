@@ -1,13 +1,14 @@
 .navbar.navbar-fixed-top
   .navbar-inner
-    .container
-      = link_to GlobalSettings.site_name, root_path, :class=>'brand'
-      %ul.nav
-        %li.active
-          %a
-            =yield :forum_name
-      %form.navbar-search.pull-right
-        %input#name(type="text" placeholder="Enter your name")
+    .container-fluid
+      .row-fluid
+        .span2
+          = link_to GlobalSettings.site_name, root_path, :class=>'brand'
+        .span8
+          =yield :forum_name
+        .span2
+          %form
+            %input#name(type="text" placeholder="Enter your name")
       -#unless GlobalSettings.deployment == "live"
         #deployment.label.warning= GlobalSettings.deployment
 

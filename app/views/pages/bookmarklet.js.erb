@@ -1,0 +1,36 @@
+//get info about current page
+title = document.title
+link = document.location.href
+args = encodeURIComponent(title+'\n\n'+link)
+//create a fixed div at the top right
+dv=document.createElement('DIV');
+dv.id="freeder-bookmarklet";
+dv.style.position="fixed";
+dv.style.top="0px";
+dv.style.right="0px";
+dv.style.height="400px";
+dv.style.width="400px";
+dv.style.border="solid 1px #555";
+dv.style.background="white";
+dv.style["z-index"]="2000";
+//div contents: close link and iframe
+dv.innerHTML=
+"\
+  <div style='float:right;padding:10px;height:20px;'>\
+    <a href='#' > close </a> \
+  </div>\
+    <div style='padding:10px;height:20px;font-size:14px;font-weight:bold;font-family:Helvetica'>\
+    Post to <%=GlobalSettings.site_name%>\
+    </div>\
+  <div>\
+    <iframe style='width:100%;height:360px;border:0px;' scrolling='no' src='<%="#{GlobalSettings.app_protocol}#{GlobalSettings.app_domain}#{post_path(@sid)}?post[content]="%>"+args+"'>\
+    </iframe>\
+  </div>\
+"
+//close link functionality
+closeLink = dv.getElementsByTagName('a')[0];
+closeLink.onclick=function(){document.body.removeChild(dv); return false;};
+
+//put div in document
+document.getElementsByTagName('body')[0].appendChild(dv);
+

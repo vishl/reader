@@ -1,18 +1,21 @@
 -content_for :scripts do
   =render "show_scripts"
--content_for :forum_name do
-  =@forum.title
-%h1
-  =@forum.title
-  %small="#{@forum.posts.count} posts"
--#new post
-.row
-  #create-post-box.span8
-    .row
-      %h2.span8
+-forum_name_header(@forum.title)
+
+.row-fluid
+  .span1
+  .span11
+    %h1
+      =@forum.title
+      %small
+        ="(#{@forum.posts.count} posts)"
+        Bookmarklet: 
+        %a{:href=>bookmarklet(@forum.sid)} #{GlobalSettings.site_name}:#{@forum.title}
+    -#new post
+    #create-post-box
+      %h2
         %a#postheader(data-toggle="collapse" data-target="#create-post-area") Post a message...
-    .row
-      #create-post-area.collapse.span4
+      #create-post-area.collapse
         =twitter_bootstrap_form_for(@post, :url=>post_create_path(@forum.sid)) do |f|
           =f.inputs  do
             =f.hidden_field :name, :value=>"Gustav", :class=>"name"
@@ -21,30 +24,29 @@
           =f.actions do
             =f.submit "Post!"
 
-.row
-  .span12
+.row-fluid
+  .span1
+  .span11
     -@posts.each do |p|
-      .row
-        .span10
-          .post-area
-            .post
-              .name=p.name
-              -if(p.comment.present?)
-                .comment
-                  ="\"#{p.comment}\""
-              .content.linkify
-                =p.content
-            .comments
-              -#.comments-header 
-                %strong Comments
-              -p.comments.each do |c|
-                .comment
-                  %span.name="#{c.name}: "
-                  %span.text.linkify=c.content
-              .comment-post-box
-                %a.comment-post-header Post a comment...
-                .comment-post-form.collapse
-                  =form_tag comment_create_path(@forum.sid, p.id) do
-                    =hidden_field_tag "comment[name]", "Gustav", :class=>"name"
-                    =text_area_tag "comment[content]", "", :rows=>3, :cols=>80, :placeholder=>"Post a comment", :class=>"span5"
-                    =submit_tag "Post!", :class=>"btn"
+      .post-area
+        .post
+          .name=p.name
+          -if(p.comment.present?)
+            .comment
+              =p.comment
+          .content.linkify
+            =p.content
+        .comments
+          -#.comments-header 
+            %strong Comments
+          -p.comments.each do |c|
+            .comment
+              %span.name="#{c.name}: "
+              %span.text.linkify=c.content
+          .comment-post-box
+            %a.comment-post-header Post a comment...
+            .comment-post-form.collapse
+              =form_tag comment_create_path(@forum.sid, p.id) do
+                =hidden_field_tag "comment[name]", "Gustav", :class=>"name"
+                =text_area_tag "comment[content]", "", :rows=>3, :cols=>80, :placeholder=>"Post a comment", :class=>"span5"
+                =submit_tag "Post!", :class=>"btn"

@@ -15,9 +15,19 @@ class ForumsController < ApplicationController
 
   def show
     @forum = Forum.find_by_sid(params[:sid])
-    @post = @forum.posts.build
+    @post = @forum.posts.build(params[:post])
     if(@forum)
       @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
+    else
+      flash[:error] = "Forum not found"
+      redirect_to root_path
+    end
+  end
+
+  def post
+    @forum = Forum.find_by_sid(params[:sid])
+    @post = @forum.posts.build(params[:post])
+    if(@forum)
     else
       flash[:error] = "Forum not found"
       redirect_to root_path
