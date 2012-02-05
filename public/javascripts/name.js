@@ -17,5 +17,6 @@ function setName(n){
   localStorage.name = n;
   $('input.name').val(n);
   $('#username').html(n);
+  $('#username-uri').html(encodeURIComponent(n));
 }
 

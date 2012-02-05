@@ -42,7 +42,7 @@
       %li Click "Create a custom link" at the bottom
       %li Paste this URL in the "URL" field (make sure you have filled in your name above)
       %li
-        %span.reader-url=(GlobalSettings.app_protocol+GlobalSettings.app_domain+post_create_get_path(@forum.sid)+"?post[name]=<span id='username'></span>&post[content]=${title}%0A%0A${url}").html_safe
+        %span.reader-url=(GlobalSettings.app_protocol+GlobalSettings.app_domain+post_create_get_path(@forum.sid)+"?post[name]=<span id='username-uri'></span>&post[content]=${title}%0A%0A${url}").html_safe
 
 
 .row-fluid
