@@ -23,4 +23,7 @@ class Post < ActiveRecord::Base
   ################################### Associations ###############################
   has_many :comments
   belongs_to :forum
+
+  ################################### Scopes #####################################
+  scope :latest, order('updated_at DESC')
 end

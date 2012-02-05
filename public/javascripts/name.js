@@ -16,5 +16,6 @@ $(function(){
 function setName(n){
   localStorage.name = n;
   $('input.name').val(n);
+  $('#username').html(n);
 }
 

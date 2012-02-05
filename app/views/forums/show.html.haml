@@ -1,16 +1,19 @@
 -content_for :scripts do
-  =render "show_scripts"
+  =render "forums/show_scripts"
 -forum_name_header(@forum.title)
 
+#newstuff.alert.fade.in.alert-info.hide{'data-alert'=>"alert"}
+  %a.close(href="#" data-dismiss="alert") &times;
+  Hey! there is new stuff posted, you should refresh the page!
 .row-fluid
   .span1
   .span11
+    .pull-right
+      %a(href="#bookmarklet-modal" data-toggle="modal") Click me to learn about bookmarklets and other sharing tools
     %h1
       =@forum.title
       %small
         ="(#{@forum.posts.count} posts)"
-        Bookmarklet: 
-        %a{:href=>bookmarklet(@forum.sid)} #{GlobalSettings.site_name}:#{@forum.title}
     -#new post
     #create-post-box
       %h2
@@ -23,6 +26,24 @@
             =f.text_area :comment, false, :rows=>3, :cols=>80, :placeholder=>"Add your comments here"
           =f.actions do
             =f.submit "Post!"
+-#bookmarklet modal stuff
+#bookmarklet-modal.modal.hide.fade.in
+  .modal-header 
+    %a.close(data-dismiss="modal") &times;
+    %h2 Bookmarklets and stuff!
+  .modal-body
+    %h3 Bookmarklet! 
+    %a.bookmarklet{:href=>bookmarklet(@forum.sid)} #{GlobalSettings.site_name}:#{@forum.title}
+    (drag this link to your bookmarks bar, then click to share from any web page)
+    %h3 Share from reader
+    %ul
+      %li In reader, go to Reader Settings
+      %li Click the "Send To" tab
+      %li Click "Create a custom link" at the bottom
+      %li Paste this URL in the "URL" field (make sure you have filled in your name above)
+      %li
+        %span.reader-url=(GlobalSettings.app_protocol+GlobalSettings.app_domain+post_create_get_path(@forum.sid)+"?post[name]=<span id='username'></span>&post[content]=${title}%0A%0A${url}").html_safe
+
 
 .row-fluid
   .span1
@@ -33,16 +54,17 @@
           .name=p.name
           -if(p.comment.present?)
             .comment
-              =p.comment
+              =filter_format(p.comment)
           .content.linkify
-            =p.content
+            -#=h(p.content).gsub(/\n/, "<br>").html_safe
+            =filter_format(p.content)
         .comments
           -#.comments-header 
             %strong Comments
           -p.comments.each do |c|
             .comment
               %span.name="#{c.name}: "
-              %span.text.linkify=c.content
+              %span.text.linkify=filter_format(c.content)
           .comment-post-box
             %a.comment-post-header Post a comment...
             .comment-post-form.collapse
@@ -50,3 +72,6 @@
                 =hidden_field_tag "comment[name]", "Gustav", :class=>"name"
                 =text_area_tag "comment[content]", "", :rows=>3, :cols=>80, :placeholder=>"Post a comment", :class=>"span5"
                 =submit_tag "Post!", :class=>"btn"
+
+#latest-post.hide=@latest_post_id
+#latest-comment.hide=@latest_comment_id

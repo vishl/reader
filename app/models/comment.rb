@@ -18,4 +18,7 @@ class Comment < ActiveRecord::Base
 
   ################################### Associations ###############################
   belongs_to :post
+  
+  ################################### Scopes #####################################
+  scope :latest, order('updated_at DESC')
 end

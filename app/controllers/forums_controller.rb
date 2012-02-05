@@ -18,6 +18,8 @@ class ForumsController < ApplicationController
     @post = @forum.posts.build(params[:post])
     if(@forum)
       @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
+      @latest_post_id = @forum.posts.latest.first.id
+      @latest_comment_id = @forum.comments.latest.first.id
     else
       flash[:error] = "Forum not found"
       redirect_to root_path
@@ -31,6 +33,23 @@ class ForumsController < ApplicationController
     else
       flash[:error] = "Forum not found"
       redirect_to root_path
+    end
+  end
+
+  def latest
+    @forum = Forum.find_by_sid(params[:sid])
+    if(@forum)
+      latest_post = params[:latest_post].to_i
+      latest_comment = params[:latest_comment].to_i
+      if((latest_post != @forum.posts.latest.first.id) ||
+         (latest_comment != @forum.comments.latest.first.id)
+        )
+        render :json=>{"has_error"=>false, "out_of_date"=>true}
+      else
+        render :json=>{"has_error"=>false, "out_of_date"=>false}
+      end
+    else
+        render :json=>{"has_error"=>true}
     end
   end
 

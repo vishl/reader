@@ -4,4 +4,8 @@ module ApplicationHelper
       "<div class='forum_title'>#{h(name)}</div>".html_safe
     end
   end
+
+  def filter_format(s)
+    h(s).gsub(/\n/, "<br>").html_safe
+  end
 end

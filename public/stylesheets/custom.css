@@ -39,6 +39,17 @@ body{
   font-weight:bold;
 }
 
+.bookmarklet{
+  border:solid 1px #555;
+  background-color:#eee;
+  border-radius:5px;
+  padding:3px;
+}
+
+.readerurl{
+  white-space:nowrap;
+}
+
 #create-post-box{
   border:solid 1px #555;
   background:#eee;

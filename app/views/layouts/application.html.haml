@@ -13,8 +13,8 @@
     = yield :header
     .container-fluid
       - flash.each do |key, value|
-        %div{:class => ["alert-message fade in", key], 'data-alert'=>"alert"}
-          %a.close(href="#") &times;
+        %div{:class => "alert fade in alert-#{key}", 'data-alert'=>"alert"}
+          %a.close(href="#" data-dismiss="alert") &times;
           = value
 
       = yield

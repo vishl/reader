@@ -1,5 +1,6 @@
 -# vim: filetype=javascript
 :javascript
+  var POLLPERIOD=60000; //one minute
   $(function(){
       //comment post toggles
       $('.comment-post-form').collapse({toggle:false})
@@ -11,6 +12,8 @@
       $('.linkify').each(function(){
           $(this).html(text_to_link($(this).html()));
       })
+
+      pollLatest();
   })
 
   function text_to_link(text) {
@@ -21,5 +24,27 @@
       return "";
     }
   }
-  
+
+  function pollLatest(){
+    //submit an ajax request
+    var lp = $('#latest-post').html();
+    var lc = $('#latest-comment').html();
+    $.ajax({
+        url: "/latest/#{@forum.sid}?latest_post="+lp+"&latest_comment="+lc,
+        dataType: 'json',
+        type: 'GET',
+        success: function(d,s,x){
+          if(!d.has_error){
+            if(d.out_of_date){
+              $('#newstuff').slideDown();
+            }else{
+              setTimeout(pollLatest, POLLPERIOD)
+            }
+          }else{
+            console.log("polling error");
+          }
+        },
+    })
+      
+  }
 
