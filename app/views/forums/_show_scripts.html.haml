@@ -80,7 +80,7 @@
     }
     //image
     if(!embedCode){
-      m = t.match(/http:\/\/\S*\.jpg|\.gif\S*[^.]/)
+      m = t.match(/http:\/\/\S*(\.jpg|\.gif)\S*[^.]/)
       if(m){
         embedCode='<a href="'+m[0]+'"><img src="'+m[0]+'"></a>'
       }
