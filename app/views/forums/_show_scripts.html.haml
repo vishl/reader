@@ -54,10 +54,13 @@
     var embedCode=null;
     var h=0;
     //youtube
-    var m = t.match(/youtube.com\/watch\?v=([^&]+)/)
+    var m = t.match(/youtube.com\/watch[^?]*?([^#]*)/)
     if(m){
-      embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+m[1]+'" frameborder="0" allowfullscreen></iframe>'
-      h=315;
+      var vid = getArg(m[1], 'v')
+      if(vid){
+        embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+vid+'" frameborder="0" allowfullscreen></iframe>'
+        h=315;
+      }
     }
     //TODO more embeds!
 
@@ -66,5 +69,17 @@
       var embed = obj.siblings('.embed-hook')
       embed.append(embedCode)
       embed.css('height', h);
+    }
+  }
+
+  function getArg(a, s){
+    var args = a.split("&")
+    for(var i=0; i<args.length; i++){
+      var m = args[i].match(/([^=])=(.*)/)
+      if(m){
+        if(m[1]==s){
+          return m[2];
+        }
+      }
     }
   }
