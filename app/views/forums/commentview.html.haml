@@ -1,0 +1,38 @@
+!!!
+%html
+  %head
+    %title 
+      #{GlobalSettings.site_name}
+    = csrf_meta_tag
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    = render 'layouts/stylesheets', :enable_mobile=>false
+    = stylesheet_link_tag 'commentview.css'
+    = render 'layouts/scripts'
+    :javascript
+      $(function(){
+        //comment posting
+        $('.comment-post-form').collapse({toggle:false})
+        $('.comment-post-header').click(function(){
+          $(this).siblings('.comment-post-form').collapse('toggle')
+        })
+      })
+    -#%link{:rel=>"shortcut icon", :type=>"image/x-icon", :href=>"/images/icons/favicon.png"}
+  %body
+    .navbar-inner.sidebar
+      =link_to "Freeder", root_path, :class=>"brand", :target=>"_top"
+      .pull-right= link_to "Close", @content, :target=>"_top"
+      .info Comment view
+      .forum
+        Back to:
+        %br
+        = link_to @forum.title, forum_path(@forum.sid), :target=>"_top"
+      .noworkee= link_to "The page isn't loading right...", @content, :target=>"_top"
+    .container-fluid
+      .row-fluid
+        .span12
+          .comments
+            -if(@post.comment.present?)
+              %span.name="#{@post.name}: "
+              %span.text.linkify=filter_format(@post.comment)
+            =render 'comments', :post=>@post, :redirect=>commentview_path(@forum.sid, @post.id, :content=>@content)
+

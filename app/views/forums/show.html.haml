@@ -56,23 +56,11 @@
             .comment
               =filter_format(p.comment)
           .content
-            .linkify
+            .linkify{"data-post-id"=>p.id}
               =filter_format(p.content)
             .embed-hook
         .comments
-          -#.comments-header 
-            %strong Comments
-          -p.comments.each do |c|
-            .comment
-              %span.name="#{c.name}: "
-              %span.text.linkify=filter_format(c.content)
-          .comment-post-box
-            %a.comment-post-header Post a comment...
-            .comment-post-form.collapse
-              =form_tag comment_create_path(@forum.sid, p.id) do
-                =hidden_field_tag "comment[name]", "Gustav", :class=>"name"
-                =text_area_tag "comment[content]", "", :rows=>3, :cols=>80, :placeholder=>"Post a comment", :class=>"span5"
-                =submit_tag "Post!", :class=>"btn"
+          =render 'comments', :post=>p
 
 #latest-post.hide=@latest_post_id
 #latest-comment.hide=@latest_comment_id

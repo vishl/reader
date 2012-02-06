@@ -1,0 +1,11 @@
+-post.comments.each do |c|
+  .comment
+    %span.name="#{c.name}: "
+    %span.text.linkify=filter_format(c.content)
+.comment-post-box
+  %a.comment-post-header Post a comment...
+  .comment-post-form.collapse
+    =form_tag comment_create_path(@forum.sid, post.id, :redirect=>defined?(redirect) ? redirect : forum_path(@forum.sid)) do
+      =hidden_field_tag "comment[name]", "Gustav", :class=>"name"
+      =text_area_tag "comment[content]", "", :rows=>3, :cols=>80, :placeholder=>"Post a comment", :class=>"span5"
+      =submit_tag "Post!", :class=>"btn"

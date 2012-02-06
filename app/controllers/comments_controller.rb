@@ -14,7 +14,11 @@ class CommentsController < ApplicationController
         #error
         flash[:error]="Invalid post"
       end
-      redirect_to forum_path(@forum.sid)
+      if(params[:redirect])
+        redirect_to params[:redirect]
+      else
+        redirect_to forum_path(@forum.sid)
+      end
     else
       flash[:error]="Invalid forum"
       redirect_to root_path

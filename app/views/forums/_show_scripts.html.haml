@@ -1,6 +1,7 @@
 -# vim: filetype=javascript
 :javascript
   var POLLPERIOD=60000; //one minute
+  var POSTFRAME=true;
   $(function(){
       //comment post toggles
       $('.comment-post-form').collapse({toggle:false})
@@ -12,12 +13,19 @@
       $('.linkify').each(function(){
           embed($(this))
           $(this).html(text_to_link($(this).html()));
+          if(POSTFRAME){
+            var pid = $(this).data('post-id')
+            $(this).children('a').each(function(){
+                if(!this.href.match(/youtube\.com/))//youtube does not allow framing
+                  this.href ="/postframe/#{@forum.sid}/"+pid+"?content="+encodeURIComponent(this.href);
+            })
+          }
       })
 
       pollLatest();
   })
 
-  function text_to_link(text) {
+  function text_to_link(text, pid) {
     if(text){
       var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
       return text.replace(exp,"<a href='$1' target='_blank'>$1</a>")

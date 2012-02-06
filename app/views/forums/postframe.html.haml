@@ -1,0 +1,9 @@
+!!!
+%html
+  %head
+    %title 
+      #{GlobalSettings.site_name}
+  %frameset(rows="*,150")
+    %frame{:src=>@content}
+    %frame{:src=>commentview_path(@forum.sid, @post.id, :content=>@content)}
+

@@ -1,0 +1,37 @@
+body{
+  padding-top:0px;
+  margin-left:160px;
+}
+
+.sidebar{
+  position:fixed;
+  top:0px;
+  left:0px;
+  height:100%;
+  width:150px;
+  padding:10px;
+  color:white;
+  border-radius:0px;
+}
+
+.sidebar a{
+  color:white;
+}
+
+.sidebar .brand{
+  color:white;
+  font-size:20px;
+}
+
+.sidebar .forum{
+  padding-top:30px;
+  font-style:italic;
+}
+
+.sidebar .noworkee{
+  position:absolute;
+  bottom:20px;
+  left:0px;
+  font-size:10px;
+}
+

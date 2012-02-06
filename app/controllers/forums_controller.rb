@@ -53,4 +53,20 @@ class ForumsController < ApplicationController
     end
   end
 
+  def postframe
+    @forum=Forum.find_by_sid(params[:sid])
+    @post = @forum.posts.find(params[:id])
+    @content = params[:content]
+
+    render :layout=>false
+  end
+
+  def commentview
+    @forum=Forum.find_by_sid(params[:sid])
+    @post = @forum.posts.find(params[:id])
+    @content = params[:content]
+
+    render :layout=>false
+  end
+
 end
