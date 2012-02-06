@@ -16,8 +16,14 @@
           if(POSTFRAME){
             var pid = $(this).data('post-id')
             $(this).children('a').each(function(){
-                if(!this.href.match(/youtube\.com/))//youtube does not allow framing
+                if(
+                  (!this.href.match(/postframe/))      //hack to prevent us from framing ourselves
+                  && (!this.href.match(/youtube\.com/)) //youtube does not allow framing
+                ){
                   this.href ="/postframe/#{@forum.sid}/"+pid+"?content="+encodeURIComponent(this.href);
+                  this.target="_self"
+                }
+                
             })
           }
       })
