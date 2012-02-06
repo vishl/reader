@@ -10,7 +10,7 @@
 
       //turn text into links
       $('.linkify').each(function(){
-          //embed($(this))
+          embed($(this))
           $(this).html(text_to_link($(this).html()));
       })
 
@@ -50,5 +50,21 @@
   }
 
   function embed(obj){
+    var t = obj.html();
+    var embedCode=null;
+    var h=0;
+    //youtube
+    var m = t.match(/youtube.com\/watch\?v=([^&]+)/)
+    if(m){
+      embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+m[1]+'" frameborder="0" allowfullscreen></iframe>'
+      h=315;
+    }
+    //TODO more embeds!
 
+    //TODO probably don't want to embed on mobile
+    if(embedCode){
+      var embed = obj.siblings('.embed-hook')
+      embed.append(embedCode)
+      embed.css('height', h);
+    }
   }
