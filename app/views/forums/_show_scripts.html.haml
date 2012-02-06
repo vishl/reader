@@ -15,7 +15,7 @@
           $(this).html(text_to_link($(this).html()));
           if(POSTFRAME){
             var pid = $(this).data('post-id')
-            $(this).children('a').each(function(){
+            $(this).parent().find('a').each(function(){
                 if(
                   (!this.href.match(/postframe/))      //hack to prevent us from framing ourselves
                   && (!this.href.match(/youtube\.com/)) //youtube does not allow framing
@@ -28,6 +28,7 @@
           }
       })
 
+      cacheUrl();
       pollLatest();
   })
 
@@ -66,14 +67,22 @@
   function embed(obj){
     var t = obj.html();
     var embedCode=null;
-    var h=0;
+    var h=null;
+    var m;
     //youtube
-    var m = t.match(/youtube.com\/watch[^?]*?([^#]*)/)
+    m = t.match(/youtube.com\/watch[^?]*?([^#]*)/)
     if(m){
       var vid = getArg(m[1], 'v')
       if(vid){
         embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+vid+'?wmode=transparent" frameborder="0" allowfullscreen></iframe>'
         h=315;
+      }
+    }
+    //image
+    if(!embedCode){
+      m = t.match(/http:\/\/\S*\.jpg|\.gif\S*[^.]/)
+      if(m){
+        embedCode='<a href="'+m[0]+'"><img src="'+m[0]+'"></a>'
       }
     }
     //TODO more embeds!
@@ -82,7 +91,7 @@
     if(embedCode){
       var embed = obj.siblings('.embed-hook')
       embed.append(embedCode)
-      embed.css('height', h);
+      if(h) embed.css('height', h);
     }
   }
 
@@ -96,4 +105,21 @@
         }
       }
     }
+  }
+
+  function cacheUrl(){
+    var sid = "#{@forum.sid}"
+    var title = "#{@forum.title}"
+    var a = []
+    if(localStorage.cached_urls){
+      a = JSON.parse(localStorage.cached_urls);
+    }
+    for(var i=0; i<a.length; i++){
+      if(a[i][0]==sid){
+        a = a.slice(0,i).concat(a.slice(i+1))
+      }
+    }
+    if(a.length>=10) a.pop()
+    a.unshift([sid,title])
+    localStorage.cached_urls = JSON.stringify(a)
   }

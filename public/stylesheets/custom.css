@@ -8,6 +8,10 @@ body{
   body {
     padding-top: 0;
   }
+  .container-fluid{
+    padding-left:3px;
+    padding-right:3px;
+  }
 }
 
 .pull-right-forreal{
@@ -53,7 +57,8 @@ body{
 }
 
 .navbar input{
-  width:100%;
+  width:97%;
+  margin-top:5px;
 }
 
 /********************************** Forum page ***********************************/
@@ -101,6 +106,7 @@ body{
   margin-bottom:20px;
   background:#eee;
   border-radius:5px;
+  word-wrap:break-word;
 }
 
 .post .name{
@@ -111,7 +117,8 @@ body{
 
 .post .comment{
   font-style:italic;
-  padding:20px;
+  padding-left:20px;
+  padding-bottom:10px;
 }
 
 .post .content{
@@ -139,4 +146,18 @@ body{
   width:400px;
 }
   */
+
+/********************************** mobile views ********************************/
+@media (max-width: 768px) {
+  .post-area {
+    padding:5px;
+  }
+  .post{
+    padding-top:16px;
+  }
+  .post .content{
+    background:white;
+    padding:5px 0px 0px 0px;
+  }
+}
 
