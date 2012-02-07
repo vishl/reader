@@ -20,7 +20,21 @@ class ForumsController < ApplicationController
     if(@forum)
       if(@showcomments)
         #shows only posts with comments and joins on comments
-        @posts = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").group("posts.id").limit(20).includes(:comments)
+        #this only works in sql lite.. something about needing to aggregate all the columns..piece of shit..
+        #@posts = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").group("posts.id").limit(20).includes(:comments)
+        np = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").limit(50).includes(:comments)
+        #have to do this bullshit to get unique posts
+        ids={}
+        @posts=[]
+        np.each do |p|
+          if(!ids.include?(p.id))
+            ids[p.id]=true
+            @posts.push(p)
+            if(@posts.length>20)
+              break
+            end
+          end
+        end
       else
         @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
       end
