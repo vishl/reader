@@ -13,6 +13,10 @@
       =@forum.title
       %small
         ="(#{@forum.posts.count} posts)"
+        -if(@showcomments)
+          =link_to "Show Normal", forum_path(@forum.sid)
+        -else
+          =link_to "Sort by Comments", forum_path(@forum.sid, :showcomments=>true)
     -#new post
     #create-post-box
       %h2
@@ -25,6 +29,23 @@
             =f.text_area :comment, false, :rows=>3, :cols=>80, :placeholder=>"Add your comments here"
           =f.actions do
             =f.submit "Post!"
+
+    -@posts.each do |p|
+      .post-area
+        .post
+          .name
+            %span="#{p.name} "
+            %span.date-delta="#{p.created_at.httpdate}"
+          -if(p.comment.present?)
+            .comment
+              =filter_format(p.comment)
+          .content
+            .linkify{"data-post-id"=>p.id}
+              =filter_format(p.content)
+            .embed-hook
+        .comments
+          =render 'comments', :post=>p
+
 -#bookmarklet modal stuff
 #bookmarklet-modal.modal.hide.fade.in
   .modal-header 
@@ -44,25 +65,6 @@
       %li Paste this URL in the "URL" field (make sure you have filled in your name above)
       %li
         %span.reader-url=(GlobalSettings.app_protocol+GlobalSettings.app_domain+post_create_get_path(@forum.sid)+"?post[name]=<span id='username-uri'></span>&post[content]=${title}%0A%0A${url}").html_safe
-
-
-.row-fluid
-  .span12
-    -@posts.each do |p|
-      .post-area
-        .post
-          .name
-            %span="#{p.name} "
-            %span.date-delta="#{p.created_at.httpdate}"
-          -if(p.comment.present?)
-            .comment
-              =filter_format(p.comment)
-          .content
-            .linkify{"data-post-id"=>p.id}
-              =filter_format(p.content)
-            .embed-hook
-        .comments
-          =render 'comments', :post=>p
 
 #latest-post.hide=@latest_post_id
 #latest-comment.hide=@latest_comment_id
