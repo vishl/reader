@@ -1,6 +1,8 @@
 -post.comments.each do |c|
   .comment
-    %span.name="#{c.name}: "
+    %span.name="#{c.name}"
+    -#%span.date-delta="#{c.created_at}"
+    <span class="date-delta">#{c.created_at}</span>: 
     %span.text.linkify=filter_format(c.content)
 .comment-post-box
   %a.comment-post-header Post a comment...

@@ -51,7 +51,9 @@
     -@posts.each do |p|
       .post-area
         .post
-          .name=p.name
+          .name
+            %span="#{p.name} "
+            %span.date-delta="#{p.created_at.httpdate}"
           -if(p.comment.present?)
             .comment
               =filter_format(p.comment)

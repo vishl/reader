@@ -141,6 +141,12 @@ body{
   margin-bottom:0px;
 }
 
+.date-delta{
+  color:#aaa;
+  font-weight:normal;
+  font-size:smaller;
+}
+
 /*
 .comments textarea{
   width:400px;
