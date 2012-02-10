@@ -1,7 +1,9 @@
 :javascript
   //some global constants
   var APP_DOMAIN="#{GlobalSettings.app_domain}"
-=javascript_include_tag :defaults
-=javascript_include_tag 'bootstrap.min.js'
-=javascript_include_tag 'name.js'
+-#
+  =javascript_include_tag :defaults
+  =javascript_include_tag 'bootstrap.min.js'
+  =javascript_include_tag 'name.js'
+= include_javascripts :common
 =yield :scripts

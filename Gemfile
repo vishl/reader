@@ -11,6 +11,7 @@ gem 'haml'
 gem 'twitter_bootstrap_form_for'
 gem 'will_paginate', '~> 3.0'
 gem "rails-settings-cached", :require => "rails-settings"
+gem 'jammit'
 
 
 group :development do

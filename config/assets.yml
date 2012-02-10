@@ -1,0 +1,17 @@
+embed_assets: off
+
+javascripts:
+  common:
+    - public/javascripts/bootstrap.min.js
+    - public/javascripts/jquery.min.js
+    - public/javascripts/jquery_ujs.js
+    - public/javascripts/application.js
+    - public/javascripts/name.js
+
+stylesheets:
+  common:
+    - public/stylesheets/bootstrap.min.css
+    - public/stylesheets/bootstrap-responsive.min.css
+    - public/stylesheets/custom.css
+  commentview:
+    - public/stylesheets/commentview.css
