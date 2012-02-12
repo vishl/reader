@@ -72,7 +72,7 @@ class ForumsController < ApplicationController
         if(has_error)
           render :json=>{'has_error'=>has_error, 'error'=>error}
         else
-          render :json=>@forum.attributes.slice('title', 'sid')
+          render :json=>{'forum'=>@forum.attributes.slice('title', 'sid'), 'posts'=>@posts}
         end
       end
     end

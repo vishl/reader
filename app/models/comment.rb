@@ -11,6 +11,8 @@
 #
 
 class Comment < ActiveRecord::Base
+  attr_accessible :name, :content
+
   ################################### Validations ################################
   validates_presence_of :name
   validates_presence_of :content
@@ -21,4 +23,8 @@ class Comment < ActiveRecord::Base
   
   ################################### Scopes #####################################
   scope :latest, order('updated_at DESC')
+
+  def as_json(options)
+    attributes.slice('name', 'content', 'post_id').merge({'timestamp'=>created_at.httpdate})
+  end
 end

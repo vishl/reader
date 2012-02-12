@@ -26,4 +26,8 @@ class Post < ActiveRecord::Base
 
   ################################### Scopes #####################################
   scope :latest, order('updated_at DESC')
+
+  def as_json(options)
+    attributes.slice("name", "content", "comment").merge({"forum_sid"=>forum.sid, "timestamp"=>updated_at.httpdate, "comments"=>comments.order("updated_at DESC").all})
+  end
 end
