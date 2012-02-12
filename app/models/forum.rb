@@ -10,7 +10,13 @@
 #
 
 class Forum < ActiveRecord::Base
+  attr_accessible :title
+
   ################################### Associations ###############################
   has_many :posts
   has_many :comments, :through=>:posts
+
+  ################################### Validations ################################
+  validates :title, :presence=>true
+  validates :sid, :presence=>true, :uniqueness=>true
 end

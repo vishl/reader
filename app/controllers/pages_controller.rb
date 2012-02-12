@@ -7,4 +7,7 @@ class PagesController < ApplicationController
     @sid = params[:sid]
     render 'bookmarklet', :layout=>false, :content_type=>"text/javascript"
   end
+
+  def backbone
+  end
 end

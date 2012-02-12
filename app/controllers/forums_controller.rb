@@ -13,8 +13,24 @@ class ForumsController < ApplicationController
     end
   end
 
+  def create
+    has_error = true
+    error = ""
+    forum = Forum.new params
+    forum.sid = generate_sid
+    if(forum.save)
+      has_error = false
+    else
+      has_error = true
+      error = forum.errors.to_s
+    end
+    render :json=>{'has_error'=>has_error, 'error'=>error, 'forum'=>forum.attributes.slice('title', 'sid')}
+  end
+
   def show
-    @forum = Forum.find_by_sid(params[:sid])
+    has_error = false
+    error = ""
+    @forum = Forum.find_by_sid(params[:id])
     @post = @forum.posts.build(params[:post])
     @showcomments = params[:showcomments].present?
     if(@forum)
@@ -41,8 +57,24 @@ class ForumsController < ApplicationController
       @latest_post_id = @forum.posts.latest.first.id if @forum.posts.count>0
       @latest_comment_id = @forum.comments.latest.first.id if @forum.comments.count>0
     else
-      flash[:error] = "Forum not found"
-      redirect_to root_path
+      has_error=true
+      error="Forum not found"
+      respond_to do |format|
+        format.html do 
+          redirect_to root_path
+          flash[:error] = "Forum not found"
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.json do
+        if(has_error)
+          render :json=>{'has_error'=>has_error, 'error'=>error}
+        else
+          render :json=>@forum.attributes.slice('title', 'sid')
+        end
+      end
     end
   end
 

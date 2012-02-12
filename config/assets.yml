@@ -1,12 +1,24 @@
 embed_assets: off
+#use these two lines to use haml templates, however these will be kind of slow,
+#so i'm just using jst
+#template_extension: jst.haml
+#template_function: Haml
 
 javascripts:
   common:
-    - public/javascripts/bootstrap.min.js
     - public/javascripts/jquery.min.js
     - public/javascripts/jquery_ujs.js
+    - public/javascripts/underscore.js
+    - public/javascripts/underscore.string.js
+    - public/javascripts/backbone.js
+    - public/javascripts/haml.js
+    - public/javascripts/bootstrap.min.js
+    - public/javascripts/utils.js
     - public/javascripts/application.js
     - public/javascripts/name.js
+    - public/javascripts/**/*.js
+    - app/views/**/*.jst
+#    - app/views/**/*.jst.haml
 
 stylesheets:
   common:
