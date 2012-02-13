@@ -12,8 +12,18 @@ var App = {
 
 //This overrides the toJSON function to always insert the authenticity token
 Backbone.Model.prototype.toJSON = function() {
-  return _(_.clone(this.attributes)).extend({
-      'authenticity_token' : $('meta[name="csrf-token"]').attr('content')
-  });
+  if(this.objName){
+    var ret={}
+    var objName = this.objName;
+    _.each(this.attributes, function(v,k){
+        ret[objName+'['+k+']']=v;
+    })
+    ret['authenticity_token'] = $('meta[name="csrf-token"]').attr('content')
+    return ret;
+  }else{
+    return _(_.clone(this.attributes)).extend({
+        'authenticity_token' : $('meta[name="csrf-token"]').attr('content')
+    });
+  }
 }
 

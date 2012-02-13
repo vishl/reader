@@ -12,7 +12,6 @@ App.Views.Home = Backbone.View.extend({
     },
 
     create: function(e){
-      console.log("create");
       //TODO add the forum to the list
       this.model.save(
         {
@@ -20,7 +19,6 @@ App.Views.Home = Backbone.View.extend({
         },
         {
           success:function(model, resp){
-            console.log("success")
             console.log(resp)
             if(resp.has_error){
               //TODO create notice
@@ -40,7 +38,6 @@ App.Views.Home = Backbone.View.extend({
     },
 
     render: function(){
-      console.log("render home");
       $(this.el).html(JST.home());
       return this;
     }

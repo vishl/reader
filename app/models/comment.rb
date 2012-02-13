@@ -25,6 +25,7 @@ class Comment < ActiveRecord::Base
   scope :latest, order('updated_at DESC')
 
   def as_json(options)
-    attributes.slice('name', 'content', 'post_id').merge({'timestamp'=>created_at.httpdate})
+    #TODO sid instead of id
+    attributes.slice('id', 'name', 'content', 'post_id').merge({'timestamp'=>created_at.httpdate})
   end
 end

@@ -1,8 +1,10 @@
 class CommentsController < ApplicationController
   def create
-    @forum = Forum.find_by_sid(params[:sid])
+    logger.debug(params)
+    logger.debug(params[:comment])
+    @forum = Forum.find_by_sid(params[:forum_id])
     if(@forum)
-      @post = @forum.posts.find_by_id(params[:id])
+      @post = @forum.posts.find_by_id(params[:post_id])
       if(@post)
         @comment = @post.comments.build(params[:comment])
         if(@comment.save)

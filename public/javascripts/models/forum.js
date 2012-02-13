@@ -1,7 +1,7 @@
 App.Models.Forum = Backbone.Model.extend({
     urlRoot: 'forums',
     initialize:function(){
-      this.posts=new App.Collections.Posts()
+      this.posts=new App.Collections.Posts(null,{forum:this})
     },
 
     //override parse so we can handle a response that includes posts
@@ -18,7 +18,9 @@ App.Models.Forum = Backbone.Model.extend({
       //convert back to json to send to posts collection, a little inefficient, but so modular!
       //var postsJson = $.toJSON(postsobj); 
       console.log("got "+p.length+"posts");
-      this.posts.reset(p);
+      //silently reset because we're about to call render on the forum anyways
+      this.posts.reset(p, {silent:true});
+      this.posts.initAll();
       return f;
     }
 })

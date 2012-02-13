@@ -12,7 +12,7 @@ App.Views.Forum = Backbone.View.extend({
     render: function(){
       console.log("render forum")
       $(this.el).html(JST['forums/show']({title:this.model.get("title")}))
-      this.$el.append(this.postsView.el)
+      this.$el.append(this.postsView.render().el)
       return this;
     }
 

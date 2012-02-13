@@ -11,14 +11,13 @@ javascripts:
     - public/javascripts/underscore.js
     - public/javascripts/underscore.string.js
     - public/javascripts/backbone.js
-    - public/javascripts/haml.js
-    - public/javascripts/bootstrap.min.js
+    - public/javascripts/bootstrap.js
     - public/javascripts/utils.js
     - public/javascripts/application.js
     - public/javascripts/name.js
     - public/javascripts/models/comments.js
     - public/javascripts/models/posts.js
-    - public/javascripts/**/*.js
+    - public/javascripts/*/*.js
     - app/views/**/*.jst
 #    - app/views/**/*.jst.haml
 
