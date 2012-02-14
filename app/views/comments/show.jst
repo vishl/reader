@@ -1,5 +1,6 @@
 <div class='comment'>
   <span class='name'><%=comment.escape("name")%></span>
-  <span class="date-delta"><%=convDate(comment.escape("timestamp"))%></span>: 
-  <span class='text linkify'><%=comment.escape("content")%></span>
+  <span class="date-delta"
+    data-original-date="<%=comment.escape('timestamp')%>"><%=convDate(parseInt(comment.escape("timestamp")))%></span>: 
+  <span class='text linkify'><%=linkify(comment.get("content"))%></span>
 </div>

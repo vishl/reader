@@ -3,12 +3,11 @@ App.Views.Comment = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.model.bind("change", this.render)
-      this.render();
     },
 
     render: function(){
       console.log("render comment")
-      $(this.el).html(JST['comments/show']({a:"fdsa",n:this.model.get("created_at"),comment:this.model}))
+      $(this.el).html(JST['comments/show']({comment:this.model}))
       return this;
     }
 
@@ -18,7 +17,7 @@ App.Views.Comments = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.model.bind("reset", this.render)
-      this.render();
+      this.model.bind("add", this.render)
     },
 
     render: function(){
@@ -27,13 +26,14 @@ App.Views.Comments = Backbone.View.extend({
       this.$el.html('');
       _.each(this.model.models, function(comment){
           var p = new App.Views.Comment({model:comment})
+          p.render();
           self.$el.append(p.el)
       })
       return this;
     }
 })
 
-App.Views.CommentPost = Backbone.View.extend({
+App.Views.CommentCreate = Backbone.View.extend({
     post:null,
     events:{
       "submit form":"postComment"
@@ -43,7 +43,6 @@ App.Views.CommentPost = Backbone.View.extend({
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.post = this.options.post;
       this.model = new App.Models.Comment(null, {post:this.post})
-      this.render();
     },
 
     render:function(){
@@ -75,6 +74,7 @@ App.Views.CommentPost = Backbone.View.extend({
               //the parent will handle posting the comment
               self.trigger("posted", self.model)
               self.reset();
+              //TODO success notification
             }
           },
           error: function(){
@@ -90,7 +90,7 @@ App.Views.CommentPost = Backbone.View.extend({
     reset: function(){
       console.log("reset");
       //don't delete the model, it was probably posted somewhere else
-      this.model = new App.Models.Comment()
+      this.model = new App.Models.Comment(null, {post:this.post})
       //TODO do we need to unbind the collapse stuff?
       return this.render()
     }

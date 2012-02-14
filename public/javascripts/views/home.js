@@ -23,8 +23,10 @@ App.Views.Home = Backbone.View.extend({
             if(resp.has_error){
               //TODO create notice
             }else{
-              //TODO navigate to forum
-              App.router.navigate('forums/'+resp.forum.sid)
+              //navigate to forum
+              //trigger causes the router to route
+              //TODO create notice
+              App.router.navigate('forums/'+resp.forum.sid, {trigger:true})
             }
           },
           error: function(){
@@ -38,7 +40,7 @@ App.Views.Home = Backbone.View.extend({
     },
 
     render: function(){
-      $(this.el).html(JST.home());
+      $(this.el).html(JST['pages/home']());
       return this;
     }
 

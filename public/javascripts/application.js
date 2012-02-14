@@ -13,6 +13,7 @@ var App = {
 //This overrides the toJSON function to always insert the authenticity token
 Backbone.Model.prototype.toJSON = function() {
   if(this.objName){
+    //attempt to pass data as an object, but it doesn't work because it's not 'form data'
     var ret={}
     var objName = this.objName;
     _.each(this.attributes, function(v,k){

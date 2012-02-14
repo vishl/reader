@@ -1,16 +1,19 @@
-<div class='post-area'>
-  <div class='post'>
-    <div class='name'>
-      <span><%=post.escape("name")%></span>
-      <span class='date-delta'><%=convDate(post.escape("timestamp"))%></span>
-    </div>
-    <div class='content'>
-      <div class='linkify' data-post-id='1'>
-        <%=post.escape("content")%>
-      </div>
-      <div class='embed-hook'></div>
+<div class='post'>
+  <div class='name'>
+    <span><%=post.escape("name")%></span>
+    <span class='date-delta'><%=convDate(parseInt(post.escape("timestamp")))%></span>
+  </div>
+  <div class='comment'>
+    <div class='linkify'>
+      <%=linkify(post.get("comment"))%>
     </div>
   </div>
-  <div id='comment-area'></div>
+  <div class='content'>
+    <div class='linkify'> 
+      <%=linkify(post.get("content"))%>
+    </div>
+    <div class='embed-hook'></div>
+  </div>
 </div>
+<div id='comment-area'></div>
 

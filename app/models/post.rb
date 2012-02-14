@@ -29,6 +29,8 @@ class Post < ActiveRecord::Base
 
   def as_json(options)
     #TODO sid instead of id
-    attributes.slice("id", "name", "content", "comment").merge({"forum_sid"=>forum.sid, "timestamp"=>updated_at.httpdate, "comments"=>comments.order("updated_at DESC").all})
+    attributes.slice("id", "name", "content", "comment").merge({
+      "forum_sid"=>forum.sid, "timestamp"=>(updated_at.present? ? updated_at.tv_sec*1000 : ""), 
+      "comments"=>comments.order("updated_at").all})
   end
 end

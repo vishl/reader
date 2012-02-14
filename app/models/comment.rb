@@ -26,6 +26,6 @@ class Comment < ActiveRecord::Base
 
   def as_json(options)
     #TODO sid instead of id
-    attributes.slice('id', 'name', 'content', 'post_id').merge({'timestamp'=>created_at.httpdate})
+    attributes.slice('id', 'name', 'content', 'post_id').merge({'timestamp'=>created_at.tv_sec*1000})
   end
 end

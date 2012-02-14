@@ -1,6 +1,7 @@
 App.Models.Post = Backbone.Model.extend({
     urlRoot:function(){return '/forums/'+this.forum.get("sid")+'/posts';},
     forum:null,
+
     //TODO override parse/constructor to include comments
     //right now it only works if we create a new model
     initialize: function(attrs, options){
@@ -13,11 +14,22 @@ App.Models.Post = Backbone.Model.extend({
         this.unset("comments");
       }else{
       }
+    },
+
+    parse: function(resp){
+      var ret = resp.post;
+      if(ret.comments){
+        this.comments.add(ret.comments, {silent:true});
+        this.comments.initAll();
+        delete ret.comments;
+      }
+      return ret;
     }
 })
 
 App.Collections.Posts = Backbone.Collection.extend({
     model:App.Models.Post,
+    comparator:function(x,y){return y.get("timestamp")-x.get("timestamp");},
     forum:null,
     urlRoot:function(){return '/forums/'+this.forumSid+'/posts';},
 

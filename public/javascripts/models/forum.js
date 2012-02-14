@@ -17,7 +17,7 @@ App.Models.Forum = Backbone.Model.extend({
       var p = resp.posts;
       //convert back to json to send to posts collection, a little inefficient, but so modular!
       //var postsJson = $.toJSON(postsobj); 
-      console.log("got "+p.length+"posts");
+      if(p) console.log("got "+p.length+"posts");
       //silently reset because we're about to call render on the forum anyways
       this.posts.reset(p, {silent:true});
       this.posts.initAll();

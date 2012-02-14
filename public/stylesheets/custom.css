@@ -107,6 +107,7 @@ body{
   background:#eee;
   border-radius:5px;
   word-wrap:break-word;
+  -webkit-transition:opacity .25s linear 0s, height .25s ease-out .1s;
 }
 
 .post .name{

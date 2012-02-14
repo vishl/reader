@@ -1,14 +1,19 @@
 App.Models.Comment = Backbone.Model.extend({
-    objName:'comment',  //causes saves to pass attributes as 'comment[attr]' instead of 'attr'
+    //objName:'comment',  //causes saves to pass attributes as 'comment[attr]' instead of 'attr'
     urlRoot:function(){return '/forums/'+this.post.forum.id+'/posts/'+this.post.id+'/comments';},
     post:null,
     initialize:function(attrs, options){
       if(options) this.post = options.post;
+    },
+    parse:function(resp){
+      return resp.comment;
     }
+
 })
 
 App.Collections.Comments = Backbone.Collection.extend({
     model:App.Models.Comment,
+    comparator:function(x,y){return x.get("timestamp")-y.get("timestamp");},
     post:null,
     urlRoot:function(){return '/forums/'+this.forumSid+'/posts';},
     initialize:function(models,options){

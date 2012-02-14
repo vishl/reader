@@ -1,18 +1,37 @@
 class PostsController < ApplicationController
   def create
-    @forum = Forum.find_by_sid(params[:sid])
+    has_error=true
+    message = ""
+    @forum = Forum.find_by_sid(params[:forum_id])
     if(@forum)
-      @post = @forum.posts.build(params[:post])
+      @post = @forum.posts.build(params.slice('name', 'content', 'comment'))
       if(@post.save)
-        redirect_to forum_path(@forum.sid)
+        message="Post created"
+        has_error=false
       else
-        flash.now[:error]="Something went wrong: #{@post.errors}"
-        @posts = @forum.posts.limit(20).includes(:comments)
-        render "forums/show"
+        message="Something went wrong: #{@post.errors}"
+        has_error=true
       end
     else
-      flash[:error]="Invalid forum"
-      redirect_to root_path
+      message="Invalid forum"
+      has_error=true
+    end
+
+    respond_to do |format|
+      format.json do
+        render :json=>{'has_error'=>has_error, 'message'=>message, 'post'=>@post}
+      end
+      format.html do
+        #defunct
+        if(has_error)
+          @posts = @forum.posts.limit(20).includes(:comments)
+          flash.now[:error] = message
+          render "forums/show"
+        else
+          flash[:success] = message
+          redirect_to forum_path(@forum.sid)
+        end
+      end
     end
   end
 
