@@ -4,6 +4,11 @@ App.Routers.Main = Backbone.Router.extend({
       "forums/:sid":"forum",
     },
 
+    initialize : function(options){
+      this.userCredentialsView = new App.Views.UserCredentials({model:App.userCredentials})
+      $('#user-credentials').html(this.userCredentialsView.el)
+    },
+
     home:function(){
       console.log("route home");
       this.homeView = new App.Views.Home();

@@ -7,9 +7,10 @@
         .span8
           &nbsp;
           =yield :forum_name
-        .span2
-          %form
-            %input#name(type="text" placeholder="Enter your name")
+        #user-credentials.span2
+          -#
+            %form
+              %input#name(type="text" placeholder="Enter your name")
       -#unless GlobalSettings.deployment == "live"
         #deployment.label.warning= GlobalSettings.deployment
 

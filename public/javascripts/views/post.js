@@ -91,7 +91,7 @@ App.Views.PostCreate = Backbone.View.extend({
       var self=this;
       this.model.save(
         {
-          name: this.$el.find('#post_name').val(),
+          name:    App.userCredentials.get('name'),
           content: this.$el.find('#post_content').val(),
           comment: this.$el.find('#post_comment').val(),
         },

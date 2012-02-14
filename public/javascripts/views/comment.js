@@ -61,7 +61,7 @@ App.Views.CommentCreate = Backbone.View.extend({
       var self=this;
       this.model.save(
         {
-          name: this.$el.find('#comment_name').val(),
+          name:    App.userCredentials.get('name'),
           content: this.$el.find('#comment_content').val(),
         },
         {
