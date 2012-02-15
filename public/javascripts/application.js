@@ -47,3 +47,25 @@ Backbone.Model.prototype.toJSON = function() {
   }
 }
 
+//add a getState function to models and collections which just summarizes all
+//the id's
+Backbone.Model.prototype.getState = function(){
+  var ret = {class:this._class, id:this.id};
+  if(this._members instanceof Array){
+    for(var i in this._members){
+      var m = this._members[i]
+      if(this[m].getState instanceof Function){
+        ret[m] = this[m].getState()
+      }
+    }
+  }
+  return ret;
+}
+
+Backbone.Collection.prototype.getState = function(){
+  return this.map(function(m){
+      if (m.getState instanceof Function){
+        return m.getState();
+      }
+  })
+}

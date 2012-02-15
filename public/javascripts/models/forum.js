@@ -1,4 +1,8 @@
 App.Models.Forum = Backbone.Model.extend({
+    //introspection
+    _class:'Forum',
+    _members:['posts'],
+
     urlRoot: 'forums',
     initialize:function(){
       this.posts=new App.Collections.Posts(null,{forum:this})
@@ -23,5 +27,6 @@ App.Models.Forum = Backbone.Model.extend({
       this.posts.initAll();
       return f;
     }
+
 })
 

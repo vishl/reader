@@ -108,3 +108,79 @@ function getArg(a, s){
   }
 }
 
+/*
+ * Input
+ * v = validator(
+    { name:{presence:true},
+      text:{presence:true,
+            presence_message:"Please enter text",
+            format:/[A-Za-z ]/,
+            format_message:"Please only characters and spaces",
+            message:"This message will be used in the absence of a specific *_message"
+          },
+    }
+   )
+   Output 
+    { name:["name is blank"],
+      text:["Please enter text", "Please only characters and spaces"]
+    }
+    Call as v({a:'val', b:'dont val'}, {a:true}) //second argument is optional
+*/
+
+function Validator(validations){
+  return function(attrs, options){
+    var errors={}
+    errors.__count=0
+    errors.__add = function(k, m){
+      if(k in this)
+        this[k].push(m)
+      else
+        this[k] = [m]
+      this.__count++;
+    }
+    var it = validations
+    if(options && options.only) it = options.only
+    for(var k in it){
+      var val = validations[k]
+      for(var trait in val){
+        switch (trait){
+          case 'presence':
+            if(_.isEmpty(attrs[k])){
+              errors.__add(k, val['presence_message'] || val['message'] || (k+ " must be present"))
+            }
+            break;
+          case 'format':
+            if(!String(attrs[k]).match(val[trait])){
+              errors.__add(k, val['format_message'] || val['message'] || (k+ " is formatted incorrectly"))
+            }
+            break;
+
+          //TODO more validators
+        }
+      }
+    }
+    if(errors.__count) return errors;
+  }
+}
+
+$.fn.displayModelErrors = function (errors, options){
+  var $this = $(this)
+  for(var id in errors){
+    var $inp = $this.find('#'+id);
+    if($inp.length){
+      //TODO custom error function
+      $inp.tooltip({title:errors[id].join(), trigger:'manual'});
+      $inp.tooltip('show');
+      $inp.addClass('model-error')
+    }
+  }
+  return this;
+}
+
+$.fn.removeModelErrors = function(form){
+  $(this).find('.model-error').each(function(){
+      $(this).removeClass('model-error')
+             .tooltip('hide')
+             .data('tooltip', null)
+  })
+}

@@ -1,12 +1,25 @@
 App.Models.Comment = Backbone.Model.extend({
-    //objName:'comment',  //causes saves to pass attributes as 'comment[attr]' instead of 'attr'
+    //introspection
+    _class:'Comment',
+    _members:[],
+
     urlRoot:function(){return '/forums/'+this.post.forum.id+'/posts/'+this.post.id+'/comments';},
     post:null,
+
     initialize:function(attrs, options){
       if(options) this.post = options.post;
     },
     parse:function(resp){
       return resp.comment;
+    },
+    validate:function(attrs){
+      if(!attrs.content || attrs.content.length==0){
+        return "Please enter a comment here";
+      }
+      if(!attrs.name){
+        this.trigger("promptName")
+        return "";
+      }
     }
 
 })
@@ -32,3 +45,22 @@ App.Collections.Comments = Backbone.Collection.extend({
       this.each(this.initModel)
     }
 })
+
+//this is really just to keep track of the newest comment that we have
+App.Collections.AllComments = Backbone.Collection.extend({
+    model:App.Models.Comment,
+    comparator:function(x,y){return x.get("timestamp")-y.get("timestamp");},
+    //no urlroot because this model should never request anything from the
+    //server
+    initialize:function(models,options){
+    },
+
+    addList:function(collection){
+      //any time a collection is added, listen to its add and remove events
+      //TODO merge with collection
+      collection.bind("add", this.add);
+    },
+
+
+})
+

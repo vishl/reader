@@ -77,9 +77,11 @@ App.Views.PostCreate = Backbone.View.extend({
 
     render:function(){
       console.log("render post create")
-      this.$el.html(JST['posts/new']({post:this.model}))
-      this.$el.find('#create-post-area').collapse({toggle:false})
-      this.$el.find('#postheader').click(function(){
+      var self = this;
+      self.$el.html(JST['posts/new']({post:this.model}))
+      self.$el.find('#create-post-area').collapse({toggle:false})
+      self.$el.find('#postheader').click(function(){
+          self.$el.removeModelErrors();
           $(this).siblings('#create-post-area').collapse('toggle')
       })
       this.delegateEvents(); //have to call this explicity if the form gets rerendered
@@ -89,11 +91,12 @@ App.Views.PostCreate = Backbone.View.extend({
     createPost:function(){
       console.log("post");
       var self=this;
+      self.$el.removeModelErrors()
       this.model.save(
         {
           name:    App.userCredentials.get('name'),
-          content: this.$el.find('#post_content').val(),
-          comment: this.$el.find('#post_comment').val(),
+          content: this.$el.find('#content').val(),
+          comment: this.$el.find('#comment').val(),
         },
         {
           success:function(model, resp){
@@ -108,9 +111,10 @@ App.Views.PostCreate = Backbone.View.extend({
               //TODO success notification
             }
           },
-          error: function(){
-            console.log("error")
-            //TODO something went wrong
+          error: function(model, errors){
+            console.log(errors)
+            self.$el.displayModelErrors(errors)
+            setTimeout(function(){self.$el.removeModelErrors()}, 2000);
           }
         }
       )
@@ -120,8 +124,8 @@ App.Views.PostCreate = Backbone.View.extend({
     reset:function(){
       this.model = new App.Models.Post(null, {forum:this.forum})
       this.$el.find('#create-post-area').collapse('hide')
-      this.$el.find('#post_content').val("")
-      this.$el.find('#post_comment').val("")
+      this.$el.find('#content').val("")
+      this.$el.find('#comment').val("")
       return this
     }
 })

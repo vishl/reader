@@ -62,7 +62,7 @@ App.Views.CommentCreate = Backbone.View.extend({
       this.model.save(
         {
           name:    App.userCredentials.get('name'),
-          content: this.$el.find('#comment_content').val(),
+          content: this.$el.find('#content').val(),
         },
         {
           success:function(model, resp){
@@ -77,8 +77,8 @@ App.Views.CommentCreate = Backbone.View.extend({
               //TODO success notification
             }
           },
-          error: function(){
-            console.log("error")
+          error: function(message){
+            console.log("error: "+message)
             //TODO something went wrong
           }
         }

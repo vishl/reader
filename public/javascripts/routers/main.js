@@ -9,6 +9,7 @@ App.Routers.Main = Backbone.Router.extend({
       $('#user-credentials').html(this.userCredentialsView.el)
     },
 
+    ////////////////////////////////// Routes //////////////////////////////////////
     home:function(){
       console.log("route home");
       this.homeView = new App.Views.Home();
@@ -18,8 +19,20 @@ App.Routers.Main = Backbone.Router.extend({
 
     forum:function(sid){
       console.log("route forum "+sid)
-      this.forumView = new App.Views.Forum({sid:sid})
-      //attach it to the main window
+      //some housekeeping stuff to keep track of when to update
+
+      //create the view and attach it to the main window
+      this.forumView = new App.Views.Forum({sid:sid});
+      this.forum = this.forumView.model;
       $('#main-window').html(this.forumView.el);
-    }
+      
+      //launch poll, this sends state to the server and receives updates
+      //periodically
+      this.startPolling();
+    },
+
+    ////////////////////////////////// Helpers /////////////////////////////////////
+    startPolling:function(){
+      var state = this.forum.getState();
+    },
 });

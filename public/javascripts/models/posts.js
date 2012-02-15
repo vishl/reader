@@ -1,6 +1,11 @@
 App.Models.Post = Backbone.Model.extend({
+    //introspection
+    _class:'Post',
+    _members:['comments'],
+
     urlRoot:function(){return '/forums/'+this.forum.get("sid")+'/posts';},
     forum:null,
+    comments:null,
 
     //TODO override parse/constructor to include comments
     //right now it only works if we create a new model
@@ -16,6 +21,11 @@ App.Models.Post = Backbone.Model.extend({
       }
     },
 
+    validate:Validator(
+      { name:{presence:true, message:"Please enter your name"},
+        content:{presence:true, message:"Please put your post here, comments are optional"}
+      }),
+
     parse: function(resp){
       var ret = resp.post;
       if(ret.comments){
@@ -24,7 +34,8 @@ App.Models.Post = Backbone.Model.extend({
         delete ret.comments;
       }
       return ret;
-    }
+    },
+
 })
 
 App.Collections.Posts = Backbone.Collection.extend({
