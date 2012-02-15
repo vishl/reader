@@ -12,15 +12,10 @@ App.Models.Comment = Backbone.Model.extend({
     parse:function(resp){
       return resp.comment;
     },
-    validate:function(attrs){
-      if(!attrs.content || attrs.content.length==0){
-        return "Please enter a comment here";
-      }
-      if(!attrs.name){
-        this.trigger("promptName")
-        return "";
-      }
-    }
+    validate:Validator(
+      { name:{presence:true, message:"Please enter your name"},
+        content:{presence:true, message:"Please enter a comment"}
+      }),
 
 })
 

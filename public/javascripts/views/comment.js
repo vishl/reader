@@ -49,8 +49,10 @@ App.Views.CommentCreate = Backbone.View.extend({
       console.log("render comment post")
       $(this.el).html(JST['comments/post']({comment:this.model}));
       //enable toggling
+      var self=this;
       this.$el.find('.comment-post-form').collapse({toggle:false})
       this.$el.find('.comment-post-header').click(function(){
+          self.$el.removeModelErrors()
           $(this).siblings('.comment-post-form').collapse('toggle')
       })
       return this;
@@ -59,6 +61,7 @@ App.Views.CommentCreate = Backbone.View.extend({
     postComment: function(e){
       console.log("post");
       var self=this;
+      self.$el.removeModelErrors()
       this.model.save(
         {
           name:    App.userCredentials.get('name'),
@@ -77,9 +80,14 @@ App.Views.CommentCreate = Backbone.View.extend({
               //TODO success notification
             }
           },
-          error: function(message){
-            console.log("error: "+message)
-            //TODO something went wrong
+          error: function(model, errors){
+            console.log("error")
+            console.log(errors)
+            self.$el.displayModelErrors(errors)
+            setTimeout(function(){self.$el.removeModelErrors()}, 2000);
+            if(errors.name){
+              self.$el.trigger("promptName");
+            }
           }
         }
       )
