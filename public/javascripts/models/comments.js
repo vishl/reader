@@ -24,10 +24,12 @@ App.Collections.Comments = Backbone.Collection.extend({
     comparator:function(x,y){return x.get("timestamp")-y.get("timestamp");},
     post:null,
     urlRoot:function(){return '/forums/'+this.forumSid+'/posts';},
+
     initialize:function(models,options){
       _.bindAll(this, 'initModel');
       console.log("init comments with post id " + options.post.id);
       this.post = options.post;
+      this.bind('add', this.initModel, this);
     },
 
     initModel:function(model, context, options){

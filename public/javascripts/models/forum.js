@@ -9,22 +9,31 @@ App.Models.Forum = Backbone.Model.extend({
     },
 
     //override parse so we can handle a response that includes posts
-    //the resp objection should structured as follows (in json)
+    //the resp objection should structured as follows 
     //forum=><forum attributes>
     //posts=>[{post=><post attributes>, comments=>[{comment=>{comment attributes}}, ...]},
     //        {post=><post attributes>, comments=>[{comment=>{comment attributes}}, ...]},
     //        ...
     //       ]
     parse:function(resp){
-      //var robj = $.parseJSON(resp)
       var f = resp.forum;
       var p = resp.posts;
-      //convert back to json to send to posts collection, a little inefficient, but so modular!
-      //var postsJson = $.toJSON(postsobj); 
       if(p) console.log("got "+p.length+"posts");
-      //silently reset because we're about to call render on the forum anyways
-      this.posts.reset(p, {silent:true});
-      this.posts.initAll();
+
+      var merged = this.posts.merge(p, {parse:true});
+      //TODO for nonunique posts, examine comments
+
+      //TODO get rid of this shit
+      //keep track of latest post/comment (only from fetch)
+      if(resp.latest_post && (!this.latest_post || resp.latest_post.timestamp>this.latest_post.timestamp)){
+        this.latest_post = resp.latest_post;
+      }
+      if(resp.latest_comment && (!this.latest_comment || resp.latest_comment.timestamp>this.latest_comment.timestamp)){
+        this.latest_comment = resp.latest_comment;
+      }
+
+
+
       return f;
     }
 

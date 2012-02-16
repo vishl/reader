@@ -54,8 +54,15 @@ class ForumsController < ApplicationController
       else
         @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
       end
-      @latest_post_id = @forum.posts.latest.first.id if @forum.posts.count>0
-      @latest_comment_id = @forum.comments.latest.first.id if @forum.comments.count>0
+      #TODO get rid of this shit
+      if @forum.posts.count>0
+        lp = @forum.posts.latest.first
+        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
+      end
+      if @forum.comments.count>0
+        lp = @forum.comments.latest.first
+        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
+      end
     else
       has_error=true
       error="Forum not found"

@@ -8,13 +8,15 @@ App.Views.Forum = Backbone.View.extend({
 
       this.postCreateView.bind("posted", this.newPost, this)
       this.model.bind("change", this.render)
-      this.model.fetch();
-      this.render();
     },
 
-    render: function(){
+    render:function(){
+      this.$el.find('#forum_title').html(this.model.get("title"));
+    },
+
+    renderAll: function(){
       console.log("render forum")
-      $(this.el).html(JST['forums/show']({title:this.model.get("title")}))
+      this.$el.html(JST['forums/show']({title:this.model.get("title")}))
       this.$el.append(this.postCreateView.render().el)
       this.$el.append(this.postsView.render().el)
       return this;

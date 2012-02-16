@@ -61,6 +61,14 @@ body{
   margin-top:5px;
 }
 
+.navbar #promptplaceholder{
+  position:fixed;
+  top:40px;
+  right:100px;
+  height:1px;
+  width:1px;
+}
+
 /********************************** Forum page ***********************************/
 .name{
   font-weight:bold;

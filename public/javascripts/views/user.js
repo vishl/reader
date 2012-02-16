@@ -7,13 +7,13 @@ App.Views.UserCredentials = Backbone.View.extend({
       _.bindAll(this);
       this.model.bind("sync", this.changed)
       $(document).on("promptName", this.showPrompt)
-      this.render();
     },
 
     render: function(){
       console.log("render user")
       this.$el.html(JST['sessions/show']({name:this.model.get("name")}))
-      this.$el.find('input').tooltip({title:"Please enter your name", placement:'bottom', trigger:'manual'})
+      this.$el.find('#promptplaceholder').popover({title:"Enter your name", placement:'bottom', trigger:'manual'})
+      if(this.model.get("name").length==0) this.showPrompt();
       return this;
     },
 
@@ -35,10 +35,10 @@ App.Views.UserCredentials = Backbone.View.extend({
     showPrompt: function(e){
       console.log("show prompt")
       var self=this;
-      self.$el.find('input').tooltip('show')
+      self.$el.find('#promptplaceholder').popover('show')
       setTimeout(function(){
-        self.$el.find('input').tooltip('hide')
-      }, 2000)
+        self.$el.find('#promptplaceholder').popover('hide')
+      }, 3500)
     }
 
 

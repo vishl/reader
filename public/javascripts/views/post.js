@@ -114,6 +114,7 @@ App.Views.PostCreate = Backbone.View.extend({
           error: function(model, errors){
             console.log(errors)
             self.$el.displayModelErrors(errors)
+            if(errors.name) self.$el.trigger("promptName");
             setTimeout(function(){self.$el.removeModelErrors()}, 2000);
           }
         }

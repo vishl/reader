@@ -24,8 +24,12 @@ class Comment < ActiveRecord::Base
   ################################### Scopes #####################################
   scope :latest, order('updated_at DESC')
 
+  def timestamp
+    updated_at.present? ? updated_at.tv_sec*1000 : ""
+  end
+
   def as_json(options)
     #TODO sid instead of id
-    attributes.slice('id', 'name', 'content', 'post_id').merge({'timestamp'=>created_at.tv_sec*1000})
+    attributes.slice('id', 'name', 'content', 'post_id').merge({'timestamp'=>timestamp})
   end
 end

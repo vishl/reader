@@ -16,8 +16,8 @@ App.Views.Comment = Backbone.View.extend({
 App.Views.Comments = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
-      this.model.bind("reset", this.render)
-      this.model.bind("add", this.render)
+      this.model.bind("reset", this.render, this)
+      this.model.bind("add", this.addComment, this)
     },
 
     render: function(){
@@ -30,7 +30,23 @@ App.Views.Comments = Backbone.View.extend({
           self.$el.append(p.el)
       })
       return this;
-    }
+    },
+
+
+    addComment: function(model, collection, options){
+      var i = options.index;
+      console.log("insert comment "+model.id+" at "+i)
+      var elt = this.$el.find('.comment')[i]
+      var view = new App.Views.Comment({model:model}) //renders on creation
+      view.render();
+      view.$el.css('display','none')  //hack to get fade in to work
+      if(elt!==undefined){
+        $(elt).before(view.el)
+      }else{
+        this.$el.append(view.el)
+      }
+      view.$el.fadeIn('slow')
+    },
 })
 
 App.Views.CommentCreate = Backbone.View.extend({
@@ -85,9 +101,7 @@ App.Views.CommentCreate = Backbone.View.extend({
             console.log(errors)
             self.$el.displayModelErrors(errors)
             setTimeout(function(){self.$el.removeModelErrors()}, 2000);
-            if(errors.name){
-              self.$el.trigger("promptName");
-            }
+            if(errors.name) self.$el.trigger("promptName");
           }
         }
       )

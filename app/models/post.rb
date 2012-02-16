@@ -27,10 +27,14 @@ class Post < ActiveRecord::Base
   ################################### Scopes #####################################
   scope :latest, order('updated_at DESC')
 
+  def timestamp
+    updated_at.present? ? updated_at.tv_sec*1000 : ""
+  end
+
   def as_json(options)
     #TODO sid instead of id
     attributes.slice("id", "name", "content", "comment").merge({
-      "forum_sid"=>forum.sid, "timestamp"=>(updated_at.present? ? updated_at.tv_sec*1000 : ""), 
+      "forum_sid"=>forum.sid, "timestamp"=>timestamp, 
       "comments"=>comments.order("updated_at").all})
   end
 end

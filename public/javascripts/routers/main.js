@@ -1,4 +1,7 @@
 App.Routers.Main = Backbone.Router.extend({
+    //constants
+    POLLINTERVAL:5000, //60 seconds
+
     routes:{
       "": "home",
       "forums/:sid":"forum",
@@ -7,6 +10,7 @@ App.Routers.Main = Backbone.Router.extend({
     initialize : function(options){
       this.userCredentialsView = new App.Views.UserCredentials({model:App.userCredentials})
       $('#user-credentials').html(this.userCredentialsView.el)
+      this.userCredentialsView.render();
     },
 
     ////////////////////////////////// Routes //////////////////////////////////////
@@ -24,7 +28,9 @@ App.Routers.Main = Backbone.Router.extend({
       //create the view and attach it to the main window
       this.forumView = new App.Views.Forum({sid:sid});
       this.forum = this.forumView.model;
+      this.forumView.renderAll(); //nothing is there yet so this just makes containers
       $('#main-window').html(this.forumView.el);
+      this.forum.fetch(); //this should populate the data dynamically
       
       //launch poll, this sends state to the server and receives updates
       //periodically
@@ -33,6 +39,15 @@ App.Routers.Main = Backbone.Router.extend({
 
     ////////////////////////////////// Helpers /////////////////////////////////////
     startPolling:function(){
-      var state = this.forum.getState();
+      //TODO fancy way is to send our state to the server, for now we just
+      //refetch
+      //var state = this.forum.getState();
+      if(this.pollId){
+        clearInterval(this.pollId);
+      }
+      var self=this
+      self.pollId = setInterval(function(){
+          self.forum.fetch();
+        },self.POLLINTERVAL);
     },
 });

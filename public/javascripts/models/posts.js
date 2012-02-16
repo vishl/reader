@@ -6,6 +6,8 @@ App.Models.Post = Backbone.Model.extend({
     urlRoot:function(){return '/forums/'+this.forum.get("sid")+'/posts';},
     forum:null,
     comments:null,
+    latest_post:null,
+    latest_comment:null,
 
     //TODO override parse/constructor to include comments
     //right now it only works if we create a new model
@@ -26,11 +28,13 @@ App.Models.Post = Backbone.Model.extend({
         content:{presence:true, message:"Please put your post here, comments are optional"}
       }),
 
-    parse: function(resp){
-      var ret = resp.post;
-      if(ret.comments){
-        this.comments.add(ret.comments, {silent:true});
-        this.comments.initAll();
+    parse: function(resp, xhr){
+      console.log("parsing post");
+      var ret = resp;
+      if(ret.post) ret = ret.post;  //possibly inside a container
+      if(ret.comments && this.comments){
+        //if there is already a comment object, add the comments; otherwise do it in the constructor
+        this.comments.merge(ret.comments); 
         delete ret.comments;
       }
       return ret;

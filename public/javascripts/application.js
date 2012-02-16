@@ -29,6 +29,7 @@ var App = {
   },
 };
 
+////////////////////////////////// Backbone Extensions /////////////////////////
 //This overrides the toJSON function to always insert the authenticity token
 Backbone.Model.prototype.toJSON = function() {
   if(this.objName){
@@ -45,6 +46,36 @@ Backbone.Model.prototype.toJSON = function() {
         'authenticity_token' : $('meta[name="csrf-token"]').attr('content')
     });
   }
+}
+
+//inject server data as if we just finished a 'fetch' operation
+//useful if the server sends additional data with another object
+//(e.g. Retriving a post also sends comments for that post)
+Backbone.Model.prototype.inject = function(resp, xhr, options){
+  return this.set(this.parse(resp, xhr), options)
+}
+
+//models should be Backbone.Model objects or an attributes (post parse) object
+Backbone.Collection.prototype.merge = function(models, options){
+  var u = [];  //unique
+  var n = [];  //non-unique
+  var i,m;
+  options = options || {};
+  for(i in models){
+    if(m = this.get(models[i].id)){
+      n.push(models[i])
+      //merge values into existing model
+      if(options.parse){
+        m.inject(models[i], null, options) //TODO modify set to take the parse option
+      }else{
+        m.set(models[i], options) 
+      }
+    }else{
+      u.push(models[i])
+    }
+  }
+  this.add(u, options);//add the new stuff
+  return {added:u, merged:n};
 }
 
 //add a getState function to models and collections which just summarizes all
