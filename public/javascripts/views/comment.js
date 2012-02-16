@@ -1,53 +1,54 @@
+/*global App Backbone _ JST*/
 App.Views.Comment = Backbone.View.extend({
 
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
-      this.model.bind("change", this.render)
+      this.model.bind("change", this.render);
     },
 
     render: function(){
-      console.log("render comment")
-      $(this.el).html(JST['comments/show']({comment:this.model}))
+      console.log("render comment");
+      $(this.el).html(JST['comments/show']({comment:this.model}));
       return this;
     }
 
-})
+});
 
 App.Views.Comments = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
-      this.model.bind("reset", this.render, this)
-      this.model.bind("add", this.addComment, this)
+      this.model.bind("reset", this.render, this);
+      this.model.bind("add", this.addComment, this);
     },
 
     render: function(){
-      console.log("render comments")
+      console.log("render comments");
       var self = this;
       this.$el.html('');
       _.each(this.model.models, function(comment){
-          var p = new App.Views.Comment({model:comment})
+          var p = new App.Views.Comment({model:comment});
           p.render();
-          self.$el.append(p.el)
-      })
+          self.$el.append(p.el);
+      });
       return this;
     },
 
 
     addComment: function(model, collection, options){
       var i = options.index;
-      console.log("insert comment "+model.id+" at "+i)
-      var elt = this.$el.find('.comment')[i]
-      var view = new App.Views.Comment({model:model}) //renders on creation
+      console.log("insert comment "+model.id+" at "+i);
+      var elt = this.$el.find('.comment')[i];
+      var view = new App.Views.Comment({model:model}); //renders on creation
       view.render();
-      view.$el.css('display','none')  //hack to get fade in to work
+      view.$el.css('display','none');  //hack to get fade in to work
       if(elt!==undefined){
-        $(elt).before(view.el)
+        $(elt).before(view.el);
       }else{
-        this.$el.append(view.el)
+        this.$el.append(view.el);
       }
-      view.$el.fadeIn('slow')
+      view.$el.fadeIn('slow');
     },
-})
+});
 
 App.Views.CommentCreate = Backbone.View.extend({
     post:null,
@@ -58,26 +59,26 @@ App.Views.CommentCreate = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.post = this.options.post;
-      this.model = new App.Models.Comment(null, {post:this.post})
+      this.model = new App.Models.Comment(null, {post:this.post});
     },
 
     render:function(){
-      console.log("render comment post")
+      console.log("render comment post");
       $(this.el).html(JST['comments/post']({comment:this.model}));
       //enable toggling
       var self=this;
-      this.$el.find('.comment-post-form').collapse({toggle:false})
+      this.$el.find('.comment-post-form').collapse({toggle:false});
       this.$el.find('.comment-post-header').click(function(){
-          self.$el.removeModelErrors()
-          $(this).siblings('.comment-post-form').collapse('toggle')
-      })
+          self.$el.removeModelErrors();
+          $(this).siblings('.comment-post-form').collapse('toggle');
+      });
       return this;
     },
 
     postComment: function(e){
       console.log("post");
       var self=this;
-      self.$el.removeModelErrors()
+      self.$el.removeModelErrors();
       this.model.save(
         {
           name:    App.userCredentials.get('name'),
@@ -85,26 +86,26 @@ App.Views.CommentCreate = Backbone.View.extend({
         },
         {
           success:function(model, resp){
-            console.log("success")
-            console.log(resp)
+            console.log("success");
+            console.log(resp);
             if(resp.has_error){
               //TODO create notice
             }else{
               //the parent will handle posting the comment
-              self.trigger("posted", self.model)
+              self.trigger("posted", self.model);
               self.reset();
               //TODO success notification
             }
           },
           error: function(model, errors){
-            console.log("error")
-            console.log(errors)
-            self.$el.displayModelErrors(errors)
-            setTimeout(function(){self.$el.removeModelErrors()}, 2000);
+            console.log("error");
+            console.log(errors);
+            self.$el.displayModelErrors(errors);
+            setTimeout(function(){self.$el.removeModelErrors();}, 2000);
             if(errors.name) self.$el.trigger("promptName");
           }
         }
-      )
+      );
       //e.preventDefault();
       return false;
     },
@@ -112,9 +113,9 @@ App.Views.CommentCreate = Backbone.View.extend({
     reset: function(){
       console.log("reset");
       //don't delete the model, it was probably posted somewhere else
-      this.model = new App.Models.Comment(null, {post:this.post})
+      this.model = new App.Models.Comment(null, {post:this.post});
       //TODO do we need to unbind the collapse stuff?
-      return this.render()
+      return this.render();
     }
 
-})
+});

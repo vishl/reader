@@ -1,3 +1,4 @@
+/*globals _ */
 var ONE_WEEK = 1000*60*60*24*7; //milliseconds
 var HALF_YEAR = 1000*60*60*24*180; //milliseconds
 var Days = ["Sun","Mon","Tue","Wed","Thurs","Fri","Sat"];
@@ -5,28 +6,28 @@ var Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oc
 $(function(){
     $(".date-delta").each(function(){
         var datestr = $(this).html();
-        $(this).html(convDate(datestr))
-    })
-})
+        $(this).html(convDate(datestr));
+    });
+});
 
 function convDate(datestr){
   var date= new Date(datestr); //not sure why Date(datestr) doesn't work
   var today = new Date();
-  var newdate = ""
+  var newdate = "";
   var h = date.getHours();
   var m = date.getMinutes();
-  var ampm = h>=12?"PM":"AM"
+  var ampm = h>=12?"PM":"AM";
   if(h>12)
     h-=12;
-  if(h==0)
+  if(h===0)
     h=12;
 
-  if((date.getFullYear() == today.getFullYear()) &&
-    (date.getMonth() == today.getMonth()) &&
-    (date.getDate() == today.getDate())){
+  if((date.getFullYear() === today.getFullYear()) &&
+    (date.getMonth() === today.getMonth()) &&
+    (date.getDate() === today.getDate())){
     newdate = h+":"+(m<10?"0":"")+m+" "+ampm;
   }else if(today-date < ONE_WEEK){
-    newdate = Days[date.getDay()]+" "+h+" "+ampm
+    newdate = Days[date.getDay()]+" "+h+" "+ampm;
   }else if(today-date < HALF_YEAR){
     newdate = Months[date.getMonth()]+" "+date.getDate();
   }else{
@@ -35,7 +36,7 @@ function convDate(datestr){
   return newdate;
 }
 
-var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
+var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 function is_link(text){
   if(text.match(_linkExp)){
     return true;
@@ -45,7 +46,7 @@ function is_link(text){
 }
 function text_to_link(text) {
   if(text){
-    return text.replace(_linkExp,"<a href='$1' target='_blank'>$1</a>")
+    return text.replace(_linkExp,"<a href='$1' target='_blank'>$1</a>");
   }else{
     return "";
   }
@@ -59,49 +60,49 @@ function linkify(t){
     .replace(/>/g, "&gt;")
     .replace(/'/g, "&#x27;")
     .replace(/"/g, "&quot;")
-  )
+  );
 }
 
 //given a dom object, will put embed code in a sibling with class 'embed-hook'
 //Huge XSS vulnerabilities here..
 function embed(elt){
-  var a = $(elt).find('a')
-  var t = a.length? a.attr('href') : ""
+  var a = $(elt).find('a');
+  var t = a.length? a.attr('href') : "";
   var embedCode=null;
   var h=null;
   var m;
   //youtube
-  m = t.match(/youtube.com\/watch[^?]*?([^#]*)/)
+  m = t.match(/youtube.com\/watch[^?]*?([^#]*)/);
   if(m){
-    var vid = getArg(m[1], 'v')
+    var vid = getArg(m[1], 'v');
     if(vid){
-      embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+vid+'?wmode=transparent" frameborder="0" allowfullscreen></iframe>'
+      embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+vid+'?wmode=transparent" frameborder="0" allowfullscreen></iframe>';
       h=315;
     }
   }
   //image
   if(!embedCode){
-    m = t.match(/http:\/\/\S*(\.jpg|\.gif|\.png|\.jpeg)/)
+    m = t.match(/http:\/\/\S*(\.jpg|\.gif|\.png|\.jpeg)/);
     if(m){
-      embedCode='<a href="'+m[0]+'"><img src="'+m[0]+'"></a>'
+      embedCode='<a href="'+m[0]+'"><img src="'+m[0]+'"></a>';
     }
   }
   //TODO more embeds!
 
   //TODO probably don't want to embed on mobile
   if(embedCode){
-    var embed = $(elt).siblings('.embed-hook')
-    embed.append(embedCode)
+    var embed = $(elt).siblings('.embed-hook');
+    embed.append(embedCode);
     if(h) embed.css('height', h);
   }
 }
 
 function getArg(a, s){
-  var args = a.split("&")
+  var args = a.split("&");
   for(var i=0; i<args.length; i++){
-    var m = args[i].match(/([^=])=(.*)/)
+    var m = args[i].match(/([^=])=(.*)/);
     if(m){
-      if(m[1]==s){
+      if(m[1]===s){
         return m[2];
       }
     }
@@ -129,29 +130,30 @@ function getArg(a, s){
 
 function Validator(validations){
   return function(attrs, options){
-    var errors={}
-    errors.__count=0
-    errors.__add = function(k, m){
-      if(k in this)
-        this[k].push(m)
-      else
-        this[k] = [m]
-      this.__count++;
-    }
-    var it = validations
-    if(options && options.only) it = options.only
+    var errors={
+      __count:0,
+      __add : function(k, m){
+        if(k in this)
+          this[k].push(m);
+        else
+          this[k] = [m];
+        this.__count++;
+      }
+    };
+    var it = validations;
+    if(options && options.only) it = options.only;
     for(var k in it){
-      var val = validations[k]
+      var val = validations[k];
       for(var trait in val){
         switch (trait){
           case 'presence':
             if(_.isEmpty(attrs[k])){
-              errors.__add(k, val['presence_message'] || val['message'] || (k+ " must be present"))
+              errors.__add(k, val['presence_message'] || val['message'] || (k+ " must be present"));
             }
             break;
           case 'format':
             if(!String(attrs[k]).match(val[trait])){
-              errors.__add(k, val['format_message'] || val['message'] || (k+ " is formatted incorrectly"))
+              errors.__add(k, val['format_message'] || val['message'] || (k+ " is formatted incorrectly"));
             }
             break;
 
@@ -160,27 +162,27 @@ function Validator(validations){
       }
     }
     if(errors.__count) return errors;
-  }
+  };
 }
 
 $.fn.displayModelErrors = function (errors, options){
-  var $this = $(this)
+  var $this = $(this);
   for(var id in errors){
     var $inp = $this.find('#'+id);
     if($inp.length){
       //TODO custom error function
       $inp.tooltip({title:errors[id].join(), trigger:'manual'});
       $inp.tooltip('show');
-      $inp.addClass('model-error')
+      $inp.addClass('model-error');
     }
   }
   return this;
-}
+};
 
 $.fn.removeModelErrors = function(form){
   $(this).find('.model-error').each(function(){
       $(this).removeClass('model-error')
              .tooltip('hide')
-             .data('tooltip', null)
-  })
-}
+             .data('tooltip', null);
+  });
+};

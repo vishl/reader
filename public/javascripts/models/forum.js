@@ -1,3 +1,4 @@
+/*global App Backbone _*/
 App.Models.Forum = Backbone.Model.extend({
     //introspection
     _class:'Forum',
@@ -5,7 +6,7 @@ App.Models.Forum = Backbone.Model.extend({
 
     urlRoot: 'forums',
     initialize:function(){
-      this.posts=new App.Collections.Posts(null,{forum:this})
+      this.posts=new App.Collections.Posts(null,{forum:this});
     },
 
     //override parse so we can handle a response that includes posts
@@ -18,7 +19,9 @@ App.Models.Forum = Backbone.Model.extend({
     parse:function(resp){
       var f = resp.forum;
       var p = resp.posts;
-      if(p) console.log("got "+p.length+"posts");
+      if(p){
+        console.log("got "+p.length+"posts");
+      }
 
       var merged = this.posts.merge(p, {parse:true});
       //TODO for nonunique posts, examine comments
@@ -37,5 +40,5 @@ App.Models.Forum = Backbone.Model.extend({
       return f;
     }
 
-})
+});
 

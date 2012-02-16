@@ -1,3 +1,4 @@
+/*global App Backbone _*/
 App.Models.Comment = Backbone.Model.extend({
     //introspection
     _class:'Comment',
@@ -7,7 +8,9 @@ App.Models.Comment = Backbone.Model.extend({
     post:null,
 
     initialize:function(attrs, options){
-      if(options) this.post = options.post;
+      if(options){ 
+        this.post = options.post;
+      }
     },
     parse:function(resp){
       return resp.comment;
@@ -17,7 +20,7 @@ App.Models.Comment = Backbone.Model.extend({
         content:{presence:true, message:"Please enter a comment"}
       }),
 
-})
+});
 
 App.Collections.Comments = Backbone.Collection.extend({
     model:App.Models.Comment,
@@ -39,9 +42,9 @@ App.Collections.Comments = Backbone.Collection.extend({
 
     initAll:function(){
       var self=this;
-      this.each(this.initModel)
+      this.each(this.initModel);
     }
-})
+});
 
 //this is really just to keep track of the newest comment that we have
 App.Collections.AllComments = Backbone.Collection.extend({
@@ -59,5 +62,5 @@ App.Collections.AllComments = Backbone.Collection.extend({
     },
 
 
-})
+});
 

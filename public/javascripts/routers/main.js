@@ -1,6 +1,7 @@
+/*global App Backbone _ */
 App.Routers.Main = Backbone.Router.extend({
     //constants
-    POLLINTERVAL:5000, //60 seconds
+    POLLINTERVAL:60000, //60 seconds
 
     routes:{
       "": "home",
@@ -8,8 +9,8 @@ App.Routers.Main = Backbone.Router.extend({
     },
 
     initialize : function(options){
-      this.userCredentialsView = new App.Views.UserCredentials({model:App.userCredentials})
-      $('#user-credentials').html(this.userCredentialsView.el)
+      this.userCredentialsView = new App.Views.UserCredentials({model:App.userCredentials});
+      $('#user-credentials').html(this.userCredentialsView.el);
       this.userCredentialsView.render();
     },
 
@@ -22,7 +23,7 @@ App.Routers.Main = Backbone.Router.extend({
     },
 
     forum:function(sid){
-      console.log("route forum "+sid)
+      console.log("route forum "+sid);
       //some housekeeping stuff to keep track of when to update
 
       //create the view and attach it to the main window
@@ -45,7 +46,7 @@ App.Routers.Main = Backbone.Router.extend({
       if(this.pollId){
         clearInterval(this.pollId);
       }
-      var self=this
+      var self=this;
       self.pollId = setInterval(function(){
           self.forum.fetch();
         },self.POLLINTERVAL);

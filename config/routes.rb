@@ -1,5 +1,5 @@
 Reader::Application.routes.draw do
-  root :to=>"pages#home"
+  root :to=>"pages#backbone"
 
   get "/backbone", :as=>:backbone, :to=>"pages#backbone"
   ##api

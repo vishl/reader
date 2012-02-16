@@ -1,3 +1,4 @@
+/*global App Backbone _ Validator*/
 App.Models.Post = Backbone.Model.extend({
     //introspection
     _class:'Post',
@@ -13,8 +14,8 @@ App.Models.Post = Backbone.Model.extend({
     //right now it only works if we create a new model
     initialize: function(attrs, options){
       if(options) this.forum = options.forum;
-      var c = this.get("comments")
-      this.comments=new App.Collections.Comments(null,{post:this})
+      var c = this.get("comments");
+      this.comments=new App.Collections.Comments(null,{post:this});
       if(c){
         this.comments.add(c, {silent:true});
         this.comments.initAll();
@@ -40,7 +41,7 @@ App.Models.Post = Backbone.Model.extend({
       return ret;
     },
 
-})
+});
 
 App.Collections.Posts = Backbone.Collection.extend({
     model:App.Models.Post,
@@ -61,6 +62,6 @@ App.Collections.Posts = Backbone.Collection.extend({
 
     initAll:function(){
       var self=this;
-      this.each(this.initModel)
+      this.each(this.initModel);
     }
-})
+});

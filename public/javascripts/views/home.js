@@ -1,3 +1,4 @@
+/*global App Backbone _ JST*/
 App.Views.Home = Backbone.View.extend({
     model: new App.Models.Forum(),
 
@@ -19,22 +20,22 @@ App.Views.Home = Backbone.View.extend({
         },
         {
           success:function(model, resp){
-            console.log(resp)
+            console.log(resp);
             if(resp.has_error){
               //TODO create notice
             }else{
               //navigate to forum
               //trigger causes the router to route
               //TODO create notice
-              App.router.navigate('forums/'+resp.forum.sid, {trigger:true})
+              App.router.navigate('forums/'+resp.forum.sid, {trigger:true});
             }
           },
           error: function(){
-            console.log("error")
+            console.log("error");
             //TODO something went wrong
           }
         }
-      )
+      );
       //e.preventDefault();
       return false;
     },
@@ -44,4 +45,4 @@ App.Views.Home = Backbone.View.extend({
       return this;
     }
 
-})
+});

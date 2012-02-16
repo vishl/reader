@@ -1,3 +1,4 @@
+/*global App Backbone _ Validator*/
 App.Models.UserCredentials = Backbone.Model.extend({
     _class: "UserCredentials",
     defaults:{
@@ -17,7 +18,7 @@ App.Models.UserCredentials = Backbone.Model.extend({
           break;
         case "create":  
         case "update":  
-          resp = localStorage.setItem("user", JSON.stringify(model.attributes)) 
+          resp = localStorage.setItem("user", JSON.stringify(model.attributes)) ;
           break;
         case "delete":  
           resp = localStorage.removeItem("user");                           
@@ -31,4 +32,4 @@ App.Models.UserCredentials = Backbone.Model.extend({
       }
     },
 
-})
+});
