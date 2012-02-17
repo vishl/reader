@@ -4,13 +4,14 @@
       .row-fluid
         .span2
           = link_to GlobalSettings.site_name, root_path, :class=>'brand'
-        .span8
+        .forum-title.span5
           &nbsp;
           =yield :forum_name
+        .bookmarklet-link.span2
+          %a(href="#bookmarklet-modal" data-toggle="modal") Get the bookmarklet
         #user-credentials.span2
-          -#
-            %form
-              %input#name(type="text" placeholder="Enter your name")
       -#unless GlobalSettings.deployment == "live"
         #deployment.label.warning= GlobalSettings.deployment
 
+-#bookmarklet modal holder
+#bookmarklet-modal.modal.hide.fade.in

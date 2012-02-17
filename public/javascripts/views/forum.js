@@ -12,12 +12,15 @@ App.Views.Forum = Backbone.View.extend({
     },
 
     render:function(){
-      this.$el.find('#forum_title').html(this.model.get("title"));
+      this.$el.find('.forum-title').html(this.model.escape("title"));
+      $('#bookmarklet-modal').html(JST['layouts/bookmarklet']({title:this.model.escape("title"),sid:this.model.id}));
+      $('.navbar .forum-title').html(this.model.escape("title"));
     },
 
     renderAll: function(){
       console.log("render forum");
       this.$el.html(JST['forums/show']({title:this.model.get("title")}));
+      this.render();
       this.$el.append(this.postCreateView.render().el);
       this.$el.append(this.postsView.render().el);
       return this;

@@ -80,6 +80,8 @@ Backbone.Collection.prototype.merge = function(models, options){
   return {added:u, merged:n};
 };
 
+/*
+ * jammit doesn't like this function and i'm not really using it
 //add a getState function to models and collections which just summarizes all
 //the id's
 Backbone.Model.prototype.getState = function(){
@@ -94,6 +96,7 @@ Backbone.Model.prototype.getState = function(){
   }
   return ret;
 };
+*/
 
 Backbone.Collection.prototype.getState = function(){
   return this.map(function(m){
