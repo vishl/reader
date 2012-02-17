@@ -17,6 +17,7 @@ App.Views.Post = Backbone.View.extend({
       this.$el.find('#comment-area').append(this.commentsView.render().el);
       this.$el.find('#comment-area').append(this.commentCreateView.render().$el);
       embed(this.$el.find('.content .linkify').get(0));
+      //TODO insert postframe
       return this;
     },
 
@@ -64,11 +65,8 @@ App.Views.Posts = Backbone.View.extend({
     }
 });
 
-App.Views.PostCreate = Backbone.View.extend({
+App.Views.PostCreate = Backbone.FormView.extend({
     forum:null,
-    events:{
-      "submit form":"createPost"
-    },
 
     initialize:function(){
       _.bindAll(this);  //all of my functions should be called with me as 'this'.. because javascript is retarded
@@ -89,41 +87,16 @@ App.Views.PostCreate = Backbone.View.extend({
       return this;
     },
 
-    createPost:function(){
-      console.log("post");
-      var self=this;
-      self.$el.removeModelErrors();
-      this.model.save(
-        {
-          name:    App.userCredentials.get('name'),
-          content: this.$el.find('#content').val(),
-          comment: this.$el.find('#comment').val(),
-        },
-        {
-          success:function(model, resp){
-            console.log("success");
-            console.log(resp);
-            if(resp.has_error){
-              //TODO create notice
-            }else{
-              //the parent will handle posting the comment
-              self.trigger("posted", self.model);
-              self.reset();
-              //TODO success notification
-            }
-          },
-          error: function(model, errors){
-            console.log(errors);
-            self.$el.displayModelErrors(errors);
-            if(errors.name) self.$el.trigger("promptName");
-            setTimeout(function(){self.$el.removeModelErrors();}, 2000);
-          }
-        }
-      );
-      return false;
+    beforePost:function(){
+      //validate the user name
+      if(!this.model.set('name',App.userCredentials.get('name'), {only:{'name':true}})){
+        this.$el.trigger("promptName");
+        return false;
+      }
+      return true;
     },
 
-    reset:function(){
+    afterSave : function(){
       this.model = new App.Models.Post(null, {forum:this.forum});
       this.$el.find('#create-post-area').collapse('hide');
       this.$el.find('#content').val("");

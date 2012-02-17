@@ -9,6 +9,11 @@ App.Models.Post = Backbone.Model.extend({
     comments:null,
     latest_post:null,
     latest_comment:null,
+    defaults:{
+      name:"",
+      content:"",
+      comment:"",
+    },
 
     //TODO override parse/constructor to include comments
     //right now it only works if we create a new model

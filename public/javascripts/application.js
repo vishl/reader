@@ -102,3 +102,55 @@ Backbone.Collection.prototype.getState = function(){
       }
   });
 };
+
+Backbone.FormView = Backbone.View.extend({
+    __postDisable:false,
+    events:{
+      "submit form":"__post"
+    },
+
+    __post: function(e){
+      var self=this;
+      if(!self._postDisable){  //prevent multiple submissions
+        console.log("post");
+        if(self.beforePost){
+          if(!self.beforePost()){
+            return false;
+          }
+        }
+        self.$el.removeModelErrors();
+        self.$el.addClass('loading');
+        self._postDisable=true;
+        var attrs = {};
+        for(var k in this.model.attributes){
+          var item = self.$el.find('form #'+k);
+          if(item.length){
+            attrs[k]=item.val();
+          }
+        }
+        this.model.save(
+          attrs,
+          {
+            success:function(model, resp){
+              console.log("success");
+              console.log(resp);
+              self.$el.removeClass('loading');
+              self._postDisable=false;
+              self.trigger("posted", self.model);
+              if(self.afterSave())self.afterSave(model, resp);
+            },
+            error: function(model, errors){
+              console.log("error");
+              console.log(errors);
+              self.$el.removeClass('loading');
+              self._postDisable=false;
+              self.$el.displayModelErrors(errors);
+              setTimeout(function(){self.$el.removeModelErrors();}, 2000);
+            }
+          }
+        );
+      }
+      return false;
+    },
+});
+

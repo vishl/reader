@@ -9,6 +9,7 @@ App.Views.Comment = Backbone.View.extend({
     render: function(){
       console.log("render comment");
       $(this.el).html(JST['comments/show']({comment:this.model}));
+      //TODO insert postframe
       return this;
     }
 
@@ -50,11 +51,9 @@ App.Views.Comments = Backbone.View.extend({
     },
 });
 
-App.Views.CommentCreate = Backbone.View.extend({
+App.Views.CommentCreate = Backbone.FormView.extend({
     post:null,
-    events:{
-      "submit form":"postComment"
-    },
+    postDisable:false,
 
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
@@ -75,47 +74,20 @@ App.Views.CommentCreate = Backbone.View.extend({
       return this;
     },
 
-    postComment: function(e){
-      console.log("post");
-      var self=this;
-      self.$el.removeModelErrors();
-      this.model.save(
-        {
-          name:    App.userCredentials.get('name'),
-          content: this.$el.find('#content').val(),
-        },
-        {
-          success:function(model, resp){
-            console.log("success");
-            console.log(resp);
-            if(resp.has_error){
-              //TODO create notice
-            }else{
-              //the parent will handle posting the comment
-              self.trigger("posted", self.model);
-              self.reset();
-              //TODO success notification
-            }
-          },
-          error: function(model, errors){
-            console.log("error");
-            console.log(errors);
-            self.$el.displayModelErrors(errors);
-            setTimeout(function(){self.$el.removeModelErrors();}, 2000);
-            if(errors.name) self.$el.trigger("promptName");
-          }
-        }
-      );
-      //e.preventDefault();
-      return false;
+    beforePost:function(){
+      //validate the user name
+      if(!this.model.set('name',App.userCredentials.get('name'), {only:{'name':true}})){
+        this.$el.trigger("promptName");
+        return false;
+      }
+      return true;
     },
 
-    reset: function(){
+    afterSave: function(){
       console.log("reset");
-      //don't delete the model, it was probably posted somewhere else
       this.model = new App.Models.Comment(null, {post:this.post});
-      //TODO do we need to unbind the collapse stuff?
       return this.render();
     }
 
 });
+

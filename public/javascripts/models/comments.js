@@ -6,6 +6,10 @@ App.Models.Comment = Backbone.Model.extend({
 
     urlRoot:function(){return '/forums/'+this.post.forum.id+'/posts/'+this.post.id+'/comments';},
     post:null,
+    defaults:{
+      name:"",
+      content:"",
+    },
 
     initialize:function(attrs, options){
       if(options){ 

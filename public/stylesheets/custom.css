@@ -99,6 +99,17 @@ body{
   cursor:pointer;
 }
 
+#create-post-area{
+}
+
+#load-img{
+  display:none
+}
+
+.loading #load-img{
+  display:inline
+}
+
 #create-post-area textarea{
   width:97%;
   height:64px;

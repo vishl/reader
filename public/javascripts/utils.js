@@ -1,14 +1,20 @@
 /*globals _ */
+function getArg(a, s){
+  var args = a.split("&");
+  for(var i=0; i<args.length; i++){
+    var m = args[i].match(/([^=])=(.*)/);
+    if(m){
+      if(m[1]===s){
+        return m[2];
+      }
+    }
+  }
+}
+
 var ONE_WEEK = 1000*60*60*24*7; //milliseconds
 var HALF_YEAR = 1000*60*60*24*180; //milliseconds
 var Days = ["Sun","Mon","Tue","Wed","Thurs","Fri","Sat"];
 var Months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-$(function(){
-    $(".date-delta").each(function(){
-        var datestr = $(this).html();
-        $(this).html(convDate(datestr));
-    });
-});
 
 function convDate(datestr){
   var date= new Date(datestr); //not sure why Date(datestr) doesn't work
@@ -35,6 +41,12 @@ function convDate(datestr){
   }
   return newdate;
 }
+$(function(){
+    $(".date-delta").each(function(){
+        var datestr = $(this).html();
+        $(this).html(convDate(datestr));
+    });
+});
 
 var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 function is_link(text){
@@ -56,7 +68,7 @@ function text_to_link(text) {
 //also escapes html
 function linkify(t){
   return text_to_link(
-    t.replace(/</g, "&lt;")
+    String(t).replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/'/g, "&#x27;")
     .replace(/"/g, "&quot;")
@@ -91,21 +103,9 @@ function embed(elt){
 
   //TODO probably don't want to embed on mobile
   if(embedCode){
-    var embed = $(elt).siblings('.embed-hook');
-    embed.append(embedCode);
-    if(h) embed.css('height', h);
-  }
-}
-
-function getArg(a, s){
-  var args = a.split("&");
-  for(var i=0; i<args.length; i++){
-    var m = args[i].match(/([^=])=(.*)/);
-    if(m){
-      if(m[1]===s){
-        return m[2];
-      }
-    }
+    var embedLoc = $(elt).siblings('.embed-hook');
+    embedLoc.append(embedCode);
+    if(h) embedLoc.css('height', h);
   }
 }
 
@@ -170,7 +170,6 @@ $.fn.displayModelErrors = function (errors, options){
   for(var id in errors){
     var $inp = $this.find('#'+id);
     if($inp.length){
-      //TODO custom error function
       $inp.tooltip({title:errors[id].join(), trigger:'manual'});
       $inp.tooltip('show');
       $inp.addClass('model-error');
