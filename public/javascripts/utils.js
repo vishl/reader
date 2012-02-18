@@ -1,4 +1,14 @@
 /*globals _ */
+String.prototype.format = function() {
+  var args = arguments;
+  return this.replace(/{(\d+)}/g, function(match, number) { 
+    return typeof args[number] != 'undefined'
+      ? args[number]
+      : match
+    ;
+  });
+};
+
 function getArg(a, s){
   var args = a.split("&");
   for(var i=0; i<args.length; i++){
@@ -58,7 +68,7 @@ function is_link(text){
 }
 function text_to_link(text) {
   if(text){
-    return text.replace(_linkExp,"<a href='$1' target='_blank'>$1</a>");
+    return text.replace(_linkExp,"<a href='$1' target='_top'>$1</a>");
   }else{
     return "";
   }

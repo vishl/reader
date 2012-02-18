@@ -1,0 +1,9 @@
+!!!
+%html
+  %head
+    %title 
+      #{GlobalSettings.site_name}
+  %frameset(rows="*,150")
+    %frame{:src=>params[:content]}
+      %frame{:src=>bbcv_path(:content=>params[:content])+"/#commentview/#{params[:forum_id]}/#{params[:post_id]}"}
+

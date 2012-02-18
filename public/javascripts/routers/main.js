@@ -6,6 +6,7 @@ App.Routers.Main = Backbone.Router.extend({
     routes:{
       "": "home",
       "forums/:sid":"forum",
+      "commentview/:sid/:id":"commentView",
     },
 
     initialize : function(options){
@@ -36,6 +37,17 @@ App.Routers.Main = Backbone.Router.extend({
       //launch poll, this sends state to the server and receives updates
       //periodically
       this.startPolling();
+    },
+
+    commentView:function(sid,id){
+      console.log("comment view "+sid+" "+id);
+
+      this.forum = new App.Models.Forum({id:sid});
+      this.post = new App.Models.Post({id:id,forum:this.forum});
+      this.postView = new App.Views.PostViewMini({model:this.post});
+      $('#main-window').html(this.postView.el);
+      this.postView.render();
+      this.post.fetch();
     },
 
     ////////////////////////////////// Helpers /////////////////////////////////////

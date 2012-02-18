@@ -1,6 +1,6 @@
 /*global App Backbone _ JST embed*/
 App.Views.Post = Backbone.View.extend({
-    post:null,
+    post:null,  //TODO what is this..
     className:'post-area', //the class of the containing <div>
 
     initialize:function(){
@@ -17,13 +17,29 @@ App.Views.Post = Backbone.View.extend({
       this.$el.find('#comment-area').append(this.commentsView.render().el);
       this.$el.find('#comment-area').append(this.commentCreateView.render().$el);
       embed(this.$el.find('.content .linkify').get(0));
-      //TODO insert postframe
+      this.postFrame(this.$el.find('.linkify a'));
       return this;
     },
 
     createComment: function(comment){
       this.commentsView.model.add(comment);
-    }
+    },
+
+    ////////////////////////////////// helpers /////////////////////////////////////
+    postFrame : function(els){
+      var self = this;
+      els.each(function(){
+          if(
+            (!this.href.match(/postframe/))      //hack to prevent us from framing ourselves
+            && (!this.href.match(/youtube\.com/)) //youtube does not allow framing
+          ){
+            //this.href ="/postframe/"+self.forum.id+"/"+self.id+"?content="+encodeURIComponent(this.href);
+            this.href = "/postframe/?forum_id={0}&post_id={1}&content={2}".format(self.model.forum.id,self.model.id,encodeURIComponent(this.href));
+            this.target="_self";
+          }
+      });
+
+    },
 });
 
 App.Views.Posts = Backbone.View.extend({
@@ -31,7 +47,6 @@ App.Views.Posts = Backbone.View.extend({
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.model.bind("reset", this.render, this);
       this.model.bind("add", this.addPost, this);
-      //TODO bind things so new posts show up correctly
     },
 
     postViews:[],
@@ -79,7 +94,8 @@ App.Views.PostCreate = Backbone.FormView.extend({
       var self = this;
       self.$el.html(JST['posts/new']({post:this.model}));
       self.$el.find('#create-post-area').collapse({toggle:false});
-      self.$el.find('#postheader').click(function(){
+      self.$el.find('#postheader').click(function(e){
+          e.preventDefault();
           self.$el.removeModelErrors();
           $(this).siblings('#create-post-area').collapse('toggle');
       });
@@ -102,6 +118,28 @@ App.Views.PostCreate = Backbone.FormView.extend({
       this.$el.find('#content').val("");
       this.$el.find('#comment').val("");
       return this;
+    }
+});
+
+App.Views.PostViewMini = Backbone.View.extend({
+    initialize:function(){
+      _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
+      this.commentsView = new App.Views.Comments({model:this.model.comments,postFrame:false});
+      this.commentCreateView = new App.Views.CommentCreate({post:this.model});
+      this.commentCreateView.bind("posted", this.createComment, this);
+      this.model.bind("change", this.render);
+    },
+
+    render: function(){
+      console.log("render post mini");
+      this.$el.html('');
+      this.$el.append(this.commentsView.render().el);
+      this.$el.append(this.commentCreateView.render().$el);
+      return this;
+    },
+
+    createComment: function(comment){
+      this.commentsView.model.add(comment);
     }
 });
 

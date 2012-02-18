@@ -35,4 +35,34 @@ class PostsController < ApplicationController
     end
   end
 
+  def show
+    has_error=false
+    message = ""
+    @forum = Forum.find_by_sid(params[:forum_id])
+    if(@forum)
+      @post = @forum.posts.find_by_id(params[:id])
+      if(@post)
+        has_error=false;
+      else
+        has_error=true
+        message="Invalid post";
+      end
+    else
+      has_error=true;
+      message="Invalid forum";
+    end
+
+    respond_to do |format|
+      format.json {
+        if(has_error)
+          #TODO http error code
+          render :json=>{'has_error'=>true, 'message'=>message}
+        else
+          render :json=>@post
+        end
+      }
+    end
+  end
+          
+
 end

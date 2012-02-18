@@ -10,4 +10,13 @@ class PagesController < ApplicationController
 
   def backbone
   end
+
+  def bbcv
+    @content = params[:content]
+    render :layout=>false
+  end
+
+  def postframe
+    render :layout=>false
+  end
 end

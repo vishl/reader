@@ -2,6 +2,7 @@ Reader::Application.routes.draw do
   root :to=>"pages#backbone"
 
   get "/backbone", :as=>:backbone, :to=>"pages#backbone"
+  get "/bbcv", :as=>:bbcv, :to=>"pages#bbcv"
   ##api
   #bookmarklet
   get "/bookmarklet",                                  :to=>"pages#bookmarklet"
@@ -11,7 +12,8 @@ Reader::Application.routes.draw do
   #ajax request to see if we should update
   get "/latest/:sid",                                  :to=>"forums#latest"
 
-  get "/postframe/:sid/:id",   :as=>:postframe,        :to=>"forums#postframe"
+  #get "/postframe/:sid/:id",   :as=>:postframe,        :to=>"forums#postframe"
+  get "/postframe",   :as=>:postframe,        :to=>"pages#postframe"
   get "/commentview/:sid/:id", :as=>:commentview,      :to=>"forums#commentview"
 
 #  post "/forums/spawn",        :as=>:spawn,            :to=>"forums#spawn"
