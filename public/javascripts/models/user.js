@@ -2,6 +2,7 @@
 App.Models.UserCredentials = Backbone.Model.extend({
     _class: "UserCredentials",
     defaults:{
+      name:"",
     },
 
     initialize:function(){

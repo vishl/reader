@@ -10,7 +10,6 @@ javascripts:
     - public/javascripts/bootstrap.js
     - public/javascripts/utils.js
     - public/javascripts/application.js
-    - public/javascripts/name.js
     - public/javascripts/models/comments.js
     - public/javascripts/models/posts.js
     - public/javascripts/*/*.js

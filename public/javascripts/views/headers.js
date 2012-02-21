@@ -27,7 +27,8 @@ App.Views.ForumHeader = Backbone.View.extend({
             }
         ));
       }
-      this.$el.find('#user-credentials').html(this.userCredentialsView.render().el);
+      this.$el.find('#user-credentials').html(this.userCredentialsView.el);
+      this.userCredentialsView.render();
       return this;
     },
 });
