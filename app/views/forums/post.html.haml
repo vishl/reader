@@ -1,7 +1,7 @@
 -forum_name_header(@forum.title)
 
 #create-post-area.span4
-  =twitter_bootstrap_form_for(@post, :url=>post_create_path(@forum.sid)) do |f|
+  =twitter_bootstrap_form_for(@post, :url=>forum_posts_path(@forum.sid)) do |f|
     =f.inputs  do
       =f.hidden_field :name, :value=>"", :class=>"name"
       =f.text_area :content, false, :rows=>3, :cols=>80, :placeholder=>"Post something here"

@@ -4,7 +4,8 @@ class PostsController < ApplicationController
     message = ""
     @forum = Forum.find_by_sid(params[:forum_id])
     if(@forum)
-      @post = @forum.posts.build(params.slice('name', 'content', 'comment'))
+      postparams = params[:post] || params.slice('name', 'content', 'comment')
+      @post = @forum.posts.build(postparams)
       if(@post.save)
         message="Post created"
         has_error=false

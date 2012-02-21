@@ -109,7 +109,9 @@ App.Views.CommentCreate = Backbone.FormView.extend({
     afterSave: function(){
       console.log("reset");
       this.model = new App.Models.Comment(null, {post:this.post});
-      return this.render();
+      this.render();
+      App.notifier.notify("Comment posted");
+      return this;
     }
 
 });

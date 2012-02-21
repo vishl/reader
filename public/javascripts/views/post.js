@@ -86,14 +86,16 @@ App.Views.PostCreate = Backbone.FormView.extend({
     initialize:function(){
       _.bindAll(this);  //all of my functions should be called with me as 'this'.. because javascript is retarded
       this.forum = this.options.forum;
-      this.model = new App.Models.Post(null, {forum:this.options.forum});
+      this.model = new App.Models.Post(this.options.attributes, {forum:this.options.forum});
     },
 
     render:function(){
       console.log("render post create");
       var self = this;
+      var startOpen = (self.model.get("content")+self.model.get("comment")).length>0;
       self.$el.html(JST['posts/new']({post:this.model}));
       self.$el.find('#create-post-area').collapse({toggle:false});
+      if(startOpen) self.$el.find('#create-post-area').addClass("in");
       self.$el.find('#postheader').click(function(e){
           e.preventDefault();
           self.$el.removeModelErrors();
@@ -117,6 +119,7 @@ App.Views.PostCreate = Backbone.FormView.extend({
       this.$el.find('#create-post-area').collapse('hide');
       this.$el.find('#content').val("");
       this.$el.find('#comment').val("");
+      App.notifier.notify("Message posted");
       return this;
     }
 });

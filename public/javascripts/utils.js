@@ -9,6 +9,36 @@ String.prototype.format = function() {
   });
 };
 
+function url_parse(url){
+  if(url===undefined){
+    url = document.location.href;
+  }
+  var m = url.match(/(\w+):\/\/([^\/]+)([^?#]+)(\?[^#]*)?#?(.*)/);
+  var ret={};
+  ret.url = m[0];
+  ret.protocol = m[1];
+  ret.domain_full = m[2];
+  ret.path = m[3];
+  ret.args_full = m[4];
+  ret.anchor=decodeURIComponent(m[5]);
+
+  var s = ret.domain_full.split(".");
+  ret.tld=s[s.length-1];
+  ret.domain = s.slice(s.length-2, s.length).join('.');
+  if(s.length>2)
+    ret.subdomain = s.slice(0,s.length-2).join('.');
+  ret.args={};
+  if(ret.args_full){
+    var args = ret.args_full.slice(1,ret.args_full.length).split("&");
+    args.forEach(function(e){
+        var a = e.split("=");
+        ret.args[decodeURIComponent(a[0])]=decodeURIComponent(a[1]);
+    });
+  }
+
+  return ret;
+}
+
 function getArg(a, s){
   var args = a.split("&");
   for(var i=0; i<args.length; i++){

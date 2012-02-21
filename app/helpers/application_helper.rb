@@ -1,7 +1,7 @@
 module ApplicationHelper
   def forum_name_header(name)
     content_for :forum_name do
-      "<div class='forum-title'>#{h(name)}</div>".html_safe
+      h(name).html_safe
     end
   end
 

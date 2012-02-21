@@ -1,4 +1,4 @@
-/*global App Backbone _ */
+/*global App Backbone _ url_parse*/
 App.Routers.Main = Backbone.Router.extend({
     //constants
     POLLINTERVAL:60000, //60 seconds
@@ -7,29 +7,33 @@ App.Routers.Main = Backbone.Router.extend({
       "": "home",
       "forums/:sid":"forum",
       "commentview/:sid/:id":"commentView",
+      "post/:sid":"post",
     },
 
     initialize : function(options){
-      this.userCredentialsView = new App.Views.UserCredentials({model:App.userCredentials});
-      $('#user-credentials').html(this.userCredentialsView.el);
-      this.userCredentialsView.render();
+      App.notifier = new App.Views.Notifier();
+      $('body').append(App.notifier.render().el);
     },
 
     ////////////////////////////////// Routes //////////////////////////////////////
     home:function(){
       console.log("route home");
       this.homeView = new App.Views.Home();
-      //attach it to the main window
+      this.forumHeaderView = new App.Views.ForumHeader(); //reuse forumHeader with null model
+      $('#header').html(this.forumHeaderView.render().el);
       $('#main-window').html(this.homeView.el);
     },
 
     forum:function(sid){
       console.log("route forum "+sid);
-      //some housekeeping stuff to keep track of when to update
 
-      //create the view and attach it to the main window
+      //create the views
       this.forumView = new App.Views.Forum({sid:sid});
-      this.forum = this.forumView.model;
+      this.forum = this.forumView.model;  //the view instantiates the model
+      this.forumHeaderView = new App.Views.ForumHeader({model:this.forum});
+
+      //render header and main window
+      $('#header').html(this.forumHeaderView.render().el);
       this.forumView.renderAll(); //nothing is there yet so this just makes containers
       $('#main-window').html(this.forumView.el);
       this.forum.fetch(); //this should populate the data dynamically
@@ -48,6 +52,18 @@ App.Routers.Main = Backbone.Router.extend({
       $('#main-window').html(this.postView.el);
       this.postView.render();
       this.post.fetch();
+    },
+
+    post:function(sid){
+      this.forum = new App.Models.Forum({id:sid});
+      this.forumHeaderView = new App.Views.ForumHeader({model:this.forum});
+      $('#header').html(this.forumHeaderView.render().el);
+      this.forum.fetch(); 
+      this.postCreateView = new App.Views.PostCreate({
+          attributes:{content:url_parse().args['content']},
+          forum:this.forum,
+      });
+      $('#main-window').html(this.postCreateView.render().el);
     },
 
     ////////////////////////////////// Helpers /////////////////////////////////////

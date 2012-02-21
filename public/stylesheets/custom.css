@@ -73,6 +73,23 @@ body{
   width:1px;
 }
 
+#notifier{
+  display:none;
+  position:fixed;
+  width:50%;
+  top:0px;
+  left:50%;
+  margin:0px 0px 0px -25%;
+  z-index:1031;
+}
+
+#notifier .close{
+  float:right;
+}
+
+#notifier #message{
+  margin:auto;
+}
 
 /********************************** Forum page ***********************************/
 .name{

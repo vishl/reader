@@ -31,9 +31,10 @@ class ForumsController < ApplicationController
     has_error = false
     error = ""
     @forum = Forum.find_by_sid(params[:id])
-    @post = @forum.posts.build(params[:post])
+    @post = @forum.posts.build(params[:post]) #defunct
     @showcomments = params[:showcomments].present?
-    if(@forum)
+    @prefetch = params[:prefetch] == "true"
+    if(@forum && @prefetch)
       if(@showcomments)
         #shows only posts with comments and joins on comments
         #this only works in sql lite.. something about needing to aggregate all the columns..piece of shit..
@@ -55,23 +56,23 @@ class ForumsController < ApplicationController
         @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
       end
       #TODO get rid of this shit
-      if @forum.posts.count>0
-        lp = @forum.posts.latest.first
-        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
-      end
-      if @forum.comments.count>0
-        lp = @forum.comments.latest.first
-        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
-      end
+#      if @forum.posts.count>0
+#        lp = @forum.posts.latest.first
+#        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
+#      end
+#      if @forum.comments.count>0
+#        lp = @forum.comments.latest.first
+#        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
+#      end
     else
       has_error=true
       error="Forum not found"
-      respond_to do |format|
-        format.html do 
-          redirect_to root_path
-          flash[:error] = "Forum not found"
-        end
-      end
+#      respond_to do |format|
+#        format.html do 
+#          redirect_to root_path
+#          flash[:error] = "Forum not found"
+#        end
+#      end
     end
 
     respond_to do |format|
@@ -79,7 +80,10 @@ class ForumsController < ApplicationController
         if(has_error)
           render :json=>{'has_error'=>has_error, 'error'=>error}
         else
-          render :json=>{'forum'=>@forum.attributes.slice('title', 'sid').merge({'id'=>@forum.sid}), 'posts'=>@posts}
+          attrs = {'forum'=>@forum.attributes.slice('title', 'sid')}
+          attrs['id'] = @forum.sid
+          attrs['posts'] = @posts if(@prefetch)  #include posts if we want to prefetch, to avoid additional request
+          render :json=>attrs
         end
       end
     end

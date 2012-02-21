@@ -5,7 +5,20 @@ App.Models.Forum = Backbone.Model.extend({
     _members:['posts'],
 
     urlRoot: 'forums',
+    //override url function to include 'prefetch' option
+    url: function() {
+      var base = this.urlRoot;
+      if (this.isNew()) return base;
+      var u =  base + (base.charAt(base.length - 1) == '/' ? '' : '/') + encodeURIComponent(this.id);
+      if(this.prefetch){
+        return u + '?prefetch=true';
+      }else{
+        return u;
+      }
+    },
+    prefetch:'false', //if this is true, when we fetch, we also fetch the posts
     initialize:function(){
+      _.bindAll(this, 'url');
       this.posts=new App.Collections.Posts(null,{forum:this});
     },
 

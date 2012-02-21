@@ -1,0 +1,29 @@
+!!!
+%html
+  %head
+    %title 
+      #{GlobalSettings.site_name}
+    = csrf_meta_tag
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    = render 'layouts/stylesheets', :enable_mobile=>false
+    = stylesheet_link_tag 'commentview.css'
+    = render 'layouts/scripts'
+    :javascript
+      $(function(){App.init();})
+  %body
+    .navbar-inner.sidebar
+      =link_to "Freeder", root_path, :class=>"brand", :target=>"_top"
+      .pull-right= link_to "Close", @content, :target=>"_top"
+      .info Comment view
+      -#
+        .forum
+          Back to:
+          %br
+          = link_to @forum.title, forum_path(@forum.sid), :target=>"_top"
+      .noworkee= link_to "Page isn't loading right?", @content, :target=>"_top"
+    .container-fluid
+      .row-fluid
+        #main-window.span12
+          Loading...
+
+

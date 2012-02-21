@@ -9,8 +9,9 @@
     = render 'layouts/scripts'
     -#%link{:rel=>"shortcut icon", :type=>"image/x-icon", :href=>"/images/icons/favicon.png"}
   %body
-    = render 'layouts/header'
-    = yield :header
+    -#= render 'layouts/header'
+    -#= yield :header
+    #header
     .container-fluid
       - flash.each do |key, value|
         %div{:class => "alert fade in alert-#{key}", 'data-alert'=>"alert"}

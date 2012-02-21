@@ -7,7 +7,8 @@
       <fieldset>
         <div class="clearfix" id="post_content_input">
           <div class="input">
-            <textarea cols="80" id="content" name="post[content]" placeholder="Post something here" rows="3"></textarea>
+            <textarea cols="80" id="content" name="post[content]"
+              placeholder="Post something here" rows="3"><%=post.get('content')%></textarea>
           </div>
         </div>
         <div class="clearfix" id="post_comment_input">
