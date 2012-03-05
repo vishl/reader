@@ -91,6 +91,20 @@ body{
   margin:auto;
 }
 
+/********************************** Home page ***********************************/
+form.sign-in input{
+  display:block;
+}
+
+form.sign-in input[type="checkbox"]{
+  display:inline-block;
+  margin-right:5px;
+}
+
+form.sign-in select{
+  width:91px;
+}
+
 /********************************** Forum page ***********************************/
 .name{
   font-weight:bold;

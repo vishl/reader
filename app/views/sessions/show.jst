@@ -1,4 +1,9 @@
-<form>
-  <input id='name' type='text' placeholder='Enter your name' value='<%=name%>'></input>
-</form>
-<div id='promptplaceholder'></div>
+<ul class="nav">
+  <li>
+    <%if(model.signedIn()){%>
+      <a href="/users/"+model.id><%=model.escape("name")%></a>
+    <%}else{%>
+      <a href="#">Sign in</a>
+    <%}%>
+  </li>
+</ul>

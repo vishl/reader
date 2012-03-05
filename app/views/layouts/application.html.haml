@@ -12,13 +12,7 @@
     -#= render 'layouts/header'
     -#= yield :header
     #header
-    .container-fluid
-      - flash.each do |key, value|
-        %div{:class => "alert fade in alert-#{key}", 'data-alert'=>"alert"}
-          %a.close(href="#" data-dismiss="alert") &times;
-          = value
-
-      = yield
+    = yield
     -#= render 'layouts/footer'
     -if(Rails.env.development?)
       = debug(params.merge({:path=>request.fullpath})) 

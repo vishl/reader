@@ -74,7 +74,6 @@ App.Views.Comments = Backbone.View.extend({
 
 App.Views.CommentCreate = Backbone.FormView.extend({
     post:null,
-    postDisable:false,
 
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'

@@ -7,6 +7,7 @@ javascripts:
     - public/javascripts/underscore.js
     - public/javascripts/underscore.string.js
     - public/javascripts/backbone.js
+    - public/javascripts/backbone_extensions.js
     - public/javascripts/bootstrap.js
     - public/javascripts/utils.js
     - public/javascripts/application.js
@@ -17,8 +18,8 @@ javascripts:
 
 stylesheets:
   common:
-    - public/stylesheets/bootstrap.min.css
-    - public/stylesheets/bootstrap-responsive.min.css
+    - public/stylesheets/bootstrap.css
+    - public/stylesheets/bootstrap-responsive.css
     - public/stylesheets/custom.css
   commentview:
     - public/stylesheets/commentview.css

@@ -3,12 +3,16 @@ App.Views.Home = Backbone.View.extend({
     model: new App.Models.Forum(),
 
     events: {
-      "submit form": "create"
+      "submit form#create": "create",
+      "submit form#sign-in": "signIn",
+      "submit form#sign-up": "signUp"
     },
 
     initialize: function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
-      //no model bindings here
+      this.signInView = new App.Views.SignIn({model:App.user});
+      this.signUpView = new App.Views.SignIn({model:App.user, signUp:true});
+      App.user.bind("change", this.render, this);
       this.render(); //render on init
     },
 
@@ -40,8 +44,26 @@ App.Views.Home = Backbone.View.extend({
       return false;
     },
 
+    signIn:function(){
+      var email = this.$('#email').val();
+      var password = this.$('#password').val();
+    },
+
+    signUp:function(){
+
+    },
+
     render: function(){
-      $(this.el).html(JST['pages/home']());
+      console.log("render home");
+      if(App.user.signedIn()){
+        $(this.el).html(JST['pages/home']());
+      }else{
+        $(this.el).html(JST['pages/home_login']());
+        this.$('#sign-in-area').html(this.signInView.el);
+        this.$('#sign-up-area').html(this.signUpView.el);
+        this.signInView.render();
+        this.signUpView.render();
+      }
       return this;
     }
 

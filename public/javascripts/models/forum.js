@@ -37,18 +37,6 @@ App.Models.Forum = Backbone.Model.extend({
       }
 
       var merged = this.posts.merge(p, {parse:true});
-      //TODO for nonunique posts, examine comments
-
-      //TODO get rid of this shit
-      //keep track of latest post/comment (only from fetch)
-      if(resp.latest_post && (!this.latest_post || resp.latest_post.timestamp>this.latest_post.timestamp)){
-        this.latest_post = resp.latest_post;
-      }
-      if(resp.latest_comment && (!this.latest_comment || resp.latest_comment.timestamp>this.latest_comment.timestamp)){
-        this.latest_comment = resp.latest_comment;
-      }
-
-
 
       return f;
     }

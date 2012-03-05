@@ -4,7 +4,7 @@ App.Views.ForumHeader = Backbone.View.extend({
 
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
-      this.userCredentialsView = new App.Views.UserCredentials({model:App.userCredentials});
+      this.userCredentialsView = new App.Views.UserCredentials({model:App.user});
       if(this.model){
         this.model.bind("change", this.render);
       }

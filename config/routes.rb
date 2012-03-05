@@ -16,6 +16,10 @@ Reader::Application.routes.draw do
   get "/postframe",   :as=>:postframe,        :to=>"pages#postframe"
   get "/commentview/:sid/:id", :as=>:commentview,      :to=>"forums#commentview"
 
+  post '/signin', :as=>:signin, :to=>"sessions#create"
+  match '/signout', :to=>"sessions#destroy"
+  resources :users
+
 #  post "/forums/spawn",        :as=>:spawn,            :to=>"forums#spawn"
 #  get  "/:sid",                :as=>:forum,            :to=>"forums#show"
 #  post "/:sid",                :as=>"post_create",     :to=>"posts#create"

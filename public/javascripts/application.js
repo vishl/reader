@@ -7,8 +7,12 @@ var App = {
   Singletons:  {},
   init: function() {
     console.log("init");
-    this.userCredentials = new App.Models.UserCredentials();
-    this.userCredentials.fetch();
+    this.user= new App.Models.User();
+    if(typeof UserCredentials!==undefined){
+      this.user.inject(User);
+    }else{
+      this.user.fetch();
+    }
     this.router = new App.Routers.Main();
     Backbone.history.start();
   },
@@ -30,6 +34,7 @@ var App = {
   },
 };
 
+/* now in separate file
 ////////////////////////////////// Backbone Extensions /////////////////////////
 //This overrides the toJSON function to always insert the authenticity token
 Backbone.Model.prototype.toJSON = function() {
@@ -96,7 +101,6 @@ Backbone.Model.prototype.getState = function(){
   }
   return ret;
 };
-*/
 
 Backbone.Collection.prototype.getState = function(){
   return this.map(function(m){
@@ -157,3 +161,4 @@ Backbone.FormView = Backbone.View.extend({
     },
 });
 
+*/

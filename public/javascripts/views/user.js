@@ -1,23 +1,24 @@
 /*global App Backbone _ JST embed*/
 App.Views.UserCredentials = Backbone.View.extend({
     events:{
-      "keyup input":"update",
+      //"keyup input":"update",
     },
 
     initialize:function(){
       _.bindAll(this);
-      this.model.bind("sync", this.changed);
-      $(document).on("promptName", this.showPrompt);
+      this.model.bind("change", this.render);
+      //$(document).on("promptName", this.showPrompt);
     },
 
     render: function(){
       console.log("render user");
-      this.$el.html(JST['sessions/show']({name:this.model.get("name")}));
-      this.$el.find('#promptplaceholder').popover({title:"Enter your name", placement:'bottom', trigger:'manual'});
-      if(this.model.get("name").length===0) this.showPrompt();
+      this.$el.html(JST['sessions/show']({model:this.model}));
+      //this.$el.find('#promptplaceholder').popover({title:"Enter your name", placement:'bottom', trigger:'manual'});
+      //if(this.model.get("name").length===0) this.showPrompt();
       return this;
     },
 
+    /*
     changed: function(){
       //only change if we're not up to date
       if(this.$el.find('input').val()!==this.model.name){
@@ -42,6 +43,7 @@ App.Views.UserCredentials = Backbone.View.extend({
       }, 3500);
     }
 
+   */
 
 });
 
