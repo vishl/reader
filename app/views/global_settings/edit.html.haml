@@ -3,13 +3,16 @@
 %h3 Use .nil, .true, .false for symbolic values
 If you reset the db, these will all be erased, so make sure there are defaults in the config/initializers/global_settings.rb file
 %hr 
-= form_for :global_settings do |f|
-  = f.submit "Save", :class=>"btn primary"
+= form_for :global_settings, :html=>{:class=>"form-horizontal"} do |f|
+  .form-actions
+    = f.submit "Save", :class=>"btn primary"
   - @settings.each do |k,v|
-    .clearfix
-      = f.label k
-      .input= field_for(f, k, v)
-  = f.submit "Save", :class=>"btn primary"
+    .control-group
+      = f.label k, :class=>"control-label"
+      .controls
+        .input= field_for(f, k, v)
+  .form-actions
+    = f.submit "Save", :class=>"btn primary"
 
 = debug(@settings)
 
