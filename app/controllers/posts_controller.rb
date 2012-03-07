@@ -1,38 +1,21 @@
 class PostsController < ApplicationController
+  before_filter :authenticate, :only=>[:create]
+
   def create
-    has_error=true
-    message = ""
     @forum = Forum.find_by_sid(params[:forum_id])
     if(@forum)
-      postparams = params[:post] || params.slice('name', 'content', 'comment')
+      postparams = params[:post] || params.slice('content', 'comment')
       @post = @forum.posts.build(postparams)
+      @post.user_id = current_user.id
       if(@post.save)
-        message="Post created"
-        has_error=false
+        #no errors
+        render :json=>{'post'=>@post}
       else
-        message="Something went wrong: #{@post.errors}"
-        has_error=true
+        logger.error("Something went wrong: #{@post.errors}")
+        render :text=>"Something went wrong: #{@post.errors}", :status=>400
       end
     else
-      message="Invalid forum"
-      has_error=true
-    end
-
-    respond_to do |format|
-      format.json do
-        render :json=>{'has_error'=>has_error, 'message'=>message, 'post'=>@post}
-      end
-      format.html do
-        #defunct
-        if(has_error)
-          @posts = @forum.posts.limit(20).includes(:comments)
-          flash.now[:error] = message
-          render "forums/show"
-        else
-          flash[:success] = message
-          redirect_to forum_path(@forum.sid)
-        end
-      end
+      render :text=>"Invalid Forum", :status=>400
     end
   end
 

@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
         render :json=>{"password"=>["Invalid password"]}, :status=>401
       end
     else
-      render :json=>@user
+      render :json=>@user.as_json(:private_data=>true)
     end
 
 #    respond_to do |f|

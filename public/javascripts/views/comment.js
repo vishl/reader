@@ -83,7 +83,7 @@ App.Views.CommentCreate = Backbone.FormView.extend({
 
     render:function(){
       console.log("render comment post");
-      $(this.el).html(JST['comments/post']({comment:this.model}));
+      $(this.el).html(JST['comments/post']({comment:this.model, signedIn:App.user.signedIn()}));
       //enable toggling
       var self=this;
       this.$el.find('.comment-post-form').collapse({toggle:false});
@@ -98,10 +98,6 @@ App.Views.CommentCreate = Backbone.FormView.extend({
 
     beforePost:function(){
       //validate the user name
-      if(!this.model.set('name',App.userCredentials.get('name'), {only:{'name':true}})){
-        this.$el.trigger("promptName");
-        return false;
-      }
       return true;
     },
 

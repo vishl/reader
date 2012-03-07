@@ -7,6 +7,8 @@ App.Views.Notifier = Backbone.View.extend({
 
     id:'notifier',
     className:'alert alert-info',
+    shown:false,
+    timeout:null,
 
     initialize:function(){
       _.bindAll(this, 'render');
@@ -24,6 +26,9 @@ App.Views.Notifier = Backbone.View.extend({
     },
 
     notify:function(message,type){
+      if(this.shown){
+        this.hide();
+      }
       type = type || 'info';
       this.message = message;
       this.$el.find('#message').html(_.escape(message));
@@ -33,9 +38,10 @@ App.Views.Notifier = Backbone.View.extend({
 
     show:function(){
       this.$el.slideDown('slow');
+      this.shown=true;
       if(this.options.autoHide){
         var self=this;
-        setTimeout(function(){
+        self.timeout = setTimeout(function(){
             self.hide();
         },self.options.timeout);
       }
@@ -43,5 +49,9 @@ App.Views.Notifier = Backbone.View.extend({
 
     hide:function(){
       this.$el.slideUp('slow');
+      this.shown=false;
+      if(this.timeout){
+        clearTimeout(this.timeout);
+      }
     },
 });

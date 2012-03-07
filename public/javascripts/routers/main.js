@@ -8,6 +8,7 @@ App.Routers.Main = Backbone.Router.extend({
       "forums/:sid":"forum",
       "commentview/:sid/:id":"commentView",
       "post/:sid":"post",
+      "users/:id":"user",
     },
 
     initialize : function(options){
@@ -64,6 +65,17 @@ App.Routers.Main = Backbone.Router.extend({
           forum:this.forum,
       });
       $('#main-window').html(this.postCreateView.render().el);
+    },
+
+    user:function(id){
+      var user;
+      if(id==App.user.id){
+        user = App.user;
+      }else{
+        user = new App.Models.User({id:id});
+      }
+      this.userView = new App.Views.UserPage({model:user});
+      user.fetch();
     },
 
     ////////////////////////////////// Helpers /////////////////////////////////////

@@ -34,7 +34,7 @@ App.Models.Post = Backbone.Model.extend({
     },
 
     validate:Validator(
-      { name:{presence:true, message:"Please enter your name"},
+      { 
         content:{presence:true, message:"Please put your post here, comments are optional"}
       }),
 

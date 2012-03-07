@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120305022634) do
+ActiveRecord::Schema.define(:version => 20120306191152) do
 
   create_table "comments", :force => true do |t|
     t.string   "name"
@@ -18,9 +18,11 @@ ActiveRecord::Schema.define(:version => 20120305022634) do
     t.integer  "post_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
 
   add_index "comments", ["post_id"], :name => "index_comments_on_post_id"
+  add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
   create_table "forums", :force => true do |t|
     t.string   "title"
@@ -38,9 +40,11 @@ ActiveRecord::Schema.define(:version => 20120305022634) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "forum_id"
+    t.integer  "user_id"
   end
 
   add_index "posts", ["forum_id"], :name => "index_posts_on_forum_id"
+  add_index "posts", ["user_id"], :name => "index_posts_on_user_id"
 
   create_table "settings", :force => true do |t|
     t.string   "var",                      :null => false
@@ -52,6 +56,18 @@ ActiveRecord::Schema.define(:version => 20120305022634) do
   end
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
+
+  create_table "subscriptions", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "forum_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
+  end
+
+  add_index "subscriptions", ["forum_id"], :name => "index_subscriptions_on_forum_id"
+  add_index "subscriptions", ["user_id", "forum_id"], :name => "index_subscriptions_on_user_id_and_forum_id", :unique => true
+  add_index "subscriptions", ["user_id"], :name => "index_subscriptions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name"

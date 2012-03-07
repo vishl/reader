@@ -68,7 +68,7 @@ App.Views.Posts = Backbone.View.extend({
       var i = options.index;
       console.log("insert post "+model.id+" at "+i);
       var elt = this.$el.find('.post-area')[i];
-      var view = new App.Views.Post({model:model}); //renders on creation
+      var view = new App.Views.Post({model:model}); 
       view.render();
       view.$el.css('display','none');
       if(elt!==undefined){
@@ -93,7 +93,9 @@ App.Views.PostCreate = Backbone.FormView.extend({
       console.log("render post create");
       var self = this;
       var startOpen = (self.model.get("content")+self.model.get("comment")).length>0;
-      self.$el.html(JST['posts/new']({post:this.model}));
+      self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn()}));
+
+      //toggle and clear errors
       self.$el.find('#create-post-area').collapse({toggle:false});
       if(startOpen) self.$el.find('#create-post-area').addClass("in");
       self.$el.find('#postheader').click(function(e){
@@ -107,10 +109,6 @@ App.Views.PostCreate = Backbone.FormView.extend({
 
     beforePost:function(){
       //validate the user name
-      if(!this.model.set('name',App.userCredentials.get('name'), {only:{'name':true}})){
-        this.$el.trigger("promptName");
-        return false;
-      }
       return true;
     },
 
@@ -121,7 +119,18 @@ App.Views.PostCreate = Backbone.FormView.extend({
       this.$el.find('#comment').val("");
       App.notifier.notify("Message posted");
       return this;
-    }
+    },
+
+    onError:function(model, errors, response){
+      if(errors && errors.authorization){
+        App.notifier.notify(errors.authorization);
+      }
+      /*
+      if(response && response.status==401){
+        App.notifier.notify("You don't have permission to post on this board, please sign in");
+      }
+      */
+    },
 });
 
 App.Views.PostViewMini = Backbone.View.extend({

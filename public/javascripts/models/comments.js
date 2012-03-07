@@ -7,7 +7,6 @@ App.Models.Comment = Backbone.Model.extend({
     urlRoot:function(){return '/forums/'+this.post.forum.id+'/posts/'+this.post.id+'/comments';},
     post:null,
     defaults:{
-      name:"",
       content:"",
     },
 
@@ -20,7 +19,7 @@ App.Models.Comment = Backbone.Model.extend({
       return resp.comment;
     },
     validate:Validator(
-      { name:{presence:true, message:"Please enter your name"},
+      { 
         content:{presence:true, message:"Please enter a comment"}
       }),
 

@@ -129,7 +129,7 @@ form.sign-in select{
   margin-bottom:20px;
 }
 
-#create-post-box a{
+a#postheader{
   display:block;
   color:black;
   cursor:pointer;

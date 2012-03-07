@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     @user = User.new(params)
     if @user.save
       sign_in(@user)
-      render :json=>@user
+      render :json=>@user.as_json(:private_data=>true)
     else
       render :json=>@user.errors, :status=>400
     end
@@ -15,9 +15,17 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by_sid(params[:id])
+    render :json=>@user.as_json(:private_data=>correct_user?(@user))
   end
 
   def update
+    @user = User.find_by_sid(params[:id])
+    if(@user.update_attributes(params))
+      sign_in @user
+      render :json=>@user.as_json(:private_data=>correct_user?(@user))
+    else
+      render :json=>@user.errors, :status=>400
+    end
   end
 
   def destroy

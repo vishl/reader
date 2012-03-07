@@ -9,6 +9,7 @@
 #  created_at :datetime
 #  updated_at :datetime
 #  forum_id   :integer
+#  user_id    :integer
 #
 
 class Post < ActiveRecord::Base
@@ -19,10 +20,12 @@ class Post < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :content
   validates_presence_of :forum_id
+  validates_presence_of :user_id
 
   ################################### Associations ###############################
   has_many :comments
   belongs_to :forum
+  belongs_to :user
 
   ################################### Scopes #####################################
   scope :latest, order('updated_at DESC')
@@ -31,9 +34,14 @@ class Post < ActiveRecord::Base
     updated_at.present? ? updated_at.tv_sec*1000 : ""
   end
 
+  def name
+    user.name
+  end
+
   def as_json(options)
     #TODO sid instead of id
-    attributes.slice("id", "name", "content", "comment").merge({
+    attributes.slice("id", "content", "comment").merge({
+      "name"=>name,
       "forum_sid"=>forum.sid, "timestamp"=>timestamp, 
       "comments"=>comments.order("updated_at").all})
   end

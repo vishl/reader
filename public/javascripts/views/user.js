@@ -1,49 +1,81 @@
 /*global App Backbone _ JST embed*/
 App.Views.UserCredentials = Backbone.View.extend({
-    events:{
-      //"keyup input":"update",
-    },
 
     initialize:function(){
       _.bindAll(this);
-      this.model.bind("change", this.render);
-      //$(document).on("promptName", this.showPrompt);
+      this.model.bind("sync", this.render);
     },
 
     render: function(){
-      console.log("render user");
+      console.log("render user credentials");
       this.$el.html(JST['sessions/show']({model:this.model}));
-      //this.$el.find('#promptplaceholder').popover({title:"Enter your name", placement:'bottom', trigger:'manual'});
-      //if(this.model.get("name").length===0) this.showPrompt();
       return this;
     },
-
-    /*
-    changed: function(){
-      //only change if we're not up to date
-      if(this.$el.find('input').val()!==this.model.name){
-        this.$el.find('input').val(this.model.name);
-      }
-      return this;
-    },
-
-    update:function(e){
-      console.log("updating name");
-      this.model.save({
-          name:this.$el.find('input').val(),
-      });
-    },
-
-    showPrompt: function(e){
-      console.log("show prompt");
-      var self=this;
-      self.$el.find('#promptplaceholder').popover('show');
-      setTimeout(function(){
-        self.$el.find('#promptplaceholder').popover('hide');
-      }, 3500);
-    }
-
-   */
 
 });
 
+App.Views.UserPage = Backbone.View.extend({
+  _className:"UserPage",
+
+  initialize:function(){
+    this.headerView =  new App.Views.ForumHeader();
+    $('#header').html(this.headerView.el);
+
+    this.userView = new App.Views.User({model:this.model});
+    $('#main-window').html(this.userView.el);
+
+    this.render();
+  },
+
+  render:function(){
+    console.log("render user page");
+    this.headerView.render();
+    this.userView.render();
+  },
+
+});
+
+App.Views.User = Backbone.View.extend({
+  _className:"User",
+  className:"container",
+
+  initialize:function(){
+    if(this.model.id === App.user.id){
+      //our profile page
+      this.userView = new App.Views.UserEdit({model:this.model});
+      this.forumListView = new App.Views.ForumList({model:this.model});
+      this.$el.append(this.userView.el);
+      this.$el.append(this.forumListView.el);
+    }else{
+      //viewing someone elses page
+      //this.userView = new App.Views.UserShow({model:this.model});
+      this.userView = new App.Views.UserEdit({model:this.model});
+      this.$el.append(this.userView.el);
+      //TODO public posts
+    }
+  },
+
+  render:function(){
+    console.log("render user");
+    this.userView.render();
+    if(this.forumListView) this.forumListView.render();
+    if(this.postsView) this.postsView.render();
+  },
+});
+
+App.Views.UserEdit = Backbone.FormView.extend({
+  _className:"UserEdit",
+  initialize:function(){
+    this.model.bind("change", this.render, this);
+  },
+
+  beforeClose:function(){
+    this.model.unbind("change", this.render, this);
+  },
+
+  render:function(){
+    console.log("render user edit");
+    this.$el.html(JST['users/edit']({model:this.model}));
+  },
+
+});

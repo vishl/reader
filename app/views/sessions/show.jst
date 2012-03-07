@@ -1,9 +1,8 @@
 <ul class="nav">
-  <li>
-    <%if(model.signedIn()){%>
-      <a href="/users/"+model.id><%=model.escape("name")%></a>
-    <%}else{%>
-      <a href="#">Sign in</a>
-    <%}%>
-  </li>
+  <%if(model.signedIn()){%>
+    <li><a href="/#users/<%=model.id%>"><%=model.escape("name")%></a> </li>
+    <li><a href="/signout">Sign Out</a></li>
+  <%}else{%>
+    <li><a href="/#">Sign in</a> </li>
+  <%}%>
 </ul>

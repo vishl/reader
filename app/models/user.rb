@@ -18,20 +18,17 @@
 class User < ActiveRecord::Base
   include SessionsHelper
 
-  attr_accessor :password
-  attr_accessible :name, :email, :password
+  attr_accessor :password, :current_password
+  attr_accessible :name, :email, :password, :current_password
 
   #initializer
   after_initialize :init
   #after_create :remove_from_whitelist
 
   ################################### Associations ###############################
-  #this is a join table
-  has_many :visits, :dependent=>:destroy
-  #these are tours we have visited
-  has_many :tours, :through=>:visits
-  #these are tours we have created
-  has_many :tours_owned, :class_name=>"Tour"
+  has_many :subscriptions
+  has_many :forums, :through=>:subscriptions
+  has_many :posts
 
   
   ################################### Validations ################################
@@ -39,6 +36,7 @@ class User < ActiveRecord::Base
   before_validation :strip_whitespace
   before_validation {self.email = self.email.downcase if self.email?}
   before_validation {self.sid ||= gen_token}
+  before_validation :check_password_update
 
   @email_regex = /^[\w+-]+(\.[\w+-]+)*@([\w-]+\.)+\w+$/i
   @name_regex = /^[A-Za-z -]{1,30}$/
@@ -57,6 +55,17 @@ class User < ActiveRecord::Base
 
   ################################### Methods ####################################
   #password helpers
+
+  #if we update our password, we must supply the old password
+  def check_password_update
+    if(encrypted_password.present? && password.present?)
+      if(!has_password?(current_password))
+        errors.add("current_password", "is invalid")
+        return false
+      end
+    end
+    return true
+  end
   
   def has_password?(submitted_password)
     salt && encrypted_password && (encrypted_password == encrypt(submitted_password))
@@ -98,7 +107,13 @@ class User < ActiveRecord::Base
   end
 
   def as_json(options)
-    return {:email=>email, :id=>sid, :name=>name}
+    options||={}
+    #TODO include posts?
+    attrs =  {:id=>sid, :name=>name}
+    if(options[:private_data])
+      attrs = attrs.merge({:email=>email, :subscriptions=>forums})
+    end
+    return attrs
   end
 
 

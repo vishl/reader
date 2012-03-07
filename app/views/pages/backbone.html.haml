@@ -1,5 +1,5 @@
 :javascript
-  User= #{current_user ? current_user.to_json : "null"};
+  User= #{current_user ? current_user.to_json(:private_data=>true) : "null"};
   $(function(){App.init();})
 #main-window
   Loading...

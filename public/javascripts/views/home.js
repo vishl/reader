@@ -4,20 +4,18 @@ App.Views.Home = Backbone.View.extend({
 
     events: {
       "submit form#create": "create",
-      "submit form#sign-in": "signIn",
-      "submit form#sign-up": "signUp"
     },
 
     initialize: function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.signInView = new App.Views.SignIn({model:App.user});
       this.signUpView = new App.Views.SignIn({model:App.user, signUp:true});
-      App.user.bind("change", this.render, this);
+      this.forumListView = new App.Views.ForumList({model:App.user});
+      App.user.bind("sync", this.render, this);
       this.render(); //render on init
     },
 
     create: function(e){
-      //TODO add the forum to the list
       this.model.save(
         {
           title: $('#title').val(),
@@ -30,7 +28,6 @@ App.Views.Home = Backbone.View.extend({
             }else{
               //navigate to forum
               //trigger causes the router to route
-              //TODO create notice
               App.router.navigate('forums/'+resp.forum.sid, {trigger:true});
             }
           },
@@ -44,19 +41,12 @@ App.Views.Home = Backbone.View.extend({
       return false;
     },
 
-    signIn:function(){
-      var email = this.$('#email').val();
-      var password = this.$('#password').val();
-    },
-
-    signUp:function(){
-
-    },
-
     render: function(){
       console.log("render home");
       if(App.user.signedIn()){
         $(this.el).html(JST['pages/home']());
+        this.$el.append(this.forumListView.el);
+        this.forumListView.render();
       }else{
         $(this.el).html(JST['pages/home_login']());
         this.$('#sign-in-area').html(this.signInView.el);

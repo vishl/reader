@@ -94,7 +94,7 @@ module SessionsHelper
         redirect_to signin_path, :notice => "Please sign in to access this page."
       end
       format.json do
-        render :text=>"Please sign in", :status=>401
+        render :json=>{"authorization"=>"Please sign in"}, :status=>401
       end
     end
   end

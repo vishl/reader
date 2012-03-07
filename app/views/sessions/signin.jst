@@ -1,6 +1,8 @@
 <h1>Sign In</h1>
 <form class="sign-in" id="sign-in">
-  <input type="email"    id="email" placeholder="email" data-placement="right"><%=model.get("email")%></input>
-  <input type="password" id="password" placeholder="password" data-placement="right"><%=model.get("password")%></input>
+  <input type="email"    id="email" placeholder="email" data-placement="right"
+  value="<%=model.get("email")%>"></input>
+  <input type="password" id="password" placeholder="password"
+  data-placement="right" value="<%=model.get("password")%>"></input>
   <input type="submit" class="btn" value="Sign In"></input>
 </form>

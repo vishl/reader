@@ -1,5 +1,6 @@
 class ForumsController < ApplicationController
   include ForumsHelper
+  before_filter :authenticate, :only=>[:create]
 
   #create a new forum
   def spawn
@@ -14,17 +15,21 @@ class ForumsController < ApplicationController
   end
 
   def create
-    has_error = true
-    error = ""
-    forum = Forum.new params
-    forum.sid = generate_sid
+    forum = Forum.new(params.slice("title"))
     if(forum.save)
-      has_error = false
+      sub = current_user.subscriptions.build(:forum_id=>forum.id)
+      sub.status="owner"
+      if(sub.save)
+        #no errors
+        render :json=>{'forum'=>forum.attributes.slice('title', 'sid')}
+      else
+        logger.error("Error creating forum sub: " + sub.errors.to_s)
+        render :nothing=>true, :status=>500
+      end
     else
-      has_error = true
-      error = forum.errors.to_s
+      logger.error("Error creating forum: " + forum.errors.to_s)
+      render :json=>forum.errors, :status=>400
     end
-    render :json=>{'has_error'=>has_error, 'error'=>error, 'forum'=>forum.attributes.slice('title', 'sid')}
   end
 
   def show

@@ -123,13 +123,16 @@ Backbone.FormView = Backbone.View.extend({
         var errorFn = function(model, errors){
           console.log("error");
           console.log(errors);
+          var response;
           if(errors.responseText){  //this is what a response from the server looks like
+            response = errors;
             errors=JSON.parse(errors.responseText);
           }
           self.$el.removeClass('loading');
           self._postDisable=false;
           self.$el.displayModelErrors(errors);
           //setTimeout(function(){self.$el.removeModelErrors();}, 2000);
+          if(self.onError)self.onError(model, errors, response);
         };
         var successFn = function(model, resp){
           console.log("success");
@@ -137,7 +140,8 @@ Backbone.FormView = Backbone.View.extend({
           self.$el.removeClass('loading');
           self._postDisable=false;
           if(self.afterSave)self.afterSave(model, resp);
-          self.trigger("posted", self.model);
+          model.trigger("sync", model, resp);
+          self.trigger("posted", model);
         };
 
         if(this.options.noSave){

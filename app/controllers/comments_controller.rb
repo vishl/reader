@@ -1,47 +1,51 @@
 class CommentsController < ApplicationController
+  before_filter :authenticate
+
   def create
     has_error=false
     message = ""
+    #TODO make sure user has permission to post in this forum
     @forum = Forum.find_by_sid(params[:forum_id])
-    if(@forum)
-      @post = @forum.posts.find_by_id(params[:post_id])
-      if(@post)
-        @comment = @post.comments.build(params.slice(:name, :content))
-        if(@comment.save)
-          message="Comment posted"
-        else
-          has_error=true
-          message="Something went wrong: #{@comment.errors}"
-        end
-      else
-        #error
-        has_error = true
-        message="Invalid post"
-      end
+#    if(@forum)
+#      @post = @forum.posts.find_by_id(params[:post_id])
+#      if(@post)
+#        @comment = @post.comments.build(params.slice(:content))
+#        if(@comment.save)
+#          #success
+#          render :json=>{'comment'=>@comment}
+#        else
+#          logger.error("Comment posting error: #{@comment.errors}")
+#          render :json=>@comment.errors, :status=>400
+#        end
+#      else
+#        logger.error("Comment posting error: can't find post with id #{params[:post_id]}")
+#        render :json=>{"post"=>"invalid ID"}, :status=>400
+#      end
+#    else
+#      logger.error("Comment posting error: can't find forum with id #{params[:forum_id]}")
+#      render :json=>{"post"=>"invalid ID"}, :status=>400
+#    end
 
+    if(!@forum)
+      logger.error("Comment posting error: can't find forum with id #{params[:forum_id]}")
+      render :json=>{"post"=>"invalid ID"}, :status=>400
     else
-      has_error=true
-      message="Invalid forum"
-      #redirect_to root_path
-    end
-
-    respond_to do |format|
-      format.html do
-        #DEFUNCT
-        if(message.present?)
-          flash[has_error ? :error : :success] = message
-        end
-        if(params[:redirect])
-          redirect_to params[:redirect]
+      @post = @forum.posts.find_by_id(params[:post_id])
+      if(!@post)
+        logger.error("Comment posting error: can't find post with id #{params[:post_id]}")
+        render :json=>{"post"=>"invalid ID"}, :status=>400
+      else
+        @comment = @post.comments.build(params.slice(:content))
+        @comment.user_id = current_user.id
+        if(!@comment.save)
+          logger.error("Comment posting error: #{@comment.errors}")
+          render :json=>@comment.errors, :status=>400
         else
-          redirect_to forum_path(@forum.sid)
+          #success
+          render :json=>{'comment'=>@comment}
         end
       end
-      format.json do
-        render :json=>{'has_error'=>has_error, 'message'=>message, 'comment'=>@comment}
-      end
     end
-
   end
 
 end
