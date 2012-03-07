@@ -23,7 +23,7 @@ class Post < ActiveRecord::Base
   validates_presence_of :user_id
 
   ################################### Associations ###############################
-  has_many :comments
+  has_many :comments, :dependent=>:destroy
   belongs_to :forum
   belongs_to :user
 

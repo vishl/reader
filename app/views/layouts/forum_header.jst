@@ -1,18 +1,27 @@
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-          <a href="/" class="brand">Freeder</a>
-        </div>
-        <div class="span4 forum-title"> <%=title?title:'&nbsp'%></div>
-        <div class="span3 bookmarklet-link">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <a href="/" class="brand">Freeder</a>
+      <%if(title){%>
+        <ul class="nav">
+          <li class="active" id="forum-title"><a><%=title%></a></li>
+        </ul>
+      <%}%>
+      <div class="nav-collapse">
+        <div class="" id="user-credentials"></div>
+        <ul class="nav pull-right">
           <%if(sid){%>
-            <a href="#bookmarklet-modal" data-toggle="modal"> Get the bookmarklet </a>
+            <li>
+              <a href="#bookmarklet-modal" data-toggle="modal"> Get the bookmarklet </a>
+            </li>
           <%}%>
-          &nbsp;
-        </div>
-        <div class="span2" id="user-credentials"></div>
+        </ul>
       </div>
     </div>
   </div>

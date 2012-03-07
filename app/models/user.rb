@@ -26,9 +26,9 @@ class User < ActiveRecord::Base
   #after_create :remove_from_whitelist
 
   ################################### Associations ###############################
-  has_many :subscriptions
+  has_many :subscriptions, :dependent=>:destroy
   has_many :forums, :through=>:subscriptions
-  has_many :posts
+  has_many :posts, :dependent=>:destroy
 
   
   ################################### Validations ################################

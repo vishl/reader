@@ -46,6 +46,7 @@ body{
   margin-bottom:0px;
 }
 
+/*
 .navbar .forum-title{
   float:left;
   color: white;
@@ -55,6 +56,11 @@ body{
   white-space:nowrap;
   text-overflow:ellipsis;
 }
+  */
+#forum-title{
+  float:left;
+}
+
 .navbar .bookmarklet-link{
   padding: 10px 10px 11px;
   line-height:19px;

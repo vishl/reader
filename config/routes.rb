@@ -31,4 +31,9 @@ Reader::Application.routes.draw do
   end
 
 
+  #admin
+  get   '/adminsettings',   :to => 'global_settings#edit'
+  post  '/adminsettings',   :to => 'global_settings#update'
+
+
 end
