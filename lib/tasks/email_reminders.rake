@@ -12,7 +12,7 @@ namespace :user do
       #compile a list of forums with changes
       changed = {}
       u.forums.find_each do |f|
-        posts = f.posts.where("updated_at > ?", Time.now-7.days).limit(2)
+        posts = f.posts.where("updated_at > ?", Time.now-7.days)
         if(posts.count>0)
           changed[f] = p
         end
@@ -29,7 +29,7 @@ namespace :user do
       #compile a list of forums with changes
       changed = {}
       u.forums.find_each do |f|
-        posts = f.posts.where("updated_at > ?", Time.now-24.hours).limit(2)
+        posts = f.posts.where("updated_at > ?", Time.now-24.hours)
         if(posts.count>0)
           changed[f] = posts
         end

@@ -9,8 +9,8 @@ App.Models.User= Backbone.Model.extend({
       current_password:"", //for change password
       remember:"",
       reminder:"",
-      reminder_day:"",
-      reminder_time:"",
+      reminder_day:"Daily",
+      reminder_time:"2",
       signup:false, //this is a hack
     },
 

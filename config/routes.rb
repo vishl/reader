@@ -36,5 +36,6 @@ Reader::Application.routes.draw do
   get   '/adminsettings',   :to => 'global_settings#edit'
   post  '/adminsettings',   :to => 'global_settings#update'
 
+  get '/test', :to=> 'pages#test'
 
 end
