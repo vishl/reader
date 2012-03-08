@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1><%=@user.name%>! You've got updates in <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain%>"><%=GlobalSettings.site_name%></a></h1>
+    <%@forums.each do |k, v|%>
+      <h2><a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain+'/#/forums/'+k.sid%>"><%=k.title%></a></h2>
+      <ul>
+        <%v.each do |p|%>
+          <li><%=p.user.name%>: <%=truncate(p.content, :length=>40)%></li>
+        <%end%>
+      </ul>
+
+    <%end%>
+  </body>
+</html>
+

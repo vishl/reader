@@ -43,8 +43,10 @@ App.Views.User = Backbone.View.extend({
     if(this.model.id === App.user.id){
       //our profile page
       this.userView = new App.Views.UserEdit({model:this.model});
+      this.userPasswordView = new App.Views.UserEditPassword({model:this.model});
       this.forumListView = new App.Views.ForumList({model:this.model});
       this.$el.append(this.userView.el);
+      this.$el.append(this.userPasswordView.el);
       this.$el.append(this.forumListView.el);
     }else{
       //viewing someone elses page
@@ -58,6 +60,7 @@ App.Views.User = Backbone.View.extend({
   render:function(){
     console.log("render user");
     this.userView.render();
+    if(this.userPasswordView) this.userPasswordView.render();
     if(this.forumListView) this.forumListView.render();
     if(this.postsView) this.postsView.render();
   },
@@ -76,6 +79,23 @@ App.Views.UserEdit = Backbone.FormView.extend({
   render:function(){
     console.log("render user edit");
     this.$el.html(JST['users/edit']({model:this.model}));
+  },
+
+});
+
+App.Views.UserEditPassword = Backbone.FormView.extend({
+  _className:"UserEditPassword",
+  initialize:function(){
+    this.model.bind("change", this.render, this);
+  },
+
+  beforeClose:function(){
+    this.model.unbind("change", this.render, this);
+  },
+
+  render:function(){
+    console.log("render user edit password");
+    this.$el.html(JST['users/edit_password']({model:this.model}));
   },
 
 });

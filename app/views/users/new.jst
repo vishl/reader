@@ -4,27 +4,8 @@
   <input type="text" id="name" placeholder="name" data-placement="right" value="<%=model.get("name")%>"></input>
   <input type="email" id="email" placeholder="email" data-placement="right" value="<%=model.get("email")%>"></input>
   <input type="password" id="password" placeholder="password" data-placement="right" value="<%=model.get("password")%>"></input>
-  <div class="control-group">
-    <label class="control-label">
-      Notify about new stuff 
-    </label>
-    <div class="controls">
-      <select id="reminder_day">
-        <%var days = ["Never", "Daily", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];%>
-        <%for(var i in days){%>
-          <option <%=model.get("reminder_day")==days[i] ? 'selected="selected"' : ''%>><%=days[i]%></option>
-        <%}%>
-      </select>
-      at
-      <select id="reminder_time">
-        <%function timepr(t){var p = t>=12?":00 PM":":00 AM"; t%=12; if(t==0)t=12; return t+p;}%>
-        <%var tz = -(new Date()).getTimezoneOffset()/60;%>
-        <%for(var i=0; i<24; i++){%>
-          <option value="<%=(i+24+tz)%24%>" <%=model.get("reminder_time")==(i+24+tz)%24 ? 'selected="selected"' : ''%>><%=timepr(i)%></option>
-        <%}%>
-      </select>
-    </div>
-  </div>
+
+  <%=JST['users/_edit_reminder']({model:model})%>
 
   <input type="submit" class="btn" value="Sign Up"></input>
 </form>
