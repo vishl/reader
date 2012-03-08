@@ -86,6 +86,7 @@ App.Views.UserEdit = Backbone.FormView.extend({
 App.Views.UserEditPassword = Backbone.FormView.extend({
   _className:"UserEditPassword",
   initialize:function(){
+    _.bindAll(this);
     this.model.bind("change", this.render, this);
   },
 
@@ -98,4 +99,7 @@ App.Views.UserEditPassword = Backbone.FormView.extend({
     this.$el.html(JST['users/edit_password']({model:this.model}));
   },
 
+  afterSave:function(){
+    this.model.clearPasswords();
+  }
 });

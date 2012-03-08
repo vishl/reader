@@ -12,4 +12,8 @@ App.Views.SignIn = Backbone.FormView.extend({
     }
   },
 
+  afterSave:function(){
+    this.model.clearPasswords();
+  }
+
 });

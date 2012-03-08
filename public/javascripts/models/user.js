@@ -100,6 +100,11 @@ App.Models.User= Backbone.Model.extend({
         return this.subscriptions[fId];
       }
       return null;
-    }
+    },
+
+    clearPasswords:function(){
+      this.attributes.password="";
+      this.attributes.current_password="";
+    },
 
 });
