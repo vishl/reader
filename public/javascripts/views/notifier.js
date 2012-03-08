@@ -1,8 +1,9 @@
 /*global App Backbone _ JST*/
 App.Views.Notifier = Backbone.View.extend({
     options:{
-      autoHide:true,
-      timeout:3500, //ms
+      type:'info',
+      expire:3500,
+      animate:'slow',
     },
 
     id:'notifier',
@@ -25,30 +26,36 @@ App.Views.Notifier = Backbone.View.extend({
       return this;
     },
 
-    notify:function(message,type){
+    notify:function(message,options){
+      options = $.extend({}, this.options, options);
       if(this.shown){
-        this.hide();
+        this.hide({animate:false});
       }
-      type = type || 'info';
       this.message = message;
       this.$el.find('#message').html(_.escape(message));
-      this.$el.removeClass().addClass("alert alert-"+type);
-      this.show();
+      this.$el.removeClass().addClass("alert alert-"+options.type);
+      this.show(options);
     },
 
-    show:function(){
+    show:function(options){
+      options = $.extend({}, this.options, options);
       this.$el.slideDown('slow');
       this.shown=true;
-      if(this.options.autoHide){
+      if(options.expire>0){
         var self=this;
         self.timeout = setTimeout(function(){
             self.hide();
-        },self.options.timeout);
+        },options.expire);
       }
     },
 
-    hide:function(){
-      this.$el.slideUp('slow');
+    hide:function(options){
+      options = $.extend({}, this.options, options);
+      if(options.animate){
+        this.$el.slideUp(options.animate);
+      }else{
+        this.$el.hide();
+      }
       this.shown=false;
       if(this.timeout){
         clearTimeout(this.timeout);

@@ -87,7 +87,7 @@ class ForumsController < ApplicationController
           render :json=>{'has_error'=>has_error, 'error'=>error}
         else
           attrs = {'forum'=>@forum.as_json(:current_user=>current_user)}
-          #attrs['id'] = @forum.sid
+          attrs['version'] = GlobalSettings.version
           attrs['posts'] = @posts if(@prefetch)  #include posts if we want to prefetch, to avoid additional request
           render :json=>attrs
         end

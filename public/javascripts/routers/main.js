@@ -1,4 +1,4 @@
-/*global App Backbone _ url_parse*/
+/*global App Backbone _ url_parse GlobalSettings*/
 App.Routers.Main = Backbone.Router.extend({
     //constants
     POLLINTERVAL:300000, //5 minutes
@@ -13,6 +13,9 @@ App.Routers.Main = Backbone.Router.extend({
 
     initialize : function(options){
       App.notifier = new App.Views.Notifier();
+      if(GlobalSettings.deployment==="development"){
+        this.POLLINTERVAL=60000;  //1 minute
+      }
       $('body').append(App.notifier.render().el);
     },
 

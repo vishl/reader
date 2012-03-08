@@ -1,4 +1,4 @@
-/*global App Backbone _*/
+/*global App Backbone _ GlobalSettings*/
 App.Models.Forum = Backbone.Model.extend({
     //introspection
     _class:'Forum',
@@ -32,6 +32,11 @@ App.Models.Forum = Backbone.Model.extend({
     parse:function(resp){
       var f = resp.forum;
       var p = resp.posts;
+      var v = resp.version;
+      if(v!==GlobalSettings.version){
+        App.notifier.notify("A new version is available, please reload the page", {type:'success', expire:0});
+      }
+
       if(p){
         console.log("got "+p.length+"posts");
       }
