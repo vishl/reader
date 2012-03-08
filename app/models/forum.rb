@@ -46,7 +46,13 @@ class Forum < ActiveRecord::Base
     options||={}
     #TODO include subscribers
     #TODO prefetch
-    return {:title=>title, :id=>sid}
+    ret = {:title=>title, :id=>sid}
+    if(options[:current_user])
+      sub = Subscription.find_by_user_id_and_forum_id(options[:current_user].id, id)
+      ret[:subscription] =sub 
+    end
+    return ret
+    
   end
 
 

@@ -21,7 +21,8 @@ class ForumsController < ApplicationController
       sub.status="owner"
       if(sub.save)
         #no errors
-        render :json=>{'forum'=>forum.attributes.slice('title', 'sid')}
+        #render :json=>{'forum'=>forum.attributes.slice('title', 'sid')}
+        render :json=>{'forum'=>forum.as_json(:current_user=>current_user)}
       else
         logger.error("Error creating forum sub: " + sub.errors.to_s)
         render :nothing=>true, :status=>500
@@ -85,8 +86,8 @@ class ForumsController < ApplicationController
         if(has_error)
           render :json=>{'has_error'=>has_error, 'error'=>error}
         else
-          attrs = {'forum'=>@forum.attributes.slice('title', 'sid')}
-          attrs['id'] = @forum.sid
+          attrs = {'forum'=>@forum.as_json(:current_user=>current_user)}
+          #attrs['id'] = @forum.sid
           attrs['posts'] = @posts if(@prefetch)  #include posts if we want to prefetch, to avoid additional request
           render :json=>attrs
         end

@@ -35,9 +35,12 @@ App.Routers.Main = Backbone.Router.extend({
 
       //render header and main window
       $('#header').html(this.forumHeaderView.render().el);
-      this.forumView.renderAll(); //nothing is there yet so this just makes containers
-      $('#main-window').html(this.forumView.el);
-      this.forum.fetch(); //this should populate the data dynamically
+      $('#main-window').html("loading");
+      var self=this;
+      this.forum.fetch({success:function(){
+        $('#main-window').html(self.forumView.el);
+        self.forumView.renderAll(true); //nothing is there yet so this just makes containers
+      }});
       
       //launch poll, this sends state to the server and receives updates
       //periodically

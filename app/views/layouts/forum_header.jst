@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
       </a>
 
-      <a href="/" class="brand">Freeder</a>
+      <a href="/" class="brand">Freader</a>
       <%if(title){%>
         <ul class="nav">
           <li class="active" id="forum-title"><a><%=title%></a></li>
@@ -18,7 +18,9 @@
         <ul class="nav pull-right">
           <%if(sid){%>
             <li>
+                <!--
               <a href="#bookmarklet-modal" data-toggle="modal"> Get the bookmarklet </a>
+              -->
             </li>
           <%}%>
         </ul>
@@ -37,7 +39,7 @@
     <h3>Bookmarklet!</h3>
     <a 
       href="javascript:void((function(){var%20e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','<%=origin%>/bookmarklet?sid=<%=sid%>&r='+Math.random()*99999999);document.body.appendChild(e)})());"
-      class='bookmarklet'>Freeder:<%=title%></a>
+      class='bookmarklet'>Freader:<%=title%></a>
     (drag this link to your bookmarks bar, then click to share from any web page)
     <p>
       Note: If it doesn't work in youtube in Chrome, you need to uninstall the youtube chrome app.

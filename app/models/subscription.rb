@@ -20,4 +20,8 @@ class Subscription < ActiveRecord::Base
   validates_uniqueness_of :user_id, :scope => :forum_id
   validates_presence_of :user_id, :forum_id
   validates :status, :format => {:with=>/^(owner)?$/}
+
+  def as_json(options)
+    return {:user_id=>user.sid, :forum_id=>forum.sid, :forum_title=>forum.title, :subscribed=>true}
+  end
 end

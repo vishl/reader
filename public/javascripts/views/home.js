@@ -28,7 +28,7 @@ App.Views.Home = Backbone.View.extend({
             }else{
               //navigate to forum
               //trigger causes the router to route
-              App.router.navigate('forums/'+resp.forum.sid, {trigger:true});
+              App.router.navigate('forums/'+resp.forum.id, {trigger:true});
             }
           },
           error: function(){
