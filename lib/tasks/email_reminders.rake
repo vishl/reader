@@ -14,7 +14,7 @@ namespace :user do
       u.forums.find_each do |f|
         posts = f.posts.where("updated_at > ?", Time.now-7.days)
         if(posts.count>0)
-          changed[f] = p
+          changed[f] = posts
         end
         #TODO detect comments as well
       end
