@@ -13,13 +13,15 @@
 #  updated_at         :datetime
 #  reset_token        :string(255)
 #  reset_token_date   :datetime
+#  reminder_day       :string(255)
+#  reminder_time      :integer
 #
 
 class User < ActiveRecord::Base
   include SessionsHelper
 
-  attr_accessor :password, :current_password
-  attr_accessible :name, :email, :password, :current_password
+  attr_accessor :password, :current_password, :reminder
+  attr_accessible :name, :email, :password, :current_password, :reminder_day, :reminder_time, :reminder
 
   #initializer
   after_initialize :init
@@ -37,6 +39,7 @@ class User < ActiveRecord::Base
   before_validation {self.email = self.email.downcase if self.email?}
   before_validation {self.sid ||= gen_token}
   before_validation :check_password_update
+  before_validation {self.reminder_day = "Never" if self.reminder==false}
 
   @email_regex = /^[\w+-]+(\.[\w+-]+)*@([\w-]+\.)+\w+$/i
   @name_regex = /^[A-Za-z -]{1,30}$/
@@ -46,6 +49,7 @@ class User < ActiveRecord::Base
   validates :password,  :length =>{ :within => 6..40 },
                         #allows updating the record without supplying a new password
                         :if => lambda{self.password.present? || self.encrypted_password.blank?}
+  validates :reminder_day, :inclusion=>{:in=>%w(Never Daily Mon Tue Wed Thu Fri Sat Sun)}
 
   validates :sid,         :presence=>true, :uniqueness=>true
 
@@ -111,7 +115,7 @@ class User < ActiveRecord::Base
     #TODO include posts?
     attrs =  {:id=>sid, :name=>name}
     if(options[:private_data])
-      attrs = attrs.merge({:email=>email, :subscriptions=>forums})
+      attrs = attrs.merge({:email=>email, :subscriptions=>forums, :reminder_day=>reminder_day, :reminder_time=>reminder_time})
     end
     return attrs
   end

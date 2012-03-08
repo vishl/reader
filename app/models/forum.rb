@@ -25,6 +25,23 @@ class Forum < ActiveRecord::Base
   validates :title, :presence=>true
   validates :sid, :presence=>true, :uniqueness=>true
 
+  def permission(user, thing)
+    #right now, anyone can view
+    if(thing==:view)
+      return true
+    end
+
+    if(user.nil?)
+      return false
+    end
+    sub = Subscription.find_by_user_id_and_forum_id(user.id, self.id)
+    if(sub.nil?)
+      return false
+    end
+    #anyone with a subscription can post
+    return true
+  end
+
   def as_json(options)
     options||={}
     #TODO include subscribers

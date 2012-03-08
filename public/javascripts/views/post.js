@@ -1,4 +1,4 @@
-/*global App Backbone _ JST embed*/
+/*global App Backbone _ JST Utils*/
 App.Views.Post = Backbone.View.extend({
     post:null,  //TODO what is this..
     className:'post-area', //the class of the containing <div>
@@ -16,7 +16,7 @@ App.Views.Post = Backbone.View.extend({
       $(this.el).html(JST['posts/show']({post:this.model}));
       this.$el.find('#comment-area').append(this.commentsView.render().el);
       this.$el.find('#comment-area').append(this.commentCreateView.render().$el);
-      embed(this.$el.find('.content .linkify').get(0));
+      Utils.embed(this.$el.find('.content .linkify').get(0));
       this.postFrame(this.$el.find('.linkify a'));
       return this;
     },
@@ -86,6 +86,8 @@ App.Views.PostCreate = Backbone.FormView.extend({
     initialize:function(){
       _.bindAll(this);  //all of my functions should be called with me as 'this'.. because javascript is retarded
       this.forum = this.options.forum;
+      this.subscription = this.options.subscription;
+      this.subscription.bind("change:subscribed", this.render, this);
       this.model = new App.Models.Post(this.options.attributes, {forum:this.options.forum});
     },
 
@@ -93,7 +95,8 @@ App.Views.PostCreate = Backbone.FormView.extend({
       console.log("render post create");
       var self = this;
       var startOpen = (self.model.get("content")+self.model.get("comment")).length>0;
-      self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn()}));
+      //self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn(), subscribed:App.user.subscribedTo(this.forum.id)}));
+      self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn(), subscribed:this.subscription.get("subscribed")}));
 
       //toggle and clear errors
       self.$el.find('#create-post-area').collapse({toggle:false});

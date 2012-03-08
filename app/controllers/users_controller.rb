@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     if @user.save
       sign_in(@user)
       render :json=>@user.as_json(:private_data=>true)
-      Notifier.signup(@user).deliver
+      Notifier.signup(@user).deliver if GlobalSettings.email_enabled
     else
       render :json=>@user.errors, :status=>400
     end

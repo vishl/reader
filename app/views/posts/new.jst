@@ -1,29 +1,35 @@
 <div id='create-post-box'>
   <%if(signedIn){%>
-    <h2>
-      <a data-target='#create-post-area' data-toggle='collapse' id='postheader'>Post a message...</a>
-    </h2>
-    <div class='collapse' id='create-post-area'>
-      <form>
-        <fieldset>
-          <div class="clearfix" id="post_content_input">
-            <div class="input">
-              <textarea cols="80" id="content" name="post[content]"
-                placeholder="Post something here" rows="3"><%=post.get('content')%></textarea>
+    <%if(subscribed){%>
+      <h2>
+        <a data-target='#create-post-area' data-toggle='collapse' id='postheader'>Post a message...</a>
+      </h2>
+      <div class='collapse' id='create-post-area'>
+        <form>
+          <fieldset>
+            <div class="clearfix" id="post_content_input">
+              <div class="input">
+                <textarea cols="80" id="content" name="post[content]"
+                  placeholder="Post something here" rows="3"><%=post.get('content')%></textarea>
+              </div>
             </div>
-          </div>
-          <div class="clearfix" id="post_comment_input">
-            <div class="input">
-              <textarea cols="80" id="comment" name="post[comment]" placeholder="Add your comments here" rows="3"></textarea>
+            <div class="clearfix" id="post_comment_input">
+              <div class="input">
+                <textarea cols="80" id="comment" name="post[comment]" placeholder="Add your comments here" rows="3"></textarea>
+              </div>
             </div>
+          </fieldset>
+          <div class="actions">
+            <input class="btn primary" id="post_submit" name="commit" type="submit" value="Post!" />
+            <img src="/images/loading.gif" id="load-img"></img>
           </div>
-        </fieldset>
-        <div class="actions">
-          <input class="btn primary" id="post_submit" name="commit" type="submit" value="Post!" />
-          <img src="/images/loading.gif" id="load-img"></img>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    <%}else{%>
+      <h2>
+        Please <a href="#" id="subscribe">subscribe</a> to this forum to post a message
+      </h2>
+    <%}%>
   <%}else{%>
     <h2>
       Please <a href="#">sign in</a> to post a message

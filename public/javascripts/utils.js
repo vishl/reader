@@ -1,4 +1,6 @@
 /*globals _ */
+var Utils={}; //Utils global namespace object
+
 String.prototype.format = function() {
   var args = arguments;
   return this.replace(/{(\d+)}/g, function(match, number) { 
@@ -7,6 +9,58 @@ String.prototype.format = function() {
       : match
     ;
   });
+};
+
+String.prototype.initialCap = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+};
+
+Utils.clearSelection = function() {
+    if(document.selection && document.selection.empty) {
+        document.selection.empty();
+    } else if(window.getSelection) {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+    }
+};
+
+Utils.genId = function(){
+  return Math.floor(Math.random()*1000000000);
+};
+
+Utils.slice = function(obj){
+  var ret = {};
+  for(var i=1; i<arguments.length; i++){
+    if(arguments[i] in obj){
+      ret[arguments[i]] = obj[arguments[i]];
+    }
+  }
+  return ret;
+};
+
+//returns a function that will execute f after delay, but resets the count every
+//time the function is called.  Useful for loading on keyup events when you
+//don't want to load during typing.  f can be a function or a string.  If it is
+//a string we examine the context when the function is called for a member f
+Utils.keyupTimeout = function(f, delay){
+  var timeout;
+  var ev;
+  var self;
+  var execAndClear = function(){
+    timeout=null;
+    f.call(self, ev);
+  };
+  return function(e){
+    ev=e;
+    self=this;
+    if(_.isString(f)){  //look for it in the current context
+      f = this[f];
+    }
+    if(timeout){
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(execAndClear, delay);
+  };
 };
 
 function url_parse(url){
@@ -105,123 +159,41 @@ function text_to_link(text) {
 }
 
 //given text will replace any text that looks like a link with html for a link
-//also escapes html
+//also escapes html and turns \n into <br>
 function linkify(t){
   return text_to_link(
     String(t).replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/'/g, "&#x27;")
     .replace(/"/g, "&quot;")
+    .replace(/\n/g, "<br>")
   );
 }
 
-//given a dom object, will put embed code in a sibling with class 'embed-hook'
-//Huge XSS vulnerabilities here..
-function embed(elt){
-  var a = $(elt).find('a');
-  var t = a.length? a.attr('href') : "";
-  var embedCode=null;
-  var h=null;
-  var m;
-  //youtube
-  m = t.match(/youtube.com\/watch[^?]*?([^#]*)/);
-  if(m){
-    var vid = getArg(m[1], 'v');
-    if(vid){
-      embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+vid+'?wmode=transparent" frameborder="0" allowfullscreen></iframe>';
-      h=315;
-    }
-  }
-  //image
-  if(!embedCode){
-    m = t.match(/http:\/\/\S*(\.jpg|\.gif|\.png|\.jpeg)/);
-    if(m){
-      embedCode='<a href="'+m[0]+'"><img src="'+m[0]+'"></a>';
-    }
-  }
-  //TODO more embeds!
 
-  //TODO probably don't want to embed on mobile
-  if(embedCode){
-    var embedLoc = $(elt).siblings('.embed-hook');
-    embedLoc.append(embedCode);
-    if(h) embedLoc.css('height', h);
-  }
-}
+//Singleton helper object
+var Singleton = function(){
+};
+Singleton.prototype = {
+  _singletons:{},
+  destroy:function(className){
+    delete this._singletons[className];
+  },
 
-/*
- * Input
- * v = validator(
-    { name:{presence:true},
-      text:{presence:true,
-            presence_message:"Please enter text",
-            format:/[A-Za-z ]/,
-            format_message:"Please only characters and spaces",
-            message:"This message will be used in the absence of a specific *_message"
-          },
-    }
-   )
-   Output 
-    { name:["name is blank"],
-      text:["Please enter text", "Please only characters and spaces"]
-    }
-    Call as v({a:'val', b:'dont val'}, {a:true}) //second argument is optional
-*/
-
-function Validator(validations){
-  return function(attrs, options){
-    var errors={
-      __count:0,
-      __add : function(k, m){
-        if(k in this)
-          this[k].push(m);
-        else
-          this[k] = [m];
-        this.__count++;
-      }
-    };
-    var it = validations;
-    if(options && options.only) it = options.only;
-    for(var k in it){
-      var val = validations[k];
-      for(var trait in val){
-        switch (trait){
-          case 'presence':
-            if(_.isEmpty(attrs[k])){
-              errors.__add(k, val['presence_message'] || val['message'] || (k+ " must be present"));
-            }
-            break;
-          case 'format':
-            if(!String(attrs[k]).match(val[trait])){
-              errors.__add(k, val['format_message'] || val['message'] || (k+ " is formatted incorrectly"));
-            }
-            break;
-
-          //TODO more validators
-        }
+  create:function(className, obj){
+    if(this._singletons[className]){
+      throw className+" object already exists";
+    }else{
+      if(obj){
+        this._singletons[className] = obj;
+      }else{
+        throw "Object must evaluate to true, got:" + obj;
       }
     }
-    if(errors.__count) return errors;
-  };
-}
+  },
 
-$.fn.displayModelErrors = function (errors, options){
-  var $this = $(this);
-  for(var id in errors){
-    var $inp = $this.find('#'+id);
-    if($inp.length){
-      $inp.tooltip({title:errors[id].join(), trigger:'manual'});
-      $inp.tooltip('show');
-      $inp.addClass('model-error');
-    }
-  }
-  return this;
+  get:function(className){
+    return this._singletons[className];
+  },
 };
 
-$.fn.removeModelErrors = function(form){
-  $(this).find('.model-error').each(function(){
-      $(this).removeClass('model-error')
-             .tooltip('hide')
-             .data('tooltip', null);
-  });
-};

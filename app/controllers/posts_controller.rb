@@ -3,19 +3,23 @@ class PostsController < ApplicationController
 
   def create
     @forum = Forum.find_by_sid(params[:forum_id])
-    if(@forum)
-      postparams = params[:post] || params.slice('content', 'comment')
-      @post = @forum.posts.build(postparams)
-      @post.user_id = current_user.id
-      if(@post.save)
-        #no errors
-        render :json=>{'post'=>@post}
-      else
-        logger.error("Something went wrong: #{@post.errors}")
-        render :text=>"Something went wrong: #{@post.errors}", :status=>400
-      end
+    if(!@forum)
+      render :json=>{"forum"=>"is invalid"}, :status=>400
     else
-      render :text=>"Invalid Forum", :status=>400
+      if(!@forum.permission(current_user,:post))
+        render :json=>{"authorization"=>"Permission denied"}, :status=>401
+      else
+        postparams = params[:post] || params.slice('content', 'comment')
+        @post = @forum.posts.build(postparams)
+        @post.user_id = current_user.id
+        if(!@post.save)
+          logger.error("Something went wrong: #{@post.errors}")
+          render :json=>@post.errors, :status=>400
+        else
+          #no errors
+          render :json=>{'post'=>@post}
+        end
+      end
     end
   end
 

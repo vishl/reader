@@ -19,6 +19,7 @@ Reader::Application.routes.draw do
   post '/signin', :as=>:signin, :to=>"sessions#create"
   match '/signout', :to=>"sessions#destroy"
   resources :users
+  resources :subscriptions, :only=>[:create, :destroy]
 
 #  post "/forums/spawn",        :as=>:spawn,            :to=>"forums#spawn"
 #  get  "/:sid",                :as=>:forum,            :to=>"forums#show"

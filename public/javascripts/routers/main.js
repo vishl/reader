@@ -1,7 +1,7 @@
 /*global App Backbone _ url_parse*/
 App.Routers.Main = Backbone.Router.extend({
     //constants
-    POLLINTERVAL:60000, //60 seconds
+    POLLINTERVAL:300000, //5 minutes
 
     routes:{
       "": "home",

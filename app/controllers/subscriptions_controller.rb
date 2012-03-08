@@ -11,16 +11,16 @@ class SubscriptionsController < ApplicationController
       sub.forum_id = forum.id
       sub.user_id = user.id
       if(sub.save)
-        render :nothing=>true
+        render :json=>{"subscribed"=>true, "id"=>forum.sid}
       else
-        render :json=>sub.errors, :status=>500
+        render :json=>sub.errors, :status=>400
       end
     end
   end
 
   def destroy
     user = current_user
-    forum = Forum.find_by_sid(params[:forum_id])
+    forum = Forum.find_by_sid(params[:id])
     if(forum.nil?)
       render :json=>{"forum"=>["is invalid"]}, :status=>400
     else
@@ -29,7 +29,7 @@ class SubscriptionsController < ApplicationController
         render :json=>{"forum"=>["not subscribed"]}, :status=>400
       else
         sub.destroy
-        render :nothing=>true
+        render :json=>{"subscribed"=>false, "id"=>nil}
       end
     end
   end

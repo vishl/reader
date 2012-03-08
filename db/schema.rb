@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120306191152) do
+ActiveRecord::Schema.define(:version => 20120307193322) do
 
   create_table "comments", :force => true do |t|
     t.string   "name"
@@ -80,9 +80,12 @@ ActiveRecord::Schema.define(:version => 20120306191152) do
     t.datetime "updated_at"
     t.string   "reset_token"
     t.datetime "reset_token_date"
+    t.string   "reminder_day"
+    t.integer  "reminder_time"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reminder_day", "reminder_time"], :name => "index_users_on_reminder_day_and_reminder_time"
   add_index "users", ["sid"], :name => "index_users_on_sid", :unique => true
 
 end

@@ -10,6 +10,7 @@ javascripts:
     - public/javascripts/backbone_extensions.js
     - public/javascripts/bootstrap.js
     - public/javascripts/utils.js
+    - public/javascripts/reader_utils.js
     - public/javascripts/application.js
     - public/javascripts/models/comments.js
     - public/javascripts/models/posts.js
