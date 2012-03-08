@@ -38,6 +38,16 @@ Utils.slice = function(obj){
   return ret;
 };
 
+Utils.aToO = function(k,v){
+  var ret={};
+  if(v===undefined) v=[];
+  for(var i=0; i<k.length; i++){
+    ret[k[i]] = v[i];
+  }
+  return ret;
+};
+
+
 //returns a function that will execute f after delay, but resets the count every
 //time the function is called.  Useful for loading on keyup events when you
 //don't want to load during typing.  f can be a function or a string.  If it is

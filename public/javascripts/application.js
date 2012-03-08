@@ -9,7 +9,7 @@ var App = {
     console.log("init");
     this.user= new App.Models.User();
     if((typeof User!=="undefined") && (User !== null)){
-      this.user.inject(User);
+      this.user.inject(User, null, {silent:true});
     }
     this.router = new App.Routers.Main();
     Backbone.history.start();

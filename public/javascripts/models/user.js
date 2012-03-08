@@ -25,6 +25,21 @@ App.Models.User= Backbone.Model.extend({
       }
       return this.urlRoot+'/'+this.id;
     },
+
+    validate:Validator({ 
+        name:{presence:true, 
+              presence_message:"Please enter your name",
+              length:[0,30],
+              format:/^[a-zA-Z \-]*$/,
+              format_message:"Letters, spaces and hyphens only"
+        },
+        email:{presence:true,
+               presence_message:"Please enter your email",
+               format:"email",
+        },
+        password:{length:[6,40], message:"At least 6 characters"},
+    }),
+
     initialize:function(){
       this.updateSubscriptions(this.attributes.subscriptions);
     },
@@ -40,7 +55,7 @@ App.Models.User= Backbone.Model.extend({
           var fId = sub[i].id;
           if(this.subscriptions[fId]){
             //update
-            this.subscription[fId].set({
+            this.subscriptions[fId].set({
               user_id:this.id, 
               forum_id:fId,
               forum_title:sub[i].title,

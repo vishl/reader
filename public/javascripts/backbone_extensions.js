@@ -1,4 +1,4 @@
-/*global Backbone _*/
+/*global Backbone _ Utils*/
 ////////////////////////////////// Backbone Extensions /////////////////////////
 //This overrides the toJSON function to always insert the authenticity token
 Backbone.Model.prototype.toJSON = function() {
@@ -109,8 +109,9 @@ Backbone.FormView = Backbone.View.extend({
         self.$el.addClass('loading');
         self._postDisable=true;
         var attrs = {};
+        var target = $(e.currentTarget);
         for(var k in this.model.attributes){
-          var item = self.$el.find('form #'+k);
+          var item = target.find('#'+k);
           if(item.length){
             if(item.attr("type")==="checkbox"){
               attrs[k] = item.is(":checked");
@@ -145,7 +146,7 @@ Backbone.FormView = Backbone.View.extend({
         };
 
         if(this.options.noSave){
-          if(this.model.set(attrs,{error:errorFn})){
+          if(this.model.set(attrs,{error:errorFn, only:Object.keys(attrs)})){
             successFn.call(this, this.model,null);
           }
         }else{
@@ -153,7 +154,8 @@ Backbone.FormView = Backbone.View.extend({
             attrs,
             {
               success:successFn,
-              error:errorFn
+              error:errorFn,
+              only:Object.keys(attrs)
             }
           );
         }
@@ -194,21 +196,33 @@ function Validator(validations){
       }
     };
     var it = validations;
-    if(options && options.only) it = options.only;
+    if(options && options.only) it = Utils.aToO(options.only,options.only);
     for(var k in it){
       var val = validations[k];
+      vals: //this is a loop label
       for(var trait in val){
         switch (trait){
           case 'presence':
             if(_.isEmpty(attrs[k])){
               errors.__add(k, val['presence_message'] || val['message'] || (k+ " must be present"));
+              break vals; //if it's not there, we don't need the other errors
             }
             break;
           case 'format':
-            if(!String(attrs[k]).match(val[trait])){
+            var fmt = val[trait];
+            if(fmt==="email") fmt=/^[\w+\-]+(\.[\w+\-]+)*@([\w\-]+\.)+\w+$/i;
+            if(!String(attrs[k]).match(fmt)){
               errors.__add(k, val['format_message'] || val['message'] || (k+ " is formatted incorrectly"));
             }
             break;
+          case 'length':
+            var min=val[trait][0];
+            var max=val[trait][1];
+            if(!(attrs[k].length>=min && (max===undefined || (attrs[k].length<=max)))){
+              errors.__add(k, val['length_message'] || val['message'] || (k+ " has an invalid length"));
+            }
+            break;
+          
 
           //TODO more validators
         }
