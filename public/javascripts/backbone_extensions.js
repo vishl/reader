@@ -96,12 +96,13 @@ Backbone.FormView = Backbone.View.extend({
     
 
     __post: function(e){
+      e.preventDefault();
       var self=this;
       if(!self._postDisable){  //prevent multiple submissions
         console.log("post");
         if(self.beforePost){
           if(!self.beforePost()){
-            return false;
+            return;
           }
         }
 
@@ -160,7 +161,6 @@ Backbone.FormView = Backbone.View.extend({
           );
         }
       }
-      return false;
     },
 });
 

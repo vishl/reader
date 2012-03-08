@@ -12,8 +12,18 @@ App.Views.SignIn = Backbone.FormView.extend({
     }
   },
 
+  beforePost:function(){
+    this.trigger("submitting");
+    return true;
+  }, 
+
   afterSave:function(){
     this.model.clearPasswords();
-  }
+    this.model.attributes.signup=false;
+  },
+
+  onError:function(){
+    this.model.attributes.signup=false;
+  },
 
 });

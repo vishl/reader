@@ -11,7 +11,10 @@ App.Views.Home = Backbone.View.extend({
       this.signInView = new App.Views.SignIn({model:App.user});
       this.signUpView = new App.Views.SignIn({model:App.user, signUp:true});
       this.forumListView = new App.Views.ForumList({model:App.user});
+
       App.user.bind("sync", this.render, this);
+      this.signInView.bind("submitting", this.removeErrors, this);
+      this.signUpView.bind("submitting", this.removeErrors, this);
       this.render(); //render on init
     },
 
@@ -54,7 +57,12 @@ App.Views.Home = Backbone.View.extend({
         this.signInView.render();
         this.signUpView.render();
       }
+      this.delegateEvents();
       return this;
-    }
+    },
 
+    removeErrors:function(){
+      this.signInView.$el.removeModelErrors();
+      this.signUpView.$el.removeModelErrors();
+    },
 });
