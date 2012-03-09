@@ -6,7 +6,7 @@ App.Views.Post = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.commentsView = new App.Views.Comments({model:this.model.comments});
-      this.commentCreateView = new App.Views.CommentCreate({post:this.model});
+      this.commentCreateView = new App.Views.CommentCreate({post:this.model, subscription:this.options.subscription});
       this.commentCreateView.bind("posted", this.createComment, this);
       this.model.bind("change", this.render);
     },
@@ -56,7 +56,7 @@ App.Views.Posts = Backbone.View.extend({
       var self = this;
       this.postViews=[];
       _.each(this.model.models, function(post){
-          var p = new App.Views.Post({model:post});
+          var p = new App.Views.Post({model:post, subscription:self.options.subscription});
           self.postViews.push(p);
           p.render();
           self.$el.append(p.el);
@@ -68,7 +68,7 @@ App.Views.Posts = Backbone.View.extend({
       var i = options.index;
       console.log("insert post "+model.id+" at "+i);
       var elt = this.$el.find('.post-area')[i];
-      var view = new App.Views.Post({model:model}); 
+      var view = new App.Views.Post({model:model, subscription:this.options.subscription}); 
       view.render();
       view.$el.css('display','none');
       if(elt!==undefined){
@@ -95,7 +95,6 @@ App.Views.PostCreate = Backbone.FormView.extend({
       console.log("render post create");
       var self = this;
       var startOpen = (self.model.get("content")+self.model.get("comment")).length>0;
-      //self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn(), subscribed:App.user.subscribedTo(this.forum.id)}));
       self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn(), subscribed:this.subscription.get("subscribed")}));
 
       //toggle and clear errors

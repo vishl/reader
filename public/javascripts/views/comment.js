@@ -78,12 +78,14 @@ App.Views.CommentCreate = Backbone.FormView.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.post = this.options.post;
+      this.subscription = this.options.subscription;
+      this.subscription.bind("change:subscribed", this.render, this);
       this.model = new App.Models.Comment(null, {post:this.post});
     },
 
     render:function(){
       console.log("render comment post");
-      $(this.el).html(JST['comments/post']({comment:this.model, signedIn:App.user.signedIn()}));
+      $(this.el).html(JST['comments/new']({comment:this.model, signedIn:App.user.signedIn(), subscribed:this.subscription.get("subscribed")}));
       //enable toggling
       var self=this;
       this.$el.find('.comment-post-form').collapse({toggle:false});

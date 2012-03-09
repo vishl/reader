@@ -22,6 +22,6 @@ class Subscription < ActiveRecord::Base
   validates :status, :format => {:with=>/^(owner)?$/}
 
   def as_json(options)
-    return {:user_id=>user.sid, :forum_id=>forum.sid, :forum_title=>forum.title, :subscribed=>true}
+    return {:user_id=>user.sid, :forum_id=>forum.sid, :forum_title=>forum.title, :subscribed=>true, :id=>forum.sid}
   end
 end
