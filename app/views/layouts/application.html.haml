@@ -14,7 +14,7 @@
     #header
     = yield
     -#= render 'layouts/footer'
-    -if(Rails.env.development?)
+    -#if(Rails.env.development?)
       = debug(params.merge({:path=>request.fullpath})) 
 
 

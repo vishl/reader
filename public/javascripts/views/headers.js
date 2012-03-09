@@ -8,6 +8,7 @@ App.Views.ForumHeader = Backbone.View.extend({
       if(this.model){
         this.model.bind("change", this.render);
       }
+      App.user.bind("change:subscriptions", this.render, this);
     },
 
     render: function(){
@@ -15,14 +16,16 @@ App.Views.ForumHeader = Backbone.View.extend({
       if(this.model){
         this.$el.html(JST['layouts/forum_header'](
             { title:this.model.escape("title"),
-              sid:this.model.escape("sid"),
+              id:this.model.id,
+              subscriptions:App.user.get("subscriptions"),
               origin:window.location.origin,
             }
         ));
       }else{
         this.$el.html(JST['layouts/forum_header'](
             { title:null,
-              sid:null,
+              id:null,
+              subscriptions:App.user.get("subscriptions"),
               origin:window.location.origin,
             }
         ));

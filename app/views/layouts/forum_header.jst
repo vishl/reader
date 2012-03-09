@@ -8,15 +8,20 @@
       </a>
 
       <a href="/" class="brand">Freader</a>
-      <%if(title){%>
+      <%if(0&&title){%>
         <ul class="nav">
           <li class="active" id="forum-title"><a><%=title%></a></li>
         </ul>
       <%}%>
       <div class="nav-collapse">
+        <ul class="nav">
+          <%for(var i=0; subscriptions && i<subscriptions.length; i++){%>
+            <li class="<%=subscriptions[i].id==id?"active":""%>"><a class="forum-nav" href="/#forums/<%=subscriptions[i].id%>" title="<%=subscriptions[i].title%>"><%=subscriptions[i].title%></a></li>
+          <%}%>
+        </ul>
         <div class="" id="user-credentials"></div>
         <ul class="nav pull-right">
-          <%if(sid){%>
+          <%if(id){%>
             <li>
                 <!--
               <a href="#bookmarklet-modal" data-toggle="modal"> Get the bookmarklet </a>
@@ -38,7 +43,7 @@
   <div class='modal-body'>
     <h3>Bookmarklet!</h3>
     <a 
-      href="javascript:void((function(){var%20e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','<%=origin%>/bookmarklet?sid=<%=sid%>&r='+Math.random()*99999999);document.body.appendChild(e)})());"
+      href="javascript:void((function(){var%20e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','<%=origin%>/bookmarklet?sid=<%=id%>&r='+Math.random()*99999999);document.body.appendChild(e)})());"
       class='bookmarklet'>Freader:<%=title%></a>
     (drag this link to your bookmarks bar, then click to share from any web page)
     <p>

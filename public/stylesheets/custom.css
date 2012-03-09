@@ -110,6 +110,14 @@ table#loading td{
   width:1px;
 }
 
+.forum-nav{
+  display: block;
+  max-width: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}  
+
 #notifier{
   display:none;
   position:fixed;

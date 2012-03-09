@@ -19,8 +19,10 @@ namespace :user do
         #TODO detect comments as well
       end
 
-      Notifier.updates(u, changed).deliver
-      count+=1
+      if(changed.length>0)
+        Notifier.updates(u, changed).deliver
+        count+=1
+      end
     end
 
     #daily people
@@ -36,8 +38,10 @@ namespace :user do
         #TODO detect comments as well
       end
 
-      Notifier.updates(u, changed).deliver
-      count+=1
+      if(changed.length>0)
+        Notifier.updates(u, changed).deliver
+        count+=1
+      end
     end
     puts "Sent #{count} emails"
   end
