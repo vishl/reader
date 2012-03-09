@@ -155,17 +155,19 @@ table#loading td{
 }
 
 #create-post-box{
-  border:solid 1px #ddd;
-  background:#eee;
+  border:solid 1px #DADADA;
   padding:10px;
-  border-radius:5px;
   margin-bottom:20px;
+}
+#create-post-box:hover{
+  background:#eee;
 }
 
 a#postheader{
   display:block;
   color:black;
   cursor:pointer;
+  text-decoration:underline;
 }
 
 #create-post-area{
@@ -189,13 +191,12 @@ a#postheader{
 }
 
 .post-area {
-  position:relative;
-  padding:20px;
-  margin-bottom:20px;
-  background:#eee;
-  border-radius:5px;
-  word-wrap:break-word;
-  -webkit-transition:opacity .25s linear 0s, height .25s ease-out .1s;
+  position: relative;
+  padding: 20px 0px 0px 0px;
+  background: #EEE;
+  word-wrap: break-word;
+  -webkit-transition: opacity .25s linear 0s, height .25s ease-out .1s;
+  border-left: solid 5px #DADADA;
 }
 
 .post .name{
@@ -215,6 +216,15 @@ a#postheader{
   padding:20px;
 }
 
+.comment-area{
+  margin:5px;
+}
+
+.comment-area form{
+  margin:0px;
+}
+
+/*
 .comments{
   padding-top:10px;
   padding-left:20px;
@@ -229,6 +239,7 @@ a#postheader{
 .comments form{
   margin-bottom:0px;
 }
+  */
 
 .date-delta{
   color:#aaa;

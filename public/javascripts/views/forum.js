@@ -5,6 +5,7 @@ App.Views.Forum = Backbone.View.extend({
     "click #unsubscribe":"unsubscribe",
     "click #launch-users":function(){this.forumUsersView.render();}
   },
+  className:"container-fluid",
 
   initialize:function(){
     _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'

@@ -31,7 +31,7 @@ class PagesController < ApplicationController
         @forums[f] = f.posts.limit(2) if (f.posts.count>0)
       end
       if(params[:signup])
-        render 'notifier/updates', :layout=>false
+        render 'notifier/signup', :layout=>false
       else
         render 'notifier/updates', :layout=>false
       end

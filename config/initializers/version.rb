@@ -1,1 +1,1 @@
-GlobalSettings.version="6"
+GlobalSettings.version="7"

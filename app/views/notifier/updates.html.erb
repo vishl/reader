@@ -1,51 +1,41 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-  </head>
-  <body>
-    <div id="email_body" style="width: 100%; font-family: 'lucida grande', arial, sans-serif; color: #333333; font-size: 13px;">
-      <h1><%=@user.name%>! You've got updates in <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain%>"><%=GlobalSettings.site_name%></a></h1>
-      <table style="
-        width:100%;
+<%=render 'notifier/header'%>
+<h1><%=@user.name%>! You've got updates in <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain%>"><%=GlobalSettings.site_name%></a></h1>
+<table style="
+  width:100%;
+  ">
+  <%@forums.each do |k, v|%>
+    <tr>
+      <td
+      style="
+      ">
+      <div style="
+        font-size:18px;
+        background-color:#ddd;
+        padding:3px;
+        "><a style="
+          display:block;
+          "
+          href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain+'/#forums/'+k.sid%>"><%=k.title%></a>
+      </div>
+      </td>
+    </tr>
+    <tr>
+      <td
+        style="
+        padding-left:20px;
         ">
-        <%@forums.each do |k, v|%>
-          <tr>
-            <td
-            style="
-            ">
-            <div style="
-              font-size:18px;
-              background-color:#ddd;
-              padding:3px;
-              "><a style="
-                display:block;
-                "
-                href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain+'/#forums/'+k.sid%>"><%=k.title%></a>
-            </div>
-            </td>
-          </tr>
-          <tr>
-            <td
-              style="
-              padding-left:20px;
-              ">
-              <%=pluralize(v.count, "update")%> from <span style="font-weight:bold"><%=v.first.user.name%></span> <%=v.count>1 ? "and others" : ""%>
-              <!--
-              <ul style="
-                list-style:none;
-                ">
-                <%v.each do |p|%>
-                  <li><span style="font-weight:bold"><%=p.user.name%>:</span> <%=truncate(p.content, :length=>40)%></li>
-                <%end%>
-              </ul>
-              -->
-            </td>
-          </tr>
-        <%end%>
-      </table>
-      <%=render 'notifier/footer'%>
-    </div>
-  </body>
-</html>
-
+        <%=pluralize(v.count, "update")%> from <span style="font-weight:bold"><%=v.first.user.name%></span> <%=v.count>1 ? "and others" : ""%>
+        <!--
+        <ul style="
+          list-style:none;
+          ">
+          <%v.each do |p|%>
+            <li><span style="font-weight:bold"><%=p.user.name%>:</span> <%=truncate(p.content, :length=>40)%></li>
+          <%end%>
+        </ul>
+        -->
+      </td>
+    </tr>
+  <%end%>
+</table>
+<%=render 'notifier/footer'%>
