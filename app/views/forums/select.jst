@@ -1,0 +1,10 @@
+Select a Fread:
+<form>
+  <select id="forum-select">
+    <%for(var i=0; i<subscriptions.length; i++){%>
+      <option value="<%=subscriptions.at(i).get("forum_id")%>"
+      <%= subscriptions.at(i).get("forum_id")===selected ? 'selected="selected"' : ''%>
+      ><%=subscriptions.at(i).get("forum_title")%></option>
+    <%}%>
+  </select>
+</form>

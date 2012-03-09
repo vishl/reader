@@ -62,3 +62,25 @@ App.Views.Forum = Backbone.View.extend({
 
 });
 
+App.Views.ForumSelect = Backbone.View.extend({
+  _className:"ForumSelect",
+  events:{
+    "change #forum-select":"changeForum",
+  },
+
+  initialize:function(){
+    //TODO pick one to select
+    this.forum = App.user.subscriptions.first().makeForum();
+  },
+
+  render:function(){
+    this.$el.html(JST["forums/select"]({subscriptions:App.user.subscriptions, selected:this.forum.id}));
+  },
+
+  changeForum:function(){
+    var id = this.$('#forum-select').val();
+    this.forum = App.user.subscriptions.get(id).makeForum();
+    this.trigger("change");
+  },
+
+});

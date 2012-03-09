@@ -87,15 +87,24 @@ App.Views.PostCreate = Backbone.FormView.extend({
       _.bindAll(this);  //all of my functions should be called with me as 'this'.. because javascript is retarded
       this.forum = this.options.forum;
       this.subscription = this.options.subscription;
-      this.subscription.bind("change:subscribed", this.render, this);
+      //if no subscription just assume we're subscribed and hope for the best
+      if(!this.subscription)this.subscription = new App.Models.Subscription({subscribed:true});
       this.model = new App.Models.Post(this.options.attributes, {forum:this.options.forum});
+
+      this.subscription.bind("change:subscribed", this.render, this);
+      this.forum.bind("change:title", this.render, this);
+    },
+
+    beforeClose:function(){
+      this.subscription.unbind("change:subscribed", this.render, this);
+      this.forum.unbind("change:title", this.render, this);
     },
 
     render:function(){
       console.log("render post create");
       var self = this;
-      var startOpen = (self.model.get("content")+self.model.get("comment")).length>0;
-      self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn(), subscribed:this.subscription.get("subscribed")}));
+      var startOpen = this.options.startOpen || ((self.model.get("content")+self.model.get("comment")).length>0);
+      self.$el.html(JST['posts/new']({post:this.model, signedIn:App.user.signedIn(), subscribed:this.subscription.get("subscribed"), title:this.forum.get("title")}));
 
       //toggle and clear errors
       self.$el.find('#create-post-area').collapse({toggle:false});
@@ -127,33 +136,10 @@ App.Views.PostCreate = Backbone.FormView.extend({
       if(errors && errors.authorization){
         App.notifier.notify(errors.authorization);
       }
-      /*
-      if(response && response.status==401){
-        App.notifier.notify("You don't have permission to post on this board, please sign in");
-      }
-      */
-    },
-});
-
-App.Views.PostViewMini = Backbone.View.extend({
-    initialize:function(){
-      _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
-      this.commentsView = new App.Views.Comments({model:this.model.comments,postFrame:false});
-      this.commentCreateView = new App.Views.CommentCreate({post:this.model});
-      this.commentCreateView.bind("posted", this.createComment, this);
-      this.model.bind("change", this.render);
     },
 
-    render: function(){
-      console.log("render post mini");
-      this.$el.html('');
-      this.$el.append(this.commentsView.render().el);
-      this.$el.append(this.commentCreateView.render().$el);
-      return this;
+    getAttrs:function(){
+      return {content:this.$('#content').val(), comment:this.$('#comment').val()};
     },
-
-    createComment: function(comment){
-      this.commentsView.model.add(comment);
-    }
 });
 

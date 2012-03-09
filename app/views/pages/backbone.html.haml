@@ -1,6 +1,3 @@
-=render 'layouts/js_settings'
-:javascript
-  User= #{current_user ? current_user.to_json(:private_data=>true) : "null"};
-  $(function(){App.init();})
+=render '/layouts/app'
 #main-window
   Loading...

@@ -1,7 +1,7 @@
 /*global App Backbone _ Validator*/
 App.Models.User= Backbone.Model.extend({
     _className: "User",
-    subscriptions:{},
+    subscriptions:new App.Collections.Subscriptions(),
     defaults:{
       name:"",
       email:"",
@@ -53,9 +53,9 @@ App.Models.User= Backbone.Model.extend({
       if(sub){
         for(var i=0; i<sub.length; i++){
           var fId = sub[i].id;
-          if(this.subscriptions[fId]){
+          if(this.subscriptions.get(fId)){
             //update
-            this.subscriptions[fId].set({
+            this.subscriptions.get(fId).set({
               user_id:this.id, 
               forum_id:fId,
               forum_title:sub[i].title,
@@ -63,12 +63,12 @@ App.Models.User= Backbone.Model.extend({
             });
           }else{
             //new
-            this.subscriptions[fId] = new App.Models.Subscription({
+            this.subscriptions.add(new App.Models.Subscription({
               user_id:this.id, 
               forum_id:fId,
               forum_title:sub[i].title,
               subscribed:true,
-            });
+            }));
           }
         }
       }
@@ -96,8 +96,8 @@ App.Models.User= Backbone.Model.extend({
     },
 
     subscription:function(fId){
-      if(this.subscriptions[fId]){
-        return this.subscriptions[fId];
+      if(this.subscriptions.get(fId)){
+        return this.subscriptions.get(fId);
       }
       return null;
     },

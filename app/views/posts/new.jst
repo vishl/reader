@@ -2,7 +2,8 @@
   <%if(signedIn){%>
     <%if(subscribed){%>
       <h2>
-        <a data-target='#create-post-area' data-toggle='collapse' id='postheader'>Post a message...</a>
+        <a data-target='#create-post-area' data-toggle='collapse'
+          id='postheader'>Post a message to: <%=title%></a>
       </h2>
       <div class='collapse' id='create-post-area'>
         <form>

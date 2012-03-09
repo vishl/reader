@@ -8,8 +8,7 @@
     = render 'layouts/stylesheets', :enable_mobile=>false
     = stylesheet_link_tag 'commentview.css'
     = render 'layouts/scripts'
-    :javascript
-      $(function(){App.init();})
+    = render 'layouts/app'
   %body
     .navbar-inner.sidebar
       =link_to "Freeder", root_path, :class=>"brand", :target=>"_top"

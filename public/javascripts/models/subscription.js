@@ -29,8 +29,13 @@ App.Models.Subscription = Backbone.Model.extend({
         self.set({"subscribed":false, "id":null});
       }
     });
-  }
+  },
 
+  makeForum:function(){
+    return new App.Models.Forum({id:this.attributes.forum_id, title:this.attributes.forum_title});
+  },
+});
 
-
+App.Collections.Subscriptions = Backbone.Collection.extend({
+  model:App.Models.Subscription,
 });

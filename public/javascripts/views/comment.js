@@ -79,6 +79,9 @@ App.Views.CommentCreate = Backbone.FormView.extend({
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.post = this.options.post;
       this.subscription = this.options.subscription;
+      //if no subscription just assume we're subscribed and hope for the best
+      if(!this.subscription)this.subscription = new App.Models.Subscription({subscribed:true});
+
       this.subscription.bind("change:subscribed", this.render, this);
       this.model = new App.Models.Comment(null, {post:this.post});
     },

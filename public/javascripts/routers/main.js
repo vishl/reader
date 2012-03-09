@@ -1,4 +1,4 @@
-/*global App Backbone _ url_parse GlobalSettings*/
+/*global App Backbone _ GlobalSettings JST*/
 App.Routers.Main = Backbone.Router.extend({
     //constants
     POLLINTERVAL:300000, //5 minutes
@@ -7,7 +7,7 @@ App.Routers.Main = Backbone.Router.extend({
       "": "home",
       "forums/:sid":"forum",
       "commentview/:sid/:id":"commentView",
-      "post/:sid":"post",
+      "post":"postMini",
       "users/:id":"user",
     },
 
@@ -55,22 +55,22 @@ App.Routers.Main = Backbone.Router.extend({
 
       this.forum = new App.Models.Forum({id:sid});
       this.post = new App.Models.Post({id:id,forum:this.forum});
-      this.postView = new App.Views.PostViewMini({model:this.post});
-      $('#main-window').html(this.postView.el);
-      this.postView.render();
-      this.post.fetch();
+      this.postView = new App.Views.PostMini({model:this.post, forum:this.forum});
+      $('#main-window').html(JST['layouts/loading']());
+      var self=this;
+      this.forum.fetch();
+      this.post.fetch({success:function(){
+        $('#main-window').html(self.postView.el);
+        self.postView.render();
+      }});
     },
 
-    post:function(sid){
-      this.forum = new App.Models.Forum({id:sid});
-      this.forumHeaderView = new App.Views.ForumHeader({model:this.forum});
-      $('#header').html(this.forumHeaderView.render().el);
-      this.forum.fetch(); 
-      this.postCreateView = new App.Views.PostCreate({
-          attributes:{content:url_parse().args['content']},
-          forum:this.forum,
-      });
-      $('#main-window').html(this.postCreateView.render().el);
+    postMini:function(sid){
+      if(App.user.signedIn()){
+        this.postMiniView = new App.Views.PostMiniCreate();
+      }else{
+        $('#main-window').html("Please sign in and reload this page");
+      }
     },
 
     user:function(id){
