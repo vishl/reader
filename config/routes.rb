@@ -26,6 +26,7 @@ Reader::Application.routes.draw do
 #  post "/:sid",                :as=>"post_create",     :to=>"posts#create"
 #  post "/:sid/:id",            :as=>"comment_create",  :to=>"comments#create"
   resources :forums do
+    get 'users'
     resources :posts do
       resources :comments
     end

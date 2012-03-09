@@ -2,7 +2,8 @@
 App.Views.Forum = Backbone.View.extend({
   events:{
     "click #subscribe":"subscribe",
-    "click #unsubscribe":"unsubscribe"
+    "click #unsubscribe":"unsubscribe",
+    "click #launch-users":function(){this.forumUsersView.render();}
   },
 
   initialize:function(){
@@ -10,6 +11,7 @@ App.Views.Forum = Backbone.View.extend({
     this.model = new App.Models.Forum({id:this.options.sid});
     this.model.prefetch=true; //prefetch posts when we fetch the forum
     this.postsView = new App.Views.Posts({model:this.model.posts});
+    this.forumUsersView = new App.Views.ForumUsers({forum:this.model});
     this.subscription = new App.Models.Subscription({
       user_id:App.user.id, 
       forum_id:this.model.id, 
@@ -28,7 +30,6 @@ App.Views.Forum = Backbone.View.extend({
     this.$el.find('.forum-title').html(this.model.escape("title")+"&nbsp;");
     this.$el.find('.subscribe-area').html(JST['forums/subscribe']({subscribed:this.subscription.get("subscribed")}));
     //$('#bookmarklet-modal').html(JST['layouts/bookmarklet']({title:this.model.escape("title"),sid:this.model.id,origin:window.location.origin}));
-    //$('.navbar .forum-title').html(this.model.escape("title"));
   },
 
   renderAll: function(){
@@ -37,6 +38,7 @@ App.Views.Forum = Backbone.View.extend({
     this.render();
     this.$el.append(this.postCreateView.render().el);
     this.$el.append(this.postsView.render().el);
+    this.$el.find('.modal-body').html(this.forumUsersView.el);
     return this;
   },
 

@@ -131,4 +131,13 @@ class ForumsController < ApplicationController
     render :layout=>false
   end
 
+  def users
+    @forum=Forum.find_by_sid(params[:forum_id])
+    if(!@forum)
+      render :json=>{"forum"=>"is invalid"}, :status=>400
+    else
+      render :json=>@forum.users
+    end
+  end
+
 end
