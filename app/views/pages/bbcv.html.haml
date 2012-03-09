@@ -11,7 +11,7 @@
     = render 'layouts/app'
   %body
     .navbar-inner.sidebar
-      =link_to "Freeder", root_path, :class=>"brand", :target=>"_top"
+      =link_to GlobalSettings.site_name, root_path, :class=>"brand", :target=>"_top"
       .pull-right= link_to "Close", @content, :target=>"_top"
       .info Comment view
       -#

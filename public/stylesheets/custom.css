@@ -224,6 +224,10 @@ a#postheader{
   margin:0px;
 }
 
+.comment-post-form textarea{
+  width:90%;
+}
+
 /*
 .comments{
   padding-top:10px;
