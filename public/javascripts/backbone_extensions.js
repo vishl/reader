@@ -108,6 +108,7 @@ Backbone.FormView = Backbone.View.extend({
 
         self.$el.removeModelErrors();
         self.$el.addClass('loading');
+        self.$el.removeClass('loaded');
         self._postDisable=true;
         var attrs = {};
         var target = $(e.currentTarget);
@@ -140,6 +141,7 @@ Backbone.FormView = Backbone.View.extend({
           console.log("success");
           console.log(resp);
           self.$el.removeClass('loading');
+          self.$el.addClass('loaded');
           self._postDisable=false;
           if(self.afterSave)self.afterSave(model, resp);
           model.trigger("sync", model, resp);

@@ -16,20 +16,20 @@ class ForumsController < ApplicationController
 
   def create
     forum = Forum.new(params.slice("title"))
-    if(forum.save)
-      sub = current_user.subscriptions.build(:forum_id=>forum.id)
-      sub.status="owner"
-      if(sub.save)
-        #no errors
-        #render :json=>{'forum'=>forum.attributes.slice('title', 'sid')}
-        render :json=>{'forum'=>forum.as_json(:current_user=>current_user)}
-      else
-        logger.error("Error creating forum sub: " + sub.errors.to_s)
-        render :nothing=>true, :status=>500
-      end
-    else
+    if(!forum.save)
       logger.error("Error creating forum: " + forum.errors.to_s)
       render :json=>forum.errors, :status=>400
+    else
+      sub = current_user.subscriptions.build(:forum_id=>forum.id)
+      sub.status="owner"
+      if(!sub.save)
+        logger.error("Error creating forum sub: " + sub.errors.to_s)
+        render :nothing=>true, :status=>500
+      else
+        #no errors
+        #render :json=>{'forum'=>forum.attributes.slice('title', 'sid')}
+        render :json=>{'forum'=>forum.as_json(:current_user=>current_user), 'version'=>GlobalSettings.version}
+      end
     end
   end
 
@@ -61,24 +61,9 @@ class ForumsController < ApplicationController
       else
         @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
       end
-      #TODO get rid of this shit
-#      if @forum.posts.count>0
-#        lp = @forum.posts.latest.first
-#        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
-#      end
-#      if @forum.comments.count>0
-#        lp = @forum.comments.latest.first
-#        @latest_post = {'id'=>lp.id, 'timestamp'=>lp.timestamp}
-#      end
     else
       has_error=true
       error="Forum not found"
-#      respond_to do |format|
-#        format.html do 
-#          redirect_to root_path
-#          flash[:error] = "Forum not found"
-#        end
-#      end
     end
 
     respond_to do |format|

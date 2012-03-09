@@ -1,10 +1,12 @@
 <h1>Sign Up</h1>
 <form class="sign-in" id="sign-up" novalidate>
-  <input type="hidden" id="signup" value="true" />
-  <input type="text" id="name" placeholder="name" data-placement="right" value="<%=model.get("name")%>"></input>
-  <input type="email" id="email" placeholder="email" data-placement="right" value="<%=model.get("email")%>"></input>
-  <input type="password" id="password" placeholder="password" data-placement="right" value="<%=model.get("password")%>"></input>
-
+  <div>
+    <input type="hidden" id="signup" value="true" />
+    <input type="text" id="name" placeholder="name" data-placement="right" value="<%=model.get("name")%>"></input>
+    <input type="email" id="email" placeholder="email" data-placement="right" value="<%=model.get("email")%>"></input>
+    <input type="password" id="password" placeholder="password" data-placement="right" value="<%=model.get("password")%>"></input>
+  </div>
 
   <input type="submit" class="btn" value="Sign Up"></input>
+  <img src="/images/loading.gif" class="during-load">
 </form>

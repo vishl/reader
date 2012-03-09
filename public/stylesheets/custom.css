@@ -36,6 +36,20 @@ table#loading td{
   height:300px;
 }
 
+.during-load,.after-load{
+  display:none;
+}
+
+.loading .during-load{
+  display:inline;
+}
+
+.loaded .after-load{
+  display:inline;
+}
+
+
+
 /********************************** Header **************************************/
 /*
 .navbar-inner {
@@ -115,18 +129,6 @@ table#loading td{
 }
 
 /********************************** Home page ***********************************/
-form.sign-in input{
-  display:block;
-}
-
-form.sign-in input[type="checkbox"]{
-  display:inline-block;
-  margin-right:5px;
-}
-
-form.sign-in select{
-  width:91px;
-}
 
 /********************************** Forum page ***********************************/
 .name{
