@@ -10,7 +10,7 @@ App.Views.Home = Backbone.View.extend({
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.signInView = new App.Views.SignIn({model:App.user});
       this.signUpView = new App.Views.SignIn({model:App.user, signUp:true});
-      this.forumListView = new App.Views.ForumList({model:App.user});
+      //this.forumListView = new App.Views.ForumList({model:App.user});
 
       App.user.bind("sync", this.render, this);
       this.signInView.bind("submitting", this.removeErrors, this);
@@ -48,8 +48,8 @@ App.Views.Home = Backbone.View.extend({
       console.log("render home");
       if(App.user.signedIn()){
         $(this.el).html(JST['pages/home']());
-        this.$el.append(this.forumListView.el);
-        this.forumListView.render();
+        //this.$el.append(this.forumListView.el);
+        //this.forumListView.render();
       }else{
         $(this.el).html(JST['pages/home_login']());
         this.$('#sign-in-area').html(this.signInView.el);

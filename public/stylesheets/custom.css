@@ -137,7 +137,43 @@ table#loading td{
 }
 
 /********************************** Home page ***********************************/
+#home-bg{
+  position: absolute;
+  top: 33px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: url('/images/freaderbg.jpg') no-repeat;
+  z-index: -1;
+  opacity: .3;
+}
 
+#home-container{
+  margin-top:65px
+}
+
+#hp-title{
+  font-size:60px;
+  line-height:70px;
+  font-weight:bold;
+}
+#hp-subtitle{
+  margin-bottom:30px;
+}
+
+form#create #title{
+  font-size:30px;
+  height: 40px;
+  line-height:30px;
+  width:400px;
+}
+
+form#create input[type="submit"]{
+  font-size:30px;
+  line-height: 30px;
+  padding:8px;
+  border-radius:0px;
+}
 /********************************** Forum page ***********************************/
 .name{
   font-weight:bold;
