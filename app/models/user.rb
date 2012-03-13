@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
   before_validation {self.reminder_day = "Never" if self.reminder==false}
 
   @email_regex = /^[\w+-]+(\.[\w+-]+)*@([\w-]+\.)+\w+$/i
-  @name_regex = /^[A-Za-z -]{1,30}$/
+  @name_regex = /^[A-Za-z\u00C0-\u00FF -]{1,30}$/
   validates :name,  :format => {:with => @name_regex}
   validates :email, :format   => { :with => @email_regex },
                     :uniqueness => {:case_sensitive => false, :message=>"already has an account"}

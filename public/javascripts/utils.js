@@ -145,12 +145,18 @@ function convDate(datestr){
   }
   return newdate;
 }
-$(function(){
-    $(".date-delta").each(function(){
-        var datestr = $(this).html();
-        $(this).html(convDate(datestr));
-    });
-});
+
+$.fn.convDate = function(){
+  var $this = $(this);
+  var datestr;
+  if($this.data("orig-date")){
+    datestr = $this.data("orig-date");
+  }else{
+    datestr = $this.html();
+    $this.data("orig-date", datestr);
+  }
+  $this.html(convDate(datestr));
+};
 
 var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
 function is_link(text){

@@ -1,0 +1,1 @@
+jammit; git add .; git commit -am "$1"; git push; git push freader-staging;

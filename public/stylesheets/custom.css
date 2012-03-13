@@ -149,7 +149,6 @@ table#loading td{
 }
 
 #home-container{
-  margin-top:65px
 }
 
 #hp-title{
@@ -161,14 +160,19 @@ table#loading td{
   margin-bottom:30px;
 }
 
-form#create #title{
+#home-container h1{
+}
+
+#home-container form input[type="text"],
+#home-container form input[type="email"],
+#home-container form input[type="password"]{
   font-size:30px;
   height: 40px;
   line-height:30px;
-  width:400px;
+  width:97%;
 }
 
-form#create input[type="submit"]{
+#home-container form input[type="submit"]{
   font-size:30px;
   line-height: 30px;
   padding:8px;

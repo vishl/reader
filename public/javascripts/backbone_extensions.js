@@ -247,7 +247,7 @@ $.fn.displayModelErrors = function (errors, options){
   return this;
 };
 
-$.fn.removeModelErrors = function(form){
+$.fn.removeModelErrors = function(){
   $(this).find('.model-error').each(function(){
       $(this).removeClass('model-error')
              .tooltip('hide')

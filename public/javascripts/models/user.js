@@ -30,7 +30,7 @@ App.Models.User= Backbone.Model.extend({
         name:{presence:true, 
               presence_message:"Please enter your name",
               length:[0,30],
-              format:/^[a-zA-Z \-]*$/,
+              format:/^[a-zA-Z\u00C0-\u00FF \-]*$/,
               format_message:"Letters, spaces and hyphens only"
         },
         email:{presence:true,
