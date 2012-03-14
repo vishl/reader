@@ -1,3 +1,4 @@
+/*Copyright 2012 Vishal Parikh*/
 /*global Backbone _ Utils*/
 ////////////////////////////////// Backbone Extensions /////////////////////////
 //This overrides the toJSON function to always insert the authenticity token

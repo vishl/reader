@@ -9,12 +9,6 @@
     = render 'layouts/scripts'
     -#%link{:rel=>"shortcut icon", :type=>"image/x-icon", :href=>"/images/icons/favicon.png"}
   %body
-    -#= render 'layouts/header'
-    -#= yield :header
     #header
     = yield
     -#= render 'layouts/footer'
-    -#if(Rails.env.development?)
-      = debug(params.merge({:path=>request.fullpath})) 
-
-

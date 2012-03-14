@@ -1,11 +1,26 @@
+#Copyright 2012 Vishal Parikh
+#This file is part of Freader.
+#Freader is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#Freader is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with Freader.  If not, see <http://www.gnu.org/licenses/>.
+
 class Notifier < ActionMailer::Base
-  #TODO better from
-  #default :from => "#{GlobalSettings.site_name} <notifications@mail.#{GlobalSettings.app_domain}>"
-  default :from => "#{GlobalSettings.site_name}@mail.#{GlobalSettings.app_domain}"
+  default :from => "#{GlobalSettings.site_name} <notifications@#{GlobalSettings.mail_domain}>"
+  #default :from => "#{GlobalSettings.site_name}@mail.#{GlobalSettings.app_domain}"
 
   def signup(user)
     @user = user
-    mail(:to=>user.email, :subject=>"Welcome to #{GlobalSettings.site_name}")
+    mail(:to=>user.email, 
+         :subject=>"Welcome to #{GlobalSettings.site_name}")
   end
 
   def updates(user, forums)

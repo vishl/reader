@@ -1,3 +1,18 @@
+#Copyright 2012 Vishal Parikh
+#This file is part of Freader.
+#Freader is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#Freader is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with Freader.  If not, see <http://www.gnu.org/licenses/>.
+
 class ForumsController < ApplicationController
   include ForumsHelper
   before_filter :authenticate, :only=>[:create]
@@ -27,7 +42,6 @@ class ForumsController < ApplicationController
         render :nothing=>true, :status=>500
       else
         #no errors
-        #render :json=>{'forum'=>forum.attributes.slice('title', 'sid')}
         render :json=>{'forum'=>forum.as_json(:current_user=>current_user), 'version'=>GlobalSettings.version}
       end
     end
@@ -41,12 +55,12 @@ class ForumsController < ApplicationController
     @showcomments = params[:showcomments].present?
     @prefetch = params[:prefetch] == "true"
     if(@forum && @prefetch)
-      if(@showcomments)
+      if(@showcomments)#sort by comments
         #shows only posts with comments and joins on comments
-        #this only works in sql lite.. something about needing to aggregate all the columns..piece of shit..
+        #this only works in sql lite.. something about needing to aggregate all the columns..
         #@posts = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").group("posts.id").limit(20).includes(:comments)
         np = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").limit(50).includes(:comments)
-        #have to do this bullshit to get unique posts
+        #have to do this to get unique posts
         ids={}
         @posts=[]
         np.each do |p|
