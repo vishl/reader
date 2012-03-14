@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License        
 along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
 */
-/*global App Backbone _ JST*/
+/*global App Backbone _ JST mpq*/
 App.Views.Home = Backbone.View.extend({
     model: new App.Models.Forum(),
 
@@ -49,6 +49,7 @@ App.Views.Home = Backbone.View.extend({
               //navigate to forum
               //trigger causes the router to route
               App.router.navigate('forums/'+resp.forum.id, {trigger:true});
+              mpq.track("create", {count:App.user.subscriptions.length});
             }
           },
           error: function(){

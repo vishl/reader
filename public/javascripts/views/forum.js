@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License        
 along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
 */
-/*global App Backbone _ JST*/
+/*global App Backbone _ JST mpq*/
 App.Views.Forum = Backbone.View.extend({
   events:{
     "click #subscribe":"subscribe",
@@ -65,6 +65,7 @@ App.Views.Forum = Backbone.View.extend({
 
   newPost: function(posts){
     this.postsView.model.add(posts);
+    mpq.track("post", {source:"forum"});
   },
 
   subscribe:function(e){
@@ -78,7 +79,7 @@ App.Views.Forum = Backbone.View.extend({
     console.log("unsubscribing from "+this.model.id);
     e.preventDefault();
     this.subscription.unsubscribe();
-    App.notifier.notify("You are now unsubscribed to "+this.model.escape("title"));
+    App.notifier.notify("You are now unsubscribed from "+this.model.escape("title"));
   },
 
 });

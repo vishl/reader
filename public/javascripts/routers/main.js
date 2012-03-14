@@ -86,7 +86,7 @@ App.Routers.Main = Backbone.Router.extend({
       if(App.user.signedIn()){
         this.postMiniView = new App.Views.PostMiniCreate();
       }else{
-        $('#main-window').html("Please sign in and reload this page");
+        $('#main-window').html('Please <a target="_blank" href="http://'+GlobalSettings.app_domain+'">sign in</a> and reload this page');
       }
     },
 

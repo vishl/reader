@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License        
 along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
 */
-/*global App Backbone _ JST url_parse*/
+/*global App Backbone _ JST url_parse mpq*/
 //create and select
 App.Views.PostMiniCreate = Backbone.View.extend({
   _className:"PostMiniCreate",
@@ -35,6 +35,7 @@ App.Views.PostMiniCreate = Backbone.View.extend({
     });
 
     this.forumSelectView.bind("change", this.changeForum, this);
+    this.postCreateView.bind("posted", function(){mpq.track("post", {source:"bookmarklet"});});
 
     $('#main-window').html(this.el);
     this.render();
@@ -87,6 +88,7 @@ App.Views.PostMini = Backbone.View.extend({
 
     createComment: function(comment){
       this.commentsView.model.add(comment);
+      mpq.track("comment", {source:"frame"});
     }
 });
 

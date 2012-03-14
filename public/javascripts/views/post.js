@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License        
 along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
 */
-/*global App Backbone _ JST Utils*/
+/*global App Backbone _ JST Utils mpq*/
 App.Views.Post = Backbone.View.extend({
     post:null,  //TODO what is this..
     className:'post-area', //the class of the containing <div>
@@ -39,6 +39,7 @@ App.Views.Post = Backbone.View.extend({
 
     createComment: function(comment){
       this.commentsView.model.add(comment);
+      mpq.track("comment", {source:"main"});
     },
 
     ////////////////////////////////// helpers /////////////////////////////////////
@@ -132,11 +133,6 @@ App.Views.PostCreate = Backbone.FormView.extend({
       });
       this.delegateEvents(); //have to call this explicity if the form gets rerendered
       return this;
-    },
-
-    beforePost:function(){
-      //validate the user name
-      return true;
     },
 
     afterSave : function(){

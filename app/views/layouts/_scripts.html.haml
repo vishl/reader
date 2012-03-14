@@ -1,3 +1,7 @@
-:javascript
 = include_javascripts :common
-=yield :scripts
+-if GlobalSettings.mixpanel_enabled
+  = render 'layouts/mixpanel'
+-else
+  :javascript
+    mpq={track:function(){}}
+= yield :scripts

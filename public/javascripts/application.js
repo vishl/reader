@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
 */
 
-/*global Backbone _ User*/
+/*global Backbone _ User mpq*/
 var App = {
   Views:       {},
   Routers:     {},
@@ -27,6 +27,7 @@ var App = {
     this.user= new App.Models.User();
     if((typeof User!=="undefined") && (User !== null)){
       this.user.inject(User, null, {silent:true});
+      mpq.identify(this.user.id);
     }
     this.router = new App.Routers.Main();
     Backbone.history.start();
