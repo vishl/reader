@@ -3,5 +3,5 @@
   = render 'layouts/mixpanel'
 -else
   :javascript
-    mpq={track:function(){}}
+    mpq={track:function(){},identify:function(){}}
 = yield :scripts
