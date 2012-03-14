@@ -100,16 +100,6 @@ Backbone.FormView = Backbone.View.extend({
       var self=this;
       if(!self._postDisable){  //prevent multiple submissions
         console.log("post");
-        if(self.beforePost){
-          if(!self.beforePost()){
-            return;
-          }
-        }
-
-        self.$el.removeModelErrors();
-        self.$el.addClass('loading');
-        self.$el.removeClass('loaded');
-        self._postDisable=true;
         var attrs = {};
         var target = $(e.currentTarget);
         for(var k in this.model.attributes){
@@ -123,13 +113,27 @@ Backbone.FormView = Backbone.View.extend({
             }
           }
         }
+
+        //additional validation
+        if(self.beforePost){
+          var err={};
+          if(!self.beforePost(attrs, err)){  
+            self.$el.displayModelErrors(err);
+            return;
+          }
+        }
+
         var errorFn = function(model, errors){
           console.log("error");
           console.log(errors);
           var response;
           if(errors.responseText){  //this is what a response from the server looks like
             response = errors;
-            errors=JSON.parse(errors.responseText);
+            try{
+              errors=JSON.parse(errors.responseText);
+            }catch(err){
+              //json parse error, do nothing
+            }
           }
           self.$el.removeClass('loading');
           self._postDisable=false;
@@ -147,6 +151,12 @@ Backbone.FormView = Backbone.View.extend({
           model.trigger("sync", model, resp);
           self.trigger("posted", model);
         };
+
+        //POST
+        self.$el.removeModelErrors();
+        self.$el.addClass('loading');
+        self.$el.removeClass('loaded');
+        self._postDisable=true;
 
         if(this.options.noSave){
           if(this.model.set(attrs,{error:errorFn, only:Object.keys(attrs)})){

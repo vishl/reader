@@ -58,6 +58,19 @@ class User < ActiveRecord::Base
               :if => lambda{self.password.present?}
 
   ################################### Methods ####################################
+  
+  def subscribed_to?(forum)
+    if(forum.nil?)
+      return false;
+    else
+      sub = Subscription.find_by_user_id_and_forum_id(id, forum.id)
+      if(sub && sub.subscribed?)
+        return true;
+      else
+        return false;
+      end
+    end
+  end
   #password helpers
 
   #if we update our password, we must supply the old password

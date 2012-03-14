@@ -6,12 +6,12 @@ gem 'sqlite3'
 gem 'twilio-ruby'
 gem 'bcrypt-ruby', :require => "bcrypt"
 gem 'jquery-rails', '>= 1.0.12'
-gem 'delayed_job'
+gem 'delayed_job_active_record'
 gem 'haml'
 gem 'twitter_bootstrap_form_for'
 gem 'will_paginate', '~> 3.0'
 gem "rails-settings-cached", :require => "rails-settings"
-gem 'jammit', :git=>"https://github.com/documentcloud/jammit.git"
+gem 'jammit'
 
 
 group :development do
@@ -19,3 +19,9 @@ group :development do
     gem 'ruby-debug19', :require => 'ruby-debug'
 end
 
+group :production do
+  gem 'hirefire'
+end
+
+
+# vim: filetype=ruby

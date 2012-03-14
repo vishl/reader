@@ -12,6 +12,7 @@ App.Views.Forum = Backbone.View.extend({
     this.model = new App.Models.Forum({id:this.options.sid});
     this.model.prefetch=true; //prefetch posts when we fetch the forum
     this.forumUsersView = new App.Views.ForumUsers({forum:this.model});
+    this.forumInviteView = new App.Views.ForumInvite({forum:this.model});
     this.subscription = new App.Models.Subscription({
       user_id:App.user.id, 
       forum_id:this.model.id, 
@@ -29,7 +30,7 @@ App.Views.Forum = Backbone.View.extend({
   },
 
   render:function(){
-    this.$el.find('.forum-title').html(this.model.escape("title")+"&nbsp;");
+    this.$el.find('.forum-title').html(this.model.escape("title"));
     this.$el.find('.subscribe-area').html(JST['forums/subscribe']({subscribed:this.subscription.get("subscribed")}));
     //$('#bookmarklet-modal').html(JST['layouts/bookmarklet']({title:this.model.escape("title"),sid:this.model.id,origin:window.location.origin}));
   },
@@ -40,7 +41,9 @@ App.Views.Forum = Backbone.View.extend({
     this.render();
     this.$el.append(this.postCreateView.render().el);
     this.$el.append(this.postsView.render().el);
-    this.$el.find('.modal-body').html(this.forumUsersView.el);
+    this.$el.find('#users-modal .modal-body').html(this.forumUsersView.el);
+    this.$el.find('#invite-modal .modal-body').html(this.forumInviteView.el);
+    this.forumInviteView.render();
     return this;
   },
 
@@ -52,12 +55,14 @@ App.Views.Forum = Backbone.View.extend({
     console.log("subscribing to "+this.model.id);
     e.preventDefault();
     this.subscription.subscribe();
+    App.notifier.notify("You are now subscribed to "+this.model.escape("title"));
   },
 
   unsubscribe:function(e){
     console.log("unsubscribing from "+this.model.id);
     e.preventDefault();
     this.subscription.unsubscribe();
+    App.notifier.notify("You are now unsubscribed to "+this.model.escape("title"));
   },
 
 });

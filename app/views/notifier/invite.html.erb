@@ -1,0 +1,16 @@
+<%=render 'notifier/header'%>
+<span style="
+  font-size:18px;
+  font-weight:bold;
+  ">
+  <%=@name%> wants you to check out 
+  <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain+"#forums/#{@forum.sid}"%>">
+    <%=@forum.title%>
+  </a>
+  on 
+  <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain%>"><%=GlobalSettings.site_name%></a></h1>
+</span>
+<p>
+Sign up and subscribe to share and to stay up to date when your friends post.
+</p>
+<%=render 'notifier/footer', :email_prefs=>false%>

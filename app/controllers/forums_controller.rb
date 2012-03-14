@@ -125,4 +125,19 @@ class ForumsController < ApplicationController
     end
   end
 
+  def invite
+    @forum=Forum.find_by_sid(params[:forum_id])
+    @addresses = JSON.parse(params[:addresses])
+    if(!@forum)
+      render :json=>{"forum"=>"is invalid"}, :status=>400
+    elsif(!current_user || !current_user.subscribed_to?(@forum))
+      render :json=>{"authorization"=>["permission denied"]}, :status=>401
+    elsif(@addresses.length<=0)
+      render :json=>{"addresses"=>["is blank"]}, :status=>400
+    else
+      logger.debug("Inviting #{@addresses.length} people");
+      render :json=>{"addresses"=>""}
+      Batch.delay.send_invites(@addresses, current_user, @forum);
+    end
+  end
 end

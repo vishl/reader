@@ -6,7 +6,11 @@
           <td style="
             border-top:solid 1px #aaa;
             ">
-            You can change your email preferences <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain+"/#users/#{@user.sid}"%>">here</a>
+            <%if email_prefs%>
+              You can change your email preferences <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain+"/#users/#{@user.sid}"%>">here</a>
+            <%end%>
+            <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain%>"><%=GlobalSettings.site_name%></a>
+            is a private, social reading platform.  Share and comment on articles with people you care about.
           </td>
         </tr>
       </table>

@@ -13,4 +13,12 @@ class Notifier < ActionMailer::Base
     @forums=forums
     mail(:to=>user.email, :subject=>"New stuff is posted on #{GlobalSettings.site_name}!")
   end
+
+  def invite(to_address, from, forum)
+    @from = from
+    @name = from.name
+    @forum= forum
+    mail(:to=>to_address, :from=>"#{@from.name} <#{@from.email}>", :subject=>"New stuff is posted on #{GlobalSettings.site_name}!")
+  end
+
 end

@@ -1,5 +1,5 @@
 <%=render 'notifier/header'%>
 <h1><%= @user.name %>, welcome to <a href="<%=GlobalSettings.app_protocol+GlobalSettings.app_domain%>"><%=GlobalSettings.site_name%></a></h1>
   <p>Thanks for joining and have a great day!</p>
-<%=render 'notifier/footer'%>
+  <%=render 'notifier/footer', :email_prefs=>true%>
 

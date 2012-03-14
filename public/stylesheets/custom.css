@@ -190,6 +190,14 @@ table#loading td{
   padding:3px;
 }
 
+.subscribe-area{
+  display:inline-block;
+}
+
+#invite-modal textarea{
+  width:97%;
+}
+
 .readerurl{
   white-space:nowrap;
 }
