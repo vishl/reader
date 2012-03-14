@@ -8,4 +8,5 @@ GlobalSettings.defaults['app_protocol'] = "http://"
 GlobalSettings.defaults['deployment'] = "development"
 GlobalSettings.defaults['email_enabled'] = false
 GlobalSettings.defaults['version'] = "0"
+GlobalSettings.defaults['console'] = true
 

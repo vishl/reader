@@ -4,4 +4,8 @@
   GlobalSettings.app_domain = "#{GlobalSettings.app_domain}";
   GlobalSettings.deployment = "#{GlobalSettings.deployment}";
   GlobalSettings.version    = "#{GlobalSettings.version}";
+  GlobalSettings.console    = "#{GlobalSettings.console}";
+  if(GlobalSettings.console=="false"){
+    if(console){console.log=function(){}}
+  }
   
