@@ -15,18 +15,19 @@ dv.style.background="white";
 dv.style.zIndex="2000001";
 //div contents: close link and iframe
 dv.innerHTML=
-"\
-  <div style='float:right;padding:10px;height:20px;'>\
-    <a href='#' > close </a> \
+'\
+  <div style="float:right;padding:10px;height:20px;">\
+    <a href="#" > close </a> \
   </div>\
-    <div style='padding:10px;height:20px;font-size:14px;font-weight:bold;font-family:Helvetica'>\
+    <div style="padding:10px;height:20px;font-size:14px;font-weight:bold;font-family:Helvetica">\
     Post to <%=GlobalSettings.site_name%>\
     </div>\
   <div>\
-    <iframe style='width:100%;height:360px;border:0px;' scrolling='no' src='<%="#{GlobalSettings.app_protocol}#{GlobalSettings.app_domain}?content="%>"+args+"#post'>\
+  <iframe style="width:100%;height:360px;border:0px;" scrolling="no" \
+  src="<%=GlobalSettings.app_protocol + GlobalSettings.app_domain%>?content='+args+'#post">\
     </iframe>\
   </div>\
-"
+'
 //close link functionality
 closeLink = dv.getElementsByTagName('a')[0];
 closeLink.onclick=function(){document.body.removeChild(dv); return false;};
