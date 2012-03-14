@@ -33,7 +33,7 @@ class Notifier < ActionMailer::Base
     @from = from
     @name = from.name
     @forum= forum
-    mail(:to=>to_address, :from=>"#{@from.name} <#{@from.email}>", :subject=>"Check out #{@forum.title} on #{GlobalSettings.site_name}!")
+    mail(:to=>to_address, :from=>"#{@from.name} via #{GlobalSettings.site_name} <notifications@#{GlobalSettings.mail_domain}>", :subject=>"Check out #{@forum.title} on #{GlobalSettings.site_name}!")
   end
 
 end
