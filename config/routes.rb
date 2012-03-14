@@ -1,43 +1,35 @@
 Reader::Application.routes.draw do
   root :to=>"pages#backbone"
 
-  get "/backbone", :as=>:backbone, :to=>"pages#backbone"
-  get "/bbcv", :as=>:bbcv, :to=>"pages#bbcv"
-  ##api
-  #bookmarklet
-  get "/bookmarklet",                                  :to=>"pages#bookmarklet"
-  get "/post/:sid",            :as=>:post,             :to=>"forums#post"
-  #google reader style
-  #get "/createpost/:sid",      :as=>"post_create_get", :to=>"posts#create"
-  #ajax request to see if we should update
-  #get "/latest/:sid",                                  :to=>"forums#latest"
-
-  #get "/postframe/:sid/:id",   :as=>:postframe,        :to=>"forums#postframe"
-  get "/postframe",   :as=>:postframe,        :to=>"pages#postframe"
-  #get "/commentview/:sid/:id", :as=>:commentview,      :to=>"forums#commentview"
-
-  post '/signin', :as=>:signin, :to=>"sessions#create"
-  match '/signout', :to=>"sessions#destroy"
-  resources :users
+  resources :users do
+    post "genreset",      :to=>"users#gen_reset",  :as=>"genreset", :on=>:collection
+    put "reset/:token",  :to=>"users#reset_post", :as=>"reset",    :on=>:member
+  end
   resources :subscriptions, :only=>[:create, :destroy]
-
-#  post "/forums/spawn",        :as=>:spawn,            :to=>"forums#spawn"
-#  get  "/:sid",                :as=>:forum,            :to=>"forums#show"
-#  post "/:sid",                :as=>"post_create",     :to=>"posts#create"
-#  post "/:sid/:id",            :as=>"comment_create",  :to=>"comments#create"
   resources :forums do
-    get 'users'
-    post 'invite'
+    get "users"
+    post "invite"
     resources :posts do
       resources :comments
     end
   end
 
+  #non resourceful helpers
+  post "/signin",     :to=>"sessions#create"
+  match "/signout",   :to=>"sessions#destroy"
+
+  get "/postframe",   :to=>"pages#postframe"
+  get "/bbcv",        :to=>"pages#bbcv"
+  get "/bookmarklet", :to=>"pages#bookmarklet"
+  #get "/post/:sid",         :as=>:post,             :to=>"forums#post"
+  #google reader style
+  #get "/createpost/:sid",  :as=>"post_create_get", :to=>"posts#create"
+
 
   #admin
-  get   '/adminsettings',   :to => 'global_settings#edit'
-  post  '/adminsettings',   :to => 'global_settings#update'
+  get   "/adminsettings",   :to => "global_settings#edit"
+  post  "/adminsettings",   :to => "global_settings#update"
 
-  get '/test', :to=> 'pages#test'
+  get "/test", :to=> "pages#test"
 
 end

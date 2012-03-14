@@ -1,0 +1,16 @@
+<div>
+  <h2>Resetting Password for <%=model.escape("name")%></h2>
+  <form class="form-horizontal" action="/users/<%=model.id%>/reset/<%=model.escape("token")%>" novalidate>
+    <div class="control-group">
+      <label class="control-label">New Password</label>
+      <div class="controls">
+        <input type="password" id="password"></input>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn">Reset</button>
+      <img src="/images/loading.gif" class="during-load">
+      <div class="after-load"> Password successfully reset.  </div>
+    </div>
+  </form>
+</div>

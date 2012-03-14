@@ -52,4 +52,43 @@ class UsersController < ApplicationController
   def index
     @users = User.paginate(:page => params[:page])
   end
+
+  ################################### Password reset ##############################
+  def gen_reset
+    email = params[:email]
+    user = User.find_by_email_lc(email)
+    if(user.nil?)
+      render :json=>{"email"=>["Does not have an account"]}, :status=>400
+    else
+      unless(user.generate_reset)
+        render :json=>{"internal"=>["#{user.errors}"]}, :status=>500
+      else
+        #success
+        #TODO send email
+        logger.info("ACTION: User generated reset #{@user}")
+        render :json=>{}
+      end
+    end
+  end
+
+  def reset_post
+    user = User.find_by_sid(params[:id])
+    @token = params[:token]
+    if(!(user && user.validate_password_token(@token)))
+      render :json=>{"authorization"=>"Permission Denied"}, :status=>401
+    else
+      user.password = params[:password]
+      user.reset_override=true   #lets us reset the password without giving the old one
+      if(user.password.blank?)
+        render :json=>{"password"=>["Please enter a password"]}, :status=>400
+      elsif(!user.save)
+        render :json=>user.errors, :status=>400
+      else
+        #success, remove token since its one time use
+        user.invalidate_password_token
+        render :json=>user
+      end
+    end
+  end
+  
 end

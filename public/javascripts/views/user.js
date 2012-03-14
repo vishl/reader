@@ -119,3 +119,49 @@ App.Views.UserEditPassword = Backbone.FormView.extend({
     this.model.clearPasswords();
   }
 });
+
+//This is a top level view to reset the users password with a token
+App.Views.UserResetPage = Backbone.View.extend({
+  _className:"UserResetPage",
+  initialize:function(){
+    this.headerView =  new App.Views.ForumHeader();
+    $('#header').html(this.headerView.el);
+    this.userView = new App.Views.UserReset({model:this.model});
+    $('#main-window').html(this.userView.el);
+
+    this.render();
+  },
+  beforeClose:function(){
+    this.headerView.close();
+    this.userView.close();
+  },
+
+  render:function(){
+    console.log("render user reset page");
+    this.headerView.render();
+    this.userView.render();
+  }
+});
+
+App.Views.UserReset = Backbone.FormView.extend({
+  _className:"UserReset",
+  initialize:function(){
+    _.bindAll(this);
+  },
+  render:function(){
+    this.$el.html(JST['users/reset']({model:this.model}));
+  },
+  onError:function(model, errors, response){
+    if(errors.authorization){
+      App.notifier.notify("Sorry, it looks like this reset link is not valid.  Please generate another one",
+                          {type:'error', expire:0});
+    }
+  },
+});
+
+App.Views.Forgot = Backbone.FormView.extend({
+  _className:"Forgot",
+  render:function(){
+    this.$el.html(JST['users/forgot']({model:this.model}));
+  },
+});

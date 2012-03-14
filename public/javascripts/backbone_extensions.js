@@ -101,6 +101,7 @@ Backbone.FormView = Backbone.View.extend({
       var self=this;
       if(!self._postDisable){  //prevent multiple submissions
         console.log("post");
+        var url = "";
         var attrs = {};
         var target = $(e.currentTarget);
         for(var k in this.model.attributes){
@@ -114,6 +115,8 @@ Backbone.FormView = Backbone.View.extend({
             }
           }
         }
+
+        url = target.attr("action");
 
         //additional validation
         if(self.beforePost){
@@ -159,6 +162,15 @@ Backbone.FormView = Backbone.View.extend({
         self.$el.removeClass('loaded');
         self._postDisable=true;
 
+        var saveOpts = {
+              success:successFn,
+              error:errorFn,
+              only:Object.keys(attrs)
+            };
+        if(url && url.length){
+          saveOpts.url = url;
+        }
+
         if(this.options.noSave){
           if(this.model.set(attrs,{error:errorFn, only:Object.keys(attrs)})){
             successFn.call(this, this.model,null);
@@ -166,11 +178,7 @@ Backbone.FormView = Backbone.View.extend({
         }else{
           this.model.save(
             attrs,
-            {
-              success:successFn,
-              error:errorFn,
-              only:Object.keys(attrs)
-            }
+            saveOpts
           );
         }
       }

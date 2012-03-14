@@ -35,7 +35,7 @@
 class User < ActiveRecord::Base
   include SessionsHelper
 
-  attr_accessor :password, :current_password, :reminder
+  attr_accessor :password, :current_password, :reminder, :reset_override
   attr_accessible :name, :email, :password, :current_password, :reminder_day, :reminder_time, :reminder
 
   #initializer
@@ -90,7 +90,7 @@ class User < ActiveRecord::Base
 
   #if we update our password, we must supply the old password
   def check_password_update
-    if(encrypted_password.present? && password.present?)
+    if(!reset_override && encrypted_password.present? && password.present?)
       if(!has_password?(current_password))
         errors.add("current_password", "is invalid")
         return false
@@ -105,18 +105,16 @@ class User < ActiveRecord::Base
 
 
   def generate_reset
-    self[:reset_token] = SecureRandom.urlsafe_base64
-    self[:reset_token_date] = Time.now
+    self.reset_token = SecureRandom.urlsafe_base64
+    self.reset_token_date = Time.now
     unless (self.save)
       logger.error("unable to generate reset token")
       logger.error(self.errors)
       false
     else
-      link = Rails.application.routes.url_helpers.users_reset_page_path(self, self[:reset_token])
-      #send an email with the above link instead of this logger message
-      logger.debug("Your password reset link is #{link}")
-      href = "#{GlobalSettings.app_protocol+GlobalSettings.app_domain}#{link}"
-      Notifier.delay.pwd_reset(self,href)
+      link = "users/#{id}/reset/#{reset_token}";
+      logger.debug("Generated reset path #{link}")
+      Notifier.delay.password_reset(id)
       true
     end
   end

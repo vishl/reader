@@ -36,4 +36,10 @@ class Notifier < ActionMailer::Base
     mail(:to=>to_address, :from=>"#{@from.name} via #{GlobalSettings.site_name} <notifications@#{GlobalSettings.mail_domain}>", :subject=>"Check out #{@forum.title} on #{GlobalSettings.site_name}!")
   end
 
+  def password_reset(user_id)
+    @user = User.find(user_id)
+    mail(:to=>@user.email, 
+         :subject=>"Reset your password on #{GlobalSettings.site_name}")
+  end
+
 end

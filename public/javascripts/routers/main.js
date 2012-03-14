@@ -25,6 +25,7 @@ App.Routers.Main = Backbone.Router.extend({
       "commentview/:sid/:id":"commentView",
       "post":"postMini",
       "users/:id":"user",
+      "users/:id/reset/:token":"userReset",
     },
 
     initialize : function(options){
@@ -54,7 +55,7 @@ App.Routers.Main = Backbone.Router.extend({
 
       //render header and main window
       $('#header').html(this.forumHeaderView.render().el);
-      $('#main-window').html("loading");
+      $('#main-window').html(JST['layouts/loading']());
       var self=this;
       this.forum.fetch({success:function(){
         $('#main-window').html(self.forumView.el);
@@ -98,6 +99,18 @@ App.Routers.Main = Backbone.Router.extend({
       }
       this.userView = new App.Views.UserPage({model:user});
       user.fetch();
+    },
+
+    userReset:function(id, token){
+      console.log("route user reset");
+      var self=this;
+      var user = new App.Models.User({id:id, token:token});
+      $('#main-window').html(JST['layouts/loading']());
+      user.fetch({success:function(){
+        self.userView = new App.Views.UserResetPage({model:user});
+      },
+      silent:true,  //no validation on user
+      });
     },
 
     ////////////////////////////////// Helpers /////////////////////////////////////
