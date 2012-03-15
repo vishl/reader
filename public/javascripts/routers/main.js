@@ -26,6 +26,7 @@ App.Routers.Main = Backbone.Router.extend({
       "post":"postMini",
       "users/:id":"user",
       "users/:id/reset/:token":"userReset",
+      "about":"about",
     },
 
     initialize : function(options){
@@ -111,6 +112,13 @@ App.Routers.Main = Backbone.Router.extend({
       },
       silent:true,  //no validation on user
       });
+    },
+
+    about:function(){
+      console.log("route about");
+      this.forumHeaderView = new App.Views.ForumHeader(); //reuse forumHeader with null model
+      $('#header').html(this.forumHeaderView.render().el);
+      $('#main-window').html(JST['pages/about']());
     },
 
     ////////////////////////////////// Helpers /////////////////////////////////////

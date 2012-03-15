@@ -4,4 +4,6 @@
 -else
   :javascript
     mpq={track:function(){},identify:function(){}}
+-if GlobalSettings.google_analytics_enabled
+  = render 'layouts/google_analytics'
 = yield :scripts

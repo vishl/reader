@@ -12,6 +12,7 @@ GlobalSettings.defaults['email_enabled'] = false
 GlobalSettings.defaults['console'] = true
 GlobalSettings.defaults['mixpanel_enabled'] = false
 GlobalSettings.defaults['mixpanel_key'] = "c2286e10e2321d592a869b9382a33f8b"
+GlobalSettings.defaults['google_analytics_enabled'] = false
 
 
 GlobalSettings.defaults['version'] = "0"

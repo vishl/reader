@@ -50,3 +50,12 @@ var App = {
   },
 };
 
+//set the min height of the main window so the footer doesn't get shoved up 
+$(function(){
+  var setHeight=function(){
+    var height = $(window).height()-40-75;
+    $('#main-window').css("min-height", height+"px");
+  };
+  setHeight.call(this);
+  $(window).bind("resize", setHeight);
+});
