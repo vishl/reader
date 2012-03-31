@@ -219,20 +219,35 @@ table#loading td{
 #create-post-box{
   background:white;
   border:solid 1px #DADADA;
-  padding:10px;
   margin-bottom:20px;
+  text-align:center;
   box-shadow: 0px 8px 6px -6px black;
 }
+
+#create-post-box .plus{
+  float: left;
+  margin: 7px;
+  border: solid 1px black;
+  height: 18px;
+  line-height: 11px;
+  width: 18px;
+}
+
 #create-post-box:hover{
   /*background:#eee;*/
   box-shadow: 0px 8px 30px -6px black;
 }
 
-a#postheader{
+#create-post-box a{
   display:block;
+  padding:10px;
   color:black;
   cursor:pointer;
-  text-decoration:underline;
+  text-decoration:none;
+  /*text-decoration:underline;*/
+}
+#create-post-box a:hover{
+  text-decoration:none;
 }
 
 #create-post-area{
@@ -256,7 +271,7 @@ a#postheader{
 }
 
 .post-area {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   background: #fff;
   border: solid 1px #DADADA;
   box-shadow: 0px 8px 6px -6px black;
@@ -290,6 +305,12 @@ a#postheader{
   margin:5px;
 }
 
+.comment-area .comment .close{
+  font-size:16px;
+  line-height:20px;
+}
+
+
 .comment-area form{
   margin:0px;
 }
@@ -307,6 +328,10 @@ a#postheader{
 
 /********************************** mobile views ********************************/
 @media (max-width: 768px) {
+  .container{
+    padding: 0px 3px;
+  }
+
   .post-area {
   }
   .post{
