@@ -28,6 +28,7 @@ table#loading{
 }
 
 table#loading td{
+  padding-top:100px;
   text-align:center;
   vertical-align:middle;
 }
@@ -252,23 +253,25 @@ a#postheader{
 
 .post-area {
   position: relative;
-  padding: 20px 0px 0px 0px;
+  margin-bottom: 5px;
   background: #EEE;
   word-wrap: break-word;
   -webkit-transition: opacity .25s linear 0s, height .25s ease-out .1s;
   border-left: solid 5px #DADADA;
 }
 
+.post .close{
+  margin-right:5px;
+}
+
 .post .name{
-  position:absolute;
-  top:3px;
-  left:5px;
+  padding-top:5px;
 }
 
 .post .comment{
   font-style:italic;
   padding-left:20px;
-  padding-bottom:10px;
+  padding-bottom:5px;
 }
 
 .post .content{
@@ -288,46 +291,22 @@ a#postheader{
   width:90%;
 }
 
-/*
-.comments{
-  padding-top:10px;
-  padding-left:20px;
-  padding-right:20px;
-}
-
-.comments-header{
-  border-bottom:solid 1px #555;
-  width:100%;
-}
-
-.comments form{
-  margin-bottom:0px;
-}
-  */
-
 .date-delta{
   color:#aaa;
   font-weight:normal;
   font-size:smaller;
 }
 
-/*
-.comments textarea{
-  width:400px;
-}
-  */
 
 /********************************** mobile views ********************************/
 @media (max-width: 768px) {
   .post-area {
-    padding:5px;
   }
   .post{
-    padding-top:16px;
   }
   .post .content{
     background:white;
-    padding:5px 0px 0px 0px;
+    padding:5px;
   }
 }
 

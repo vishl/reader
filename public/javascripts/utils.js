@@ -174,7 +174,7 @@ $.fn.convDate = function(){
   $this.html(convDate(datestr));
 };
 
-var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;()*%]*[-A-Z0-9+&@#\/%=~_|()*])/ig;
 function is_link(text){
   if(text.match(_linkExp)){
     return true;

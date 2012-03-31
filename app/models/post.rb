@@ -58,6 +58,8 @@ class Post < ActiveRecord::Base
     attributes.slice("id", "content", "comment").merge({
       "name"=>name,
       "forum_sid"=>forum.sid, "timestamp"=>timestamp, 
-      "comments"=>comments.order("updated_at").all})
+      "comments"=>comments.order("updated_at").all,
+      "owner_id"=>user.sid
+    })
   end
 end

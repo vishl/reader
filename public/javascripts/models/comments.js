@@ -24,6 +24,7 @@ App.Models.Comment = Backbone.Model.extend({
     post:null,
     defaults:{
       content:"",
+      owner_id:"",
     },
 
     initialize:function(attrs, options){

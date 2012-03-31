@@ -19,12 +19,23 @@ App.Views.Post = Backbone.View.extend({
     post:null,  //TODO what is this..
     className:'post-area', //the class of the containing <div>
 
+    events:{
+      "click .post .close":"deletePost",
+    },
+
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.commentsView = new App.Views.Comments({model:this.model.comments});
       this.commentCreateView = new App.Views.CommentCreate({post:this.model, subscription:this.options.subscription});
       this.commentCreateView.bind("posted", this.createComment, this);
       this.model.bind("change", this.render);
+    },
+
+    beforeClose:function(){
+      this.commentsView.close();
+      this.commentCreateView.unbind("posted", this.createComment, this);
+      this.commentCreateView.close();
+      this.model.unbind("change", this.render);
     },
 
     render: function(){
@@ -42,15 +53,24 @@ App.Views.Post = Backbone.View.extend({
       mpq.track("comment", {source:"main"});
     },
 
+    deletePost:function(e){
+      e.preventDefault();
+      var deleteIt = confirm("Delete this post and all of its comments?");
+      if(deleteIt){
+        this.model.destroy();
+        this.close();
+      }
+    },
+
     ////////////////////////////////// helpers /////////////////////////////////////
     postFrame : function(els){
       var self = this;
       els.each(function(){
           if(
-            (!this.href.match(/postframe/))      //hack to prevent us from framing ourselves
+            (!this.href.match(/postframe/))       //hack to prevent us from framing ourselves
             && (!this.href.match(/youtube\.com/)) //youtube does not allow framing
+            && (!this.href.match(/^https/))       //don't frame https sites
           ){
-            //this.href ="/postframe/"+self.forum.id+"/"+self.id+"?content="+encodeURIComponent(this.href);
             this.href = "/postframe/?forum_id={0}&post_id={1}&content={2}".format(self.model.forum.id,self.model.id,encodeURIComponent(this.href));
             this.target="_self";
           }
@@ -64,6 +84,8 @@ App.Views.Posts = Backbone.View.extend({
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.model.bind("reset", this.render, this);
       this.model.bind("add", this.addPost, this);
+      this.model.bind("destroy", this.removePost, this);
+      this.model.bind("remove", this.removePost, this);
     },
 
     postViews:[],
@@ -94,7 +116,11 @@ App.Views.Posts = Backbone.View.extend({
         this.$el.append(view.el);
       }
       view.$el.fadeIn('slow');
-    }
+    },
+
+    removePost:function(model, collection, options){
+
+    },
 });
 
 App.Views.PostCreate = Backbone.FormView.extend({

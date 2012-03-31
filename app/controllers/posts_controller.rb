@@ -66,6 +66,19 @@ class PostsController < ApplicationController
       }
     end
   end
+
+  def destroy
+    @post = Post.find_by_id(params[:id])
+    if(!@post)
+      render :json=>{"id"=>["is invalid"]}, :status=>400
+    elsif(!(current_user && @post.user == current_user))
+      render :json=>{"authorization"=>["access denied"], :status=>401}
+    else
+      #no errors
+      @post.destroy
+      render :nothing=>true
+    end
+  end
           
 
 end

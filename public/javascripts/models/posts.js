@@ -29,6 +29,7 @@ App.Models.Post = Backbone.Model.extend({
       name:"",
       content:"",
       comment:"",
+      owner_id:"",
     },
 
     //TODO override parse/constructor to include comments

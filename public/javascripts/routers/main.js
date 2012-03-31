@@ -20,13 +20,14 @@ App.Routers.Main = Backbone.Router.extend({
     POLLINTERVAL:300000, //5 minutes
 
     routes:{
-      "": "home",
-      "forums/:sid":"forum",
-      "commentview/:sid/:id":"commentView",
-      "post":"postMini",
-      "users/:id":"user",
-      "users/:id/reset/:token":"userReset",
-      "about":"about",
+      ""                       : "home",
+      "loading"                : "loading",
+      "forums/:sid"            : "forum",
+      "commentview/:sid/:id"   : "commentView",
+      "post"                   : "postMini",
+      "users/:id"              : "user",
+      "users/:id/reset/:token" : "userReset",
+      "about"                  : "about",
     },
 
     initialize : function(options){
@@ -44,6 +45,12 @@ App.Routers.Main = Backbone.Router.extend({
       this.forumHeaderView = new App.Views.ForumHeader(); //reuse forumHeader with null model
       $('#header').html(this.forumHeaderView.render().el);
       $('#main-window').html(this.homeView.el);
+    },
+
+    loading:function(){
+      //basically just for testing
+      $('#header').html(this.forumHeaderView.render().el);
+      $('#main-window').html(JST['layouts/loading']());
     },
 
     forum:function(sid){

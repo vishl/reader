@@ -51,7 +51,8 @@ class Comment < ActiveRecord::Base
 
   def as_json(options)
     #TODO sid instead of id
-    attributes.slice('id', 'content', 'post_id').merge({'name'=>name, 'timestamp'=>timestamp})
+    attributes.slice('id', 'content', 'post_id').merge(
+      {'name'=>name, 'timestamp'=>timestamp, 'owner_id'=>user.sid})
   end
 
 end

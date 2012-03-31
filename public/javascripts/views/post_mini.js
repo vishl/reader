@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
 */
 /*global App Backbone _ JST url_parse mpq*/
+
 //create and select
 App.Views.PostMiniCreate = Backbone.View.extend({
   _className:"PostMiniCreate",

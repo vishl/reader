@@ -18,7 +18,7 @@ along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 function handleErrors(message, url, line){
   if(GlobalSettings && GlobalSettings.deployment==="development"){
   }else{
-    alert("Something has gone wrong, you probably need to reload the page");
+    alert("Something has gone wrong, you probably need to reload the page\n\n({0},line {1}){2}".format(url, line, message));
   }
 }
 window.onerror = handleErrors;

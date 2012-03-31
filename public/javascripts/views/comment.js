@@ -18,6 +18,10 @@ along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 App.Views.Comment = Backbone.View.extend({
     postFrameEn:true,
 
+    events:{
+      "click .close":"deleteComment",
+    },
+
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.model.bind("change", this.render);
@@ -25,11 +29,24 @@ App.Views.Comment = Backbone.View.extend({
         this.postFrameEn = this.options.postFrame;
     },
 
+    beforeClose:function(){
+      this.model.unbind("change", this.render);
+    },
+
     render: function(){
       console.log("render comment");
       $(this.el).html(JST['comments/show']({comment:this.model}));
       if(this.postFrameEn)this.postFrame(this.$el.find('.linkify a'));
       return this;
+    },
+
+    deleteComment:function(e){
+      e.preventDefault();
+      var deleteIt = confirm("Delete this comment?");
+      if(deleteIt){
+        this.model.destroy();
+        this.close();
+      }
     },
 
     ////////////////////////////////// helpers /////////////////////////////////////

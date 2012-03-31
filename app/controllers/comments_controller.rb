@@ -46,4 +46,19 @@ class CommentsController < ApplicationController
     end
   end
 
+  def destroy
+    @comment = Comment.find_by_id(params[:id])
+    if(!@comment)
+      render :json=>{"id"=>["is invalid"]}, :status=>400
+    elsif(!(current_user && @comment.user == current_user))
+      render :json=>{"authorization"=>["access denied"]}, :status=>401
+    else
+      #no errors
+      @comment.destroy
+      render :nothing=>true
+    end
+  end
+          
+
+
 end

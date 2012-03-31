@@ -1,4 +1,7 @@
 <div class='comment'>
+  <%if(App.user.signedIn() && comment.get("owner_id")===App.user.id){%>
+    <div class="close">&times;</div>
+  <%}%>
   <span class='name'><%=comment.escape("name")%></span>
   <span class="date-delta"
     data-original-date="<%=comment.escape('timestamp')%>"><%=convDate(parseInt(comment.escape("timestamp")))%></span>: 

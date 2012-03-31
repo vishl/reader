@@ -1,4 +1,7 @@
 <div class='post'>
+  <%if(App.user.signedIn() && post.get("owner_id")===App.user.id){%>
+    <div class="close">&times;</div>
+  <%}%>
   <div class='name'>
     <span><%=post.escape("name")%></span>
     <span class='date-delta'><%=convDate(parseInt(post.escape("timestamp")))%></span>
