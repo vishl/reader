@@ -165,14 +165,14 @@ Backbone.FormView = Backbone.View.extend({
         var saveOpts = {
               success:successFn,
               error:errorFn,
-              only:Object.keys(attrs)
+              only:_.keys(attrs)
             };
         if(url && url.length){
           saveOpts.url = url;
         }
 
         if(this.options.noSave){
-          if(this.model.set(attrs,{error:errorFn, only:Object.keys(attrs)})){
+          if(this.model.set(attrs,{error:errorFn, only:_.keys(attrs)})){
             successFn.call(this, this.model,null);
           }
         }else{

@@ -3,6 +3,7 @@ embed_assets: off
 javascripts:
   common:
     - public/javascripts/jquery.min.js
+    - public/javascripts/wtfie.js
     - public/javascripts/jquery_ujs.js
     - public/javascripts/underscore.js
     - public/javascripts/underscore.string.js
