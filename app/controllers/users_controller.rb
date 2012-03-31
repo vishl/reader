@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     #create a new user
     @user = User.new(params)
     if @user.save
-      sign_in(@user)
+      sign_in(@user, params[:remember])
       render :json=>@user.as_json(:private_data=>true)
       Notifier.signup(@user).deliver if GlobalSettings.email_enabled
     else

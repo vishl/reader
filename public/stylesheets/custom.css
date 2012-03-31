@@ -177,13 +177,32 @@ table#loading td{
 #home-container h1{
 }
 
+#signup-box{
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 19px -6px black;
+  padding:15px 0px 0px 0px;
+} 
+
 #home-container form input[type="text"],
 #home-container form input[type="email"],
 #home-container form input[type="password"]{
   font-size:30px;
   height: 40px;
   line-height:30px;
-  width:97%;
+  width:90%;
+}
+#home-container form #remember-box{
+  display:inline-block;
+  width:220px;
+}
+
+#home-container form label.checkbox{
+  font-size:30px;
+  height: 40px;
+}
+
+label.checkbox{
+  cursor:pointer;
 }
 
 #home-container form input[type="submit"]{

@@ -4,8 +4,16 @@
     <input type="email"    id="email"    placeholder="email"    data-placement="right" value="<%=model.get("email")%>"></input>
     <input type="password" id="password" placeholder="password" data-placement="right" value="<%=model.get("password")%>"></input>
   </div>
-  <input type="submit" class="btn-warning " value="Sign In"></input>
-  <img src="/images/loading.gif" class="during-load">
+  <div>
+    <input type="submit" class="btn-warning " value="Sign In"></input>
+    <div id="remember-box">
+      <label class="checkbox">
+        <input type="checkbox" id="remember" data-true-value="remember" data-false-value="noremember">
+        Remember me
+      </label>
+    </div>
+    <img src="/images/loading.gif" class="during-load">
+  </div>
   <div>
     <a id="launch-forgot" data-toggle="modal" data-target="#forgot-modal" href="#" >Forgot password?</a>
   </div>

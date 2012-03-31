@@ -108,7 +108,19 @@ Backbone.FormView = Backbone.View.extend({
           var item = target.find('#'+k);
           if(item.length){
             if(item.attr("type")==="checkbox"){
-              attrs[k] = item.is(":checked");
+              if(item.is(":checked")){
+                if(item.data("true-value")){
+                  attrs[k] = item.data("true-value");
+                }else{
+                  attrs[k] = true;
+                }
+              }else{
+                if(item.data("false-value")){
+                  attrs[k] = item.data("false-value");
+                }else{
+                  attrs[k] = false;
+                }
+              }
             //TODO radio buttons
             }else{
               attrs[k]=item.val();

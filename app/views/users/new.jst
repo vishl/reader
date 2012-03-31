@@ -7,6 +7,14 @@
     <input type="password" id="password" placeholder="password" data-placement="right" value="<%=model.get("password")%>"></input>
   </div>
 
-  <input type="submit" class="btn-warning" value="Sign Up"></input>
+  <div>
+    <input type="submit" class="btn-warning" value="Sign Up"></input>
+    <div id="remember-box">
+      <label class="checkbox">
+        <input type="checkbox" id="remember" data-true-value="remember" data-false-value="noremember">
+        Remember me
+      </label>
+    </div>
+  </div>
   <img src="/images/loading.gif" class="during-load">
 </form>
