@@ -320,6 +320,21 @@ label.checkbox{
   padding:20px;
 }
 
+.post .ytembed-title{
+  font-size:24px;
+  line-height:24px;
+}
+
+.post .ytembed-desc{
+  background:#eee;
+}
+
+.post .ytembed-close{
+  font-size:14px;
+  font-weight:bold;
+  color:#555;
+}
+
 .comment-area{
   margin:5px;
 }

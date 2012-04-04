@@ -5,6 +5,8 @@ javascripts:
     - public/javascripts/jquery.min.js
     - public/javascripts/wtfie.js
     - public/javascripts/jquery_ujs.js
+    - public/javascripts/jquery.ytembed.js
+    - public/javascripts/jquery.expandydiv.js
     - public/javascripts/underscore.js
     - public/javascripts/underscore.string.js
     - public/javascripts/utils.js

@@ -23,13 +23,17 @@ Utils.embed = function(elt){
   var embedCode=null;
   var h=null;
   var m;
+  var embedLoc = $(elt).siblings('.embed-hook');
   //youtube
   m = t.match(/youtube.com\/watch[^?]*?([^#]*)/);
   if(m){
     var vid = getArg(m[1], 'v');
     if(vid){
+      /*
       embedCode='<iframe width="560" height="315" src="http://www.youtube.com/embed/'+vid+'?wmode=transparent" frameborder="0" allowfullscreen></iframe>';
       h=315;
+      */
+     $(a).ytEmbed({target:embedLoc});
     }
   }
   //image
@@ -43,7 +47,6 @@ Utils.embed = function(elt){
 
   //TODO probably don't want to embed on mobile
   if(embedCode){
-    var embedLoc = $(elt).siblings('.embed-hook');
     embedLoc.append(embedCode);
     if(h) embedLoc.css('height', h);
   }
