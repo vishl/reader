@@ -21,4 +21,4 @@ function handleErrors(message, url, line){
     alert("Something has gone wrong, you probably need to reload the page\n\n({0},line {1}){2}".format(url, line, message));
   }
 }
-window.onerror = handleErrors;
+//window.onerror = handleErrors;

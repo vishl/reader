@@ -104,7 +104,7 @@ Backbone.FormView = Backbone.View.extend({
         var url = "";
         var attrs = {};
         var target = $(e.currentTarget);
-        for(var k in this.model.attributes){
+        for(var k in self.model.attributes){
           var item = target.find('#'+k);
           if(item.length){
             if(item.attr("type")==="checkbox"){
@@ -164,7 +164,9 @@ Backbone.FormView = Backbone.View.extend({
           self.$el.addClass('loaded');
           self._postDisable=false;
           if(self.afterSave)self.afterSave(model, resp);
-          model.trigger("sync", model, resp);
+          if(!(self.options && self.options.noSave)){ //if we didn't actually sync, don't trigger
+            model.trigger("sync", model, resp);
+          }
           self.trigger("posted", model);
         };
 
@@ -183,12 +185,12 @@ Backbone.FormView = Backbone.View.extend({
           saveOpts.url = url;
         }
 
-        if(this.options.noSave){
-          if(this.model.set(attrs,{error:errorFn, only:_.keys(attrs)})){
-            successFn.call(this, this.model,null);
+        if(self.options.noSave){
+          if(self.model.set(attrs,{error:errorFn, only:_.keys(attrs)})){
+            successFn.call(self, self.model,null);
           }
         }else{
-          this.model.save(
+          self.model.save(
             attrs,
             saveOpts
           );
