@@ -41,7 +41,7 @@ class CommentsController < ApplicationController
             #success
             render :json=>{'comment'=>@comment}
             #TODO delay this?
-            @post.reset_markers
+            @post.reset_markers(current_user)
           end
         end
       end

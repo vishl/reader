@@ -53,8 +53,12 @@ class Post < ActiveRecord::Base
     user.name
   end
 
-  def reset_markers
-    Marker.where(:post_id=>self.id).find_each{|m| m.update_attributes(:is_read=>false)}
+  def reset_markers(except=nil)
+    Marker.where(:post_id=>self.id).find_each{|m| 
+      if(!except || m.user_id!=except.id)
+        m.update_attributes(:is_read=>false)
+      end
+    }
   end
 
   def as_json(options={})
