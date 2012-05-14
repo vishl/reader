@@ -180,7 +180,7 @@ App.Views.ForumSelect = Backbone.View.extend({
 
   initialize:function(){
     //TODO pick one to select
-    var init = App.user.get("last_forum");
+    var init = App.user.get_setting("last_forum");
     if(init){
       init = App.user.subscriptions().get(init);
     }else{
@@ -195,7 +195,7 @@ App.Views.ForumSelect = Backbone.View.extend({
 
   changeForum:function(){
     var id = this.$('#forum-select').val();
-    this.forum = App.user.subscriptions.get(id).makeForum();
+    this.forum = App.user.subscriptions().get(id);
     this.trigger("change");
   },
 
