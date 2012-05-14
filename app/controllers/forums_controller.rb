@@ -15,7 +15,7 @@
 
 class ForumsController < ApplicationController
   include ForumsHelper
-  before_filter :authenticate, :only=>[:create]
+  before_filter :authenticate, :only=>[:create, :mark_all_read]
 
   #create a new forum
   def spawn
@@ -47,6 +47,16 @@ class ForumsController < ApplicationController
     end
   end
 
+  def update
+    forum = Forum.find_by_sid(params[:id])
+    unless(forum.owner.user == current_user)
+      render :status=>401, :json=>{'error'=>'permission denied'}
+    else
+      forum.update_attributes(params.slice("title"))
+      render :json=>{'forum'=>forum}
+    end
+  end
+
   def show
     has_error = false
     error = ""
@@ -54,27 +64,27 @@ class ForumsController < ApplicationController
     @post = @forum.posts.build(params[:post]) #defunct
     @showcomments = params[:showcomments].present?
     @prefetch = params[:prefetch] == "true"
-    if(@forum && @prefetch)
-      if(@showcomments)#sort by comments
-        #shows only posts with comments and joins on comments
-        #this only works in sql lite.. something about needing to aggregate all the columns..
-        #@posts = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").group("posts.id").limit(20).includes(:comments)
-        np = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").limit(50).includes(:comments)
-        #have to do this to get unique posts
-        ids={}
-        @posts=[]
-        np.each do |p|
-          if(!ids.include?(p.id))
-            ids[p.id]=true
-            @posts.push(p)
-            if(@posts.length>20)
-              break
-            end
-          end
-        end
-      else
-        @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
-      end
+    if(@forum)
+#      if(@showcomments)#sort by comments
+#        #shows only posts with comments and joins on comments
+#        #this only works in sql lite.. something about needing to aggregate all the columns..
+#        #@posts = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").group("posts.id").limit(20).includes(:comments)
+#        np = @forum.posts.joins("JOIN comments ON comments.post_id=posts.id").order("comments.created_at DESC").limit(50).includes(:comments)
+#        #have to do this to get unique posts
+#        ids={}
+#        @posts=[]
+#        np.each do |p|
+#          if(!ids.include?(p.id))
+#            ids[p.id]=true
+#            @posts.push(p)
+#            if(@posts.length>20)
+#              break
+#            end
+#          end
+#        end
+#      else
+#        @posts = @forum.posts.order("updated_at DESC").limit(20).includes(:comments)
+#      end
     else
       has_error=true
       error="Forum not found"
@@ -83,52 +93,50 @@ class ForumsController < ApplicationController
     respond_to do |format|
       format.json do
         if(has_error)
-          render :json=>{'has_error'=>has_error, 'error'=>error}
+          render :status=>400, :json=>{'has_error'=>has_error, 'error'=>error}
         else
-          attrs = {'forum'=>@forum.as_json(:current_user=>current_user)}
+          attrs = {'forum'=>@forum.as_json(:current_user=>current_user, :include_posts=>@prefetch, :offset=>params[:offset], :limit=>params[:limit], :hide_read=>current_user ? current_user.get_setting("hide_read") : false)}
           attrs['version'] = GlobalSettings.version
-          attrs['posts'] = @posts if(@prefetch)  #include posts if we want to prefetch, to avoid additional request
           render :json=>attrs
         end
       end
     end
   end
 
-  def post
-    @forum = Forum.find_by_sid(params[:sid])
-    @post = @forum.posts.build(params[:post])
-    if(@forum)
-    else
-      flash[:error] = "Forum not found"
-      redirect_to root_path
-    end
-  end
+#  def post
+#    @forum = Forum.find_by_sid(params[:sid])
+#    @post = @forum.posts.build(params[:post])
+#    if(@forum)
+#    else
+#      flash[:error] = "Forum not found"
+#      redirect_to root_path
+#    end
+#  end
 
-  def latest
-    @forum = Forum.find_by_sid(params[:sid])
-    if(@forum)
-      latest_post = params[:latest_post].to_i
-      latest_comment = params[:latest_comment].to_i
-      if((@forum.posts.count>0)    && (latest_post != @forum.posts.latest.first.id) ||
-         (@forum.comments.count>0) && (latest_comment != @forum.comments.latest.first.id)
-        )
-        render :json=>{"has_error"=>false, "out_of_date"=>true}
-      else
-        render :json=>{"has_error"=>false, "out_of_date"=>false}
-      end
-    else
-        render :json=>{"has_error"=>true}
-    end
-  end
+#  def latest
+#    @forum = Forum.find_by_sid(params[:sid])
+#    if(@forum)
+#      latest_post = params[:latest_post].to_i
+#      latest_comment = params[:latest_comment].to_i
+#      if((@forum.posts.count>0)    && (latest_post != @forum.posts.latest.first.id) ||
+#         (@forum.comments.count>0) && (latest_comment != @forum.comments.latest.first.id)
+#        )
+#        render :json=>{"has_error"=>false, "out_of_date"=>true}
+#      else
+#        render :json=>{"has_error"=>false, "out_of_date"=>false}
+#      end
+#    else
+#        render :json=>{"has_error"=>true}
+#    end
+#  end
 
-
-  def commentview
-    @forum=Forum.find_by_sid(params[:sid])
-    @post = @forum.posts.find(params[:id])
-    @content = params[:content]
-
-    render :layout=>false
-  end
+#  def commentview
+#    @forum=Forum.find_by_sid(params[:sid])
+#    @post = @forum.posts.find(params[:id])
+#    @content = params[:content]
+#
+#    render :layout=>false
+#  end
 
   def users
     @forum=Forum.find_by_sid(params[:forum_id])
@@ -152,6 +160,16 @@ class ForumsController < ApplicationController
       logger.debug("Inviting #{@addresses.length} people");
       render :json=>{"addresses"=>""}
       Batch.delay.send_invites(@addresses, current_user, @forum);
+    end
+  end
+
+  def mark_all_read
+    @forum = Forum.find_by_sid(params[:id])
+    unless(@forum)
+      render :status=>404, :json=>{"forum"=>"is invalid"}
+    else
+      @forum.mark_all_read(current_user)
+      render :json=>{'forum'=>@forum.as_json(:current_user=>current_user, :include_posts=>@prefetch, :hide_read=>current_user ? current_user.get_setting("hide_read") : false)}
     end
   end
 end

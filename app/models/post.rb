@@ -53,13 +53,26 @@ class Post < ActiveRecord::Base
     user.name
   end
 
-  def as_json(options)
+  def reset_markers
+    Marker.where(:post_id=>self.id).find_each{|m| m.update_attributes(:is_read=>false)}
+  end
+
+  def as_json(options={})
+    options||={}
     #TODO sid instead of id
-    attributes.slice("id", "content", "comment").merge({
+    ret = attributes.slice("id", "content", "comment").merge({
       "name"=>name,
       "forum_sid"=>forum.sid, "timestamp"=>timestamp, 
       "comments"=>comments.order("updated_at").all,
       "owner_id"=>user.sid
     })
+
+    if(options[:current_user])
+      m = Marker.find_by_user_id_and_post_id(options[:current_user].id, self.id)
+      if(m)
+        ret = ret.merge(m.attributes.slice("is_starred", "is_read", "is_hidden"))
+      end
+    end
+    return ret
   end
 end

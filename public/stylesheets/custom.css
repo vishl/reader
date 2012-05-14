@@ -4,6 +4,10 @@ body{
   background: #eee;
 }
 
+a{
+  cursor:pointer;
+}
+
 @media (max-width: 980px) {
   /* Remove any padding from the body */
   body {
@@ -90,8 +94,35 @@ table#loading td{
   text-overflow:ellipsis;
 }
   */
+
+.unread-count{
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  top: -7px;
+  left: -5px;
+  background: red;
+  /*border: solid 2px white;*/
+  line-height:10px;
+  border-radius: 4px;
+  padding: 2px;
+  font-size: 12px;
+  color:white;
+}
+
 #forum-title{
   float:left;
+}
+
+.forum-title i{
+  margin-top:13px;
+}
+.forum-title a{
+  text-decoration:none;
+  color:#aaa;
+}
+.forum-title #cancel{
+  vertical-align:top;
 }
 
 .navbar .bookmarklet-link{
@@ -297,7 +328,10 @@ label.checkbox{
 
   word-wrap: break-word;
   -webkit-transition: opacity .25s linear 0s, height .25s ease-out .1s;
-  /*border-left: solid 5px #DADADA;*/
+}
+
+.post-area.read{
+  box-shadow: 0px 0px 0px 0px black;
 }
 
 .post .close{
@@ -309,6 +343,16 @@ label.checkbox{
   padding-top:5px;
 }
 
+.post .post-controls{
+  display:inline-block;
+  float:right;
+}
+
+.post .post-controls .close{
+  display:inline-block;
+  float:none;
+}
+
 .post .comment{
   font-style:italic;
   padding-left:20px;
@@ -316,7 +360,6 @@ label.checkbox{
 }
 
 .post .content{
-  background:white;
   padding:20px;
 }
 
@@ -341,7 +384,6 @@ label.checkbox{
 
 .comment-area .comment .close{
   font-size:16px;
-  line-height:20px;
 }
 
 
@@ -357,6 +399,11 @@ label.checkbox{
   color:#aaa;
   font-weight:normal;
   font-size:smaller;
+}
+
+#load-bottom{
+  margin:30px;
+  text-align:center;
 }
 
 

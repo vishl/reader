@@ -15,9 +15,21 @@
       <%}%>
       <div class="nav-collapse">
         <ul class="nav">
-          <%for(var i=0; subscriptions && i<subscriptions.length; i++){%>
-            <li class="<%=subscriptions[i].id==id?"active":""%>"><a class="forum-nav" href="/#forums/<%=subscriptions[i].id%>" title="<%=subscriptions[i].title%>"><%=subscriptions[i].title%></a></li>
-          <%}%>
+          <li>
+            <a class="forum-nav" href="/new" title="New">
+              New
+            </a>
+          </li>
+          <%subscriptions.forEach(function(s){%>
+            <li class="<%=s.id==id?"active":""%>">
+            <a class="forum-nav" href="/#forums/<%=s.id%>" title="<%=s.escape("title")%>">
+              <%=s.escape("title")%>
+              <%if(s.get("unread_count")){%>
+                <span class="unread-count"><%=s.get("unread_count")%></span>
+              <%}%>
+            </a>
+            </li>
+          <%});%>
         </ul>
         <div class="" id="user-credentials"></div>
         <ul class="nav pull-right">

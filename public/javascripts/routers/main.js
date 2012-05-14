@@ -21,6 +21,7 @@ App.Routers.Main = Backbone.Router.extend({
 
     routes:{
       ""                       : "home",
+      "new"                    : "new_home",
       "loading"                : "loading",
       "forums/:sid"            : "forum",
       "commentview/:sid/:id"   : "commentView",
@@ -41,6 +42,15 @@ App.Routers.Main = Backbone.Router.extend({
     ////////////////////////////////// Routes //////////////////////////////////////
     home:function(){
       console.log("route home");
+      var last = App.user.get_setting("last_forum");
+      if(last){
+        this.navigate('forums/'+last, {trigger:true});
+      }else{
+        this.new_home();
+      }
+    },
+
+    new_home:function(){
       this.homeView = new App.Views.Home();
       this.forumHeaderView = new App.Views.ForumHeader(); //reuse forumHeader with null model
       $('#header').html(this.forumHeaderView.render().el);
@@ -56,9 +66,16 @@ App.Routers.Main = Backbone.Router.extend({
     forum:function(sid){
       console.log("route forum "+sid);
 
+      if(App.user.signedIn()){
+        App.user.set_setting("last_forum", sid);
+      }
       //create the views
-      this.forumView = new App.Views.Forum({sid:sid});
-      this.forum = this.forumView.model;  //the view instantiates the model
+      this.forum = App.user.subscriptions().get(sid);
+      if(!this.forum){
+        this.forum = new App.Models.Forum({id:sid});
+      }
+      this.forum.prefetch=true;
+      this.forumView = new App.Views.Forum({model:this.forum});
       this.forumHeaderView = new App.Views.ForumHeader({model:this.forum});
 
       //render header and main window
@@ -139,6 +156,7 @@ App.Routers.Main = Backbone.Router.extend({
       var self=this;
       self.pollId = setInterval(function(){
           self.forum.fetch();
+          App.user.fetch();
         },self.POLLINTERVAL);
     },
 });

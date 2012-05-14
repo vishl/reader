@@ -1,22 +1,21 @@
-<div class='post'>
-  <%if(App.user.signedIn() && post.get("owner_id")===App.user.id){%>
-    <div class="close">&times;</div>
-  <%}%>
-  <div class='name'>
-    <span><%=post.escape("name")%></span>
-    <span class='date-delta'><%=convDate(parseInt(post.escape("timestamp")))%></span>
-  </div>
-  <div class='comment'>
-    <div class='linkify'>
-      <%=linkify(post.get("comment"))%>
+<div class="post-area <%=post.get('is_read')? 'read' : ''%>">
+  <div class="post">
+    <div id="controls-hook"></div>
+    <div class="name">
+      <span><%=post.escape("name")%></span>
+      <span class="date-delta"><%=convDate(parseInt(post.escape("timestamp")))%></span>
+    </div>
+    <div class="comment">
+      <div class="linkify">
+        <%=linkify(post.get("comment"))%>
+      </div>
+    </div>
+    <div class="content">
+      <div class="linkify"> 
+        <%=linkify(post.get("content"))%>
+      </div>
+      <div class="embed-hook"></div>
     </div>
   </div>
-  <div class='content'>
-    <div class='linkify'> 
-      <%=linkify(post.get("content"))%>
-    </div>
-    <div class='embed-hook'></div>
-  </div>
+  <div class="comment-area"></div>
 </div>
-<div class='comment-area'></div>
-

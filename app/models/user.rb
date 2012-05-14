@@ -1,18 +1,3 @@
-#Copyright 2012 Vishal Parikh
-#This file is part of Freader.
-#Freader is free software: you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation, either version 3 of the License, or
-#(at your option) any later version.
-#
-#Freader is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with Freader.  If not, see <http://www.gnu.org/licenses/>.
-
 # == Schema Information
 #
 # Table name: users
@@ -30,13 +15,29 @@
 #  reset_token_date   :datetime
 #  reminder_day       :string(255)
 #  reminder_time      :integer
+#  settings           :text
 #
+
+#Copyright 2012 Vishal Parikh
+#This file is part of Freader.
+#Freader is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#Freader is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 
 class User < ActiveRecord::Base
   include SessionsHelper
 
   attr_accessor :password, :current_password, :reminder, :reset_override
-  attr_accessible :name, :email, :password, :current_password, :reminder_day, :reminder_time, :reminder
+  attr_accessible :name, :email, :password, :current_password, :reminder_day, :reminder_time, :reminder, :settings
 
   #initializer
   after_initialize :init
@@ -73,6 +74,30 @@ class User < ActiveRecord::Base
               :if => lambda{self.password.present?}
 
   ################################### Methods ####################################
+  
+  def get_settings
+    if(self.settings.present?)
+      j = JSON.parse self.settings
+      return j
+    else
+      return {}
+    end
+  end
+
+  def set_settings(s)
+    self.settings = JSON.stringify(s)
+    self.save!
+  end
+    
+  def get_setting(key)
+    return get_settings[key]
+  end
+
+  def set_setting(key, val)
+    j = get_settings
+    j[key] = val
+    set_settings(j)
+  end
   
   def subscribed_to?(forum)
     if(forum.nil?)
@@ -141,7 +166,7 @@ class User < ActiveRecord::Base
     #TODO include posts?
     attrs =  {:id=>sid, :name=>name}
     if(options[:private_data])
-      attrs = attrs.merge({:email=>email, :subscriptions=>forums, :reminder_day=>reminder_day, :reminder_time=>reminder_time})
+      attrs = attrs.merge({:email=>email, :subscriptions=>forums.as_json(options), :reminder_day=>reminder_day, :reminder_time=>reminder_time, :settings=>get_settings})
     end
     return attrs
   end

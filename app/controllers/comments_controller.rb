@@ -40,6 +40,8 @@ class CommentsController < ApplicationController
           else
             #success
             render :json=>{'comment'=>@comment}
+            #TODO delay this?
+            @post.reset_markers
           end
         end
       end

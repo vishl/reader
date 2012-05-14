@@ -9,7 +9,11 @@ Reader::Application.routes.draw do
   resources :forums do
     get "users"
     post "invite"
+    put "mark_all_read"
     resources :posts do
+      member do
+        put "set_marker"
+      end
       resources :comments
     end
   end

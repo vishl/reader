@@ -24,7 +24,12 @@ App.Views.ForumHeader = Backbone.View.extend({
       if(this.model){
         this.model.bind("change", this.render);
       }
-      App.user.bind("change:subscriptions", this.render, this);
+      App.user.subscriptions().bind("add remove reset change", this.render, this);
+    },
+
+    beforeClose:function(){
+      this.userCredentialsView.close();
+      App.user.subscriptions().unbind("add remove reset change", this.render, this);
     },
 
     render: function(){
@@ -33,7 +38,7 @@ App.Views.ForumHeader = Backbone.View.extend({
         this.$el.html(JST['layouts/forum_header'](
             { title:this.model.escape("title"),
               id:this.model.id,
-              subscriptions:App.user.get("subscriptions"),
+              subscriptions:App.user.subscriptions(),
               origin:window.location.origin,
             }
         ));
@@ -41,7 +46,7 @@ App.Views.ForumHeader = Backbone.View.extend({
         this.$el.html(JST['layouts/forum_header'](
             { title:null,
               id:null,
-              subscriptions:App.user.get("subscriptions"),
+              subscriptions:App.user.subscriptions(),
               origin:window.location.origin,
             }
         ));

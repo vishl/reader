@@ -1,0 +1,13 @@
+
+  <div class="post-controls">
+    <%if(App.user.signedIn()){%>
+      <%if(post.get("is_read")){%>
+        <a id="mark-unread">
+          <i class="icon-eye-open"></i>
+        </a>
+      <%}%>
+    <%}%>
+    <%if(App.user.signedIn() && post.get("owner_id")===App.user.id){%>
+      <div class="close">&times;</div>
+    <%}%>
+  </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120313232651) do
+ActiveRecord::Schema.define(:version => 20120514024444) do
 
   create_table "comments", :force => true do |t|
     t.string   "name"
@@ -48,6 +48,24 @@ ActiveRecord::Schema.define(:version => 20120313232651) do
   end
 
   add_index "forums", ["sid"], :name => "index_forums_on_sid"
+
+  create_table "markers", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "post_id"
+    t.boolean  "is_read"
+    t.boolean  "is_starred"
+    t.boolean  "is_hidden"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "forum_id"
+  end
+
+  add_index "markers", ["forum_id"], :name => "index_markers_on_forum_id"
+  add_index "markers", ["is_hidden"], :name => "index_markers_on_is_hidden"
+  add_index "markers", ["is_read"], :name => "index_markers_on_is_read"
+  add_index "markers", ["is_starred"], :name => "index_markers_on_is_starred"
+  add_index "markers", ["post_id"], :name => "index_markers_on_post_id"
+  add_index "markers", ["user_id", "post_id"], :name => "index_markers_on_user_id_and_post_id"
 
   create_table "posts", :force => true do |t|
     t.string   "name"
@@ -98,6 +116,7 @@ ActiveRecord::Schema.define(:version => 20120313232651) do
     t.datetime "reset_token_date"
     t.string   "reminder_day"
     t.integer  "reminder_time"
+    t.text     "settings"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

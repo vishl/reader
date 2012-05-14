@@ -1,11 +1,10 @@
 <div class="pull-right">
+  <a id="mark-all-read" class="btn"> <i class="icon-check"></i> </a>
+  <a id="hide-read" class="btn <%=App.user.get_setting('hide_read')?'active':''%>"><i class="icon-eye-open"></i></a>
   <a id="launch-users" class="btn btn-success" data-toggle="modal" data-target="#users-modal" href="#" >People</a>
   <div class="subscribe-area"></div>
 </div>
-<h1 class='forum-title'>
-  Loading...
-</h1>
-
+<div id="title-hook"></div>
 <div id="users-modal" class="modal hide fade in">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">&times;</a>
@@ -13,6 +12,12 @@
   </div>
   <div class="modal-body">
   </div>
+</div>
+
+<div id="post-create-hook"></div>
+<div id="posts-hook"></div>
+<div id="load-bottom" class="hide">
+  <img src="/images/loading.gif">
 </div>
 
 <div id="invite-modal" class="modal hide fade in">

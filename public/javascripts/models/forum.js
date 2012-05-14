@@ -25,7 +25,7 @@ App.Models.Forum = Backbone.Model.extend({
     url: function() {
       var base = this.urlRoot;
       if (this.isNew()) return base;
-      var u =  base + (base.charAt(base.length - 1) == '/' ? '' : '/') + encodeURIComponent(this.id);
+      var u =  base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id);
       if(this.prefetch){
         return u + '?prefetch=true';
       }else{
@@ -35,7 +35,21 @@ App.Models.Forum = Backbone.Model.extend({
     prefetch:'false', //if this is true, when we fetch, we also fetch the posts
     initialize:function(){
       _.bindAll(this, 'url');
-      this.posts=new App.Collections.Posts(null,{forum:this});
+    },
+
+    markAllRead:function(){
+      this.save(null, {url:this.url().replace(/\?|$/,'/mark_all_read?')});
+      this.posts().forEach(function(p){p.set({"is_read":true});});
+    },
+
+    getMore:function(count, f){
+      count=count||20;
+      this.fetch({data:{offset:this.posts().length, limit:count}, success:f});
+    },
+
+    posts:function(){
+      if(!this._posts){this._posts=new App.Collections.Posts(null,{forum:this});}
+      return this._posts;
     },
 
     //override parse so we can handle a response that includes posts
@@ -46,21 +60,27 @@ App.Models.Forum = Backbone.Model.extend({
     //        ...
     //       ]
     parse:function(resp){
-      var f = resp.forum;
-      var p = resp.posts;
-      var v = resp.version;
-      if(v!==GlobalSettings.version){
+      var f, p, v;
+      if(resp.forum){
+        f = resp.forum;
+        p = resp.forum.posts;
+        v = resp.version;
+      }else{
+        f=resp;
+      }
+      if(v && v!==GlobalSettings.version){
         App.notifier.notify("A new version is available, please reload the page", {type:'success', expire:0});
       }
-
       if(p){
         console.log("got "+p.length+"posts");
+        var merged = this.posts().merge(p, {parse:true});
       }
-
-      var merged = this.posts.merge(p, {parse:true});
 
       return f;
     }
 
 });
 
+App.Collections.Forums = Backbone.Collection.extend({
+  model:App.Models.Forum,
+});

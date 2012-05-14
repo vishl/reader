@@ -17,7 +17,6 @@ along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 /*global App Backbone _ Validator*/
 App.Models.User= Backbone.Model.extend({
     _className: "User",
-    subscriptions:new App.Collections.Subscriptions(),
     defaults:{
       name:"",
       email:"",
@@ -57,37 +56,37 @@ App.Models.User= Backbone.Model.extend({
     }),
 
     initialize:function(){
-      this.updateSubscriptions(this.attributes.subscriptions);
     },
 
     parse:function(resp,xhr){
-      this.updateSubscriptions(resp.subscriptions);
+      this.subscriptions().merge(resp.subscriptions, {parse:true});
       return resp;
     },
 
-    updateSubscriptions:function(sub){
-      if(sub){
-        for(var i=0; i<sub.length; i++){
-          var fId = sub[i].id;
-          if(this.subscriptions.get(fId)){
-            //update
-            this.subscriptions.get(fId).set({
-              user_id:this.id, 
-              forum_id:fId,
-              forum_title:sub[i].title,
-              subscribed:true,
-            });
-          }else{
-            //new
-            this.subscriptions.add(new App.Models.Subscription({
-              user_id:this.id, 
-              forum_id:fId,
-              forum_title:sub[i].title,
-              subscribed:true,
-            }));
-          }
-        }
+    toJSON:function(){
+      var ret = _(_.clone(this.attributes)).extend({
+          'authenticity_token' : $('meta[name="csrf-token"]').attr('content')
+      });
+      ret.settings = JSON.stringify(ret.settings);
+
+      return  ret;
+    },
+
+    get_setting:function(k){
+      if(this.attributes.settings){
+        return this.attributes.settings[k];
       }
+    },
+
+    set_setting:function(k,v,f){
+      this.attributes.settings[k] = v;
+      this.trigger("change:settings");
+      this.save(null,{success:f, only:[]});
+    },
+
+    subscriptions:function(){
+      if(!this._subscriptions){this._subscriptions = new App.Collections.Forums();}
+      return this._subscriptions;
     },
 
     signedIn:function(){
@@ -99,24 +98,25 @@ App.Models.User= Backbone.Model.extend({
     },
 
     subscribedTo:function(fId){
-      var sub = this.attributes.subscriptions;
-      if(!sub || !sub.length){
-        return false;
-      }
-      for(var i=0; i<sub.length; i++){
-        if(sub[i].id==fId){
-          return true;
-        }
-      }
-      return false;
+      return this.subscriptions().get(fId);
+//      var sub = this.attributes.subscriptions;
+//      if(!sub || !sub.length){
+//        return false;
+//      }
+//      for(var i=0; i<sub.length; i++){
+//        if(sub[i].id==fId){
+//          return true;
+//        }
+//      }
+//      return false;
     },
 
-    subscription:function(fId){
-      if(this.subscriptions.get(fId)){
-        return this.subscriptions.get(fId);
-      }
-      return null;
-    },
+//    subscription:function(fId){
+//      if(this.subscriptions.get(fId)){
+//        return this.subscriptions.get(fId);
+//      }
+//      return null;
+//    },
 
     clearPasswords:function(){
       this.attributes.password="";

@@ -32,7 +32,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :user
 
   ################################### Validations ################################
-  validates_uniqueness_of :user_id, :scope => :forum_id
+  validates_uniqueness_of :user_id, :scope => :forum_id, :message=>"is already subscribed"
   validates_presence_of :user_id, :forum_id
   validates :status, :format => {:with=>/^(owner)?$/}
 

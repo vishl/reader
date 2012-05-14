@@ -1,0 +1,15 @@
+<h1 class='forum-title'>
+  <%if(mode==='view'){%>
+    <%=model.escape('title')%>
+    <%if(owner){%>
+      <a id="edit"><i class="icon-pencil"></i></a>
+    <%}%>
+  <%}else{%>
+    <form>
+      <input id="title" value="<%=model.escape('title')%>">
+      <small>
+        <a id="cancel">&times;</a>
+      </small>
+    </form>
+  <%}%>
+</h1>

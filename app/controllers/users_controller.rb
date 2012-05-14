@@ -31,14 +31,14 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by_sid(params[:id])
-    render :json=>@user.as_json(:private_data=>correct_user?(@user))
+    render :json=>@user.as_json(:private_data=>correct_user?(@user), :current_user=>current_user)
   end
 
   def update
     @user = User.find_by_sid(params[:id])
     if(@user.update_attributes(params))
       sign_in @user
-      render :json=>@user.as_json(:private_data=>correct_user?(@user))
+      render :json=>@user.as_json(:private_data=>correct_user?(@user), :current_user=>current_user)
     else
       render :json=>@user.errors, :status=>400
     end

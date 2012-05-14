@@ -165,3 +165,4 @@ App.Views.Forgot = Backbone.FormView.extend({
     this.$el.html(JST['users/forgot']({model:this.model}));
   },
 });
+

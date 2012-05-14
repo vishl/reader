@@ -30,6 +30,7 @@ App.Models.Post = Backbone.Model.extend({
       content:"",
       comment:"",
       owner_id:"",
+      is_read:true,
     },
 
     //TODO override parse/constructor to include comments
@@ -67,11 +68,23 @@ App.Models.Post = Backbone.Model.extend({
       return ret;
     },
 
+    setMarkers:function(obj){
+      this.save(obj, {url:this.url()+'/set_marker'});
+    },
+
 });
 
 App.Collections.Posts = Backbone.Collection.extend({
     model:App.Models.Post,
-    comparator:function(x,y){return y.get("timestamp")-x.get("timestamp");},
+    comparator:function(x,y){
+//      if(x.get("is_read") && !y.get("is_read")){
+//        return 1;
+//      }
+//      if(!x.get("is_read") && y.get("is_read")){
+//        return -1;
+//      }
+      return y.get("timestamp")-x.get("timestamp");
+    },
     forum:null,
     urlRoot:function(){return '/forums/'+this.forumSid+'/posts';},
 

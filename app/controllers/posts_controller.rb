@@ -14,7 +14,7 @@
 #along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 
 class PostsController < ApplicationController
-  before_filter :authenticate, :only=>[:create]
+  before_filter :authenticate, :only=>[:create, :set_marker]
 
   def create
     @forum = Forum.find_by_sid(params[:forum_id])
@@ -32,6 +32,7 @@ class PostsController < ApplicationController
           render :json=>@post.errors, :status=>400
         else
           #no errors
+          @forum.make_markers_for(@post) #TODO delay this?
           render :json=>{'post'=>@post}
         end
       end
@@ -64,6 +65,25 @@ class PostsController < ApplicationController
           render :json=>@post
         end
       }
+    end
+  end
+
+  def set_marker
+    @forum = Forum.find_by_sid(params[:forum_id])
+    unless(@forum)
+      render :status=>400, :json=>{"forum"=>"is invalid"}
+    else
+      @post = @forum.posts.find_by_id(params[:id])
+      unless(@post)
+        render :status=>400, :json=>{"post"=>"is invalid"}
+      else
+        marker = Marker.find_by_user_id_and_post_id(current_user.id, @post.id)
+        if(!marker)
+          Marker.create!(:user_id=>current_user, :post_id=>@post.id, :forum_id=>@post.forum_id, :is_read=>false, :is_starred=>false, :is_hidden=>false);
+        end
+        marker.update_attributes(params.slice("is_read", "is_starred", "is_hidden"))
+        render :json=>@post.as_json(:current_user=>current_user)
+      end
     end
   end
 

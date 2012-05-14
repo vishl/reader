@@ -1,4 +1,4 @@
 =render 'layouts/js_settings'
 :javascript
-  User= #{current_user ? current_user.to_json(:private_data=>true) : "null"};
+  User= #{current_user ? current_user.to_json(:private_data=>true, :current_user=>current_user) : "null"};
   $(function(){App.init();})

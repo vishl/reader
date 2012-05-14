@@ -17,30 +17,34 @@ along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 /*global App Backbone _ JST Utils mpq*/
 App.Views.Post = Backbone.View.extend({
     post:null,  //TODO what is this..
-    className:'post-area', //the class of the containing <div>
 
     events:{
       "click .post .close":"deletePost",
+      "click #mark-unread":"markUnread",
+      "click":"markRead",
     },
 
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
+      this.controlsView = new App.Views.PostControls({model:this.model});
       this.commentsView = new App.Views.Comments({model:this.model.comments});
       this.commentCreateView = new App.Views.CommentCreate({post:this.model, subscription:this.options.subscription});
       this.commentCreateView.bind("posted", this.createComment, this);
-      this.model.bind("change", this.render);
+      this.model.bind("change:is_read", this.updateRead, this);
     },
 
     beforeClose:function(){
+      this.controlsView.close();
       this.commentsView.close();
       this.commentCreateView.unbind("posted", this.createComment, this);
       this.commentCreateView.close();
-      this.model.unbind("change", this.render);
+      this.model.bind("change:is_read", this.updateRead, this);
     },
 
     render: function(){
       console.log("render post");
       $(this.el).html(JST['posts/show']({post:this.model}));
+      this.$('#controls-hook').html(this.controlsView.render().el);
       this.$el.find('.comment-area').append(this.commentsView.render().el);
       this.$el.find('.comment-area').append(this.commentCreateView.render().$el);
       Utils.embed(this.$el.find('.content .linkify').get(0));
@@ -62,6 +66,30 @@ App.Views.Post = Backbone.View.extend({
       }
     },
 
+    markRead:function(e){
+      if(!this.model.get("is_read")){
+        this.model.setMarkers({is_read:true});
+      }
+    },
+
+    markUnread:function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(this.model.get("is_read")){
+        this.model.setMarkers({is_read:false});
+      }
+    },
+
+    updateRead:function(){
+      if(this.model.get("is_read")){
+        this.$('.post-area').addClass("read");
+      }else{
+        this.$('.post-area').removeClass("read");
+      }
+      this.controlsView.render();
+    },
+
+
     ////////////////////////////////// helpers /////////////////////////////////////
     postFrame : function(els){
       var self = this;
@@ -79,6 +107,15 @@ App.Views.Post = Backbone.View.extend({
     },
 });
 
+App.Views.PostControls = Backbone.View.extend({
+  render:function(){
+    this.$('#mark-unread').tooltip('hide');
+    this.$el.html(JST['posts/controls']({post:this.model}));
+    this.$('#mark-unread').tooltip({title:"Mark unread"});
+    return this;
+  },
+});
+
 App.Views.Posts = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
@@ -86,6 +123,15 @@ App.Views.Posts = Backbone.View.extend({
       this.model.bind("add", this.addPost, this);
       this.model.bind("destroy", this.removePost, this);
       this.model.bind("remove", this.removePost, this);
+      App.user.bind("change:settings", this.render, this);
+    },
+
+    beforeClose:function(){
+      this.model.unbind("reset", this.render, this);
+      this.model.unbind("add", this.addPost, this);
+      this.model.unbind("destroy", this.removePost, this);
+      this.model.unbind("remove", this.removePost, this);
+      App.user.unbind("change:settings", this.render, this);
     },
 
     postViews:[],
@@ -95,10 +141,14 @@ App.Views.Posts = Backbone.View.extend({
       var self = this;
       this.postViews=[];
       _.each(this.model.models, function(post){
+        if(App.user.get_setting("hide_read") && post.get("is_read")){
+          //don't display
+        }else{
           var p = new App.Views.Post({model:post, subscription:self.options.subscription});
           self.postViews.push(p);
           p.render();
           self.$el.append(p.el);
+        }
       });
       return this;
     },
