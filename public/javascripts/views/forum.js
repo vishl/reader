@@ -180,11 +180,17 @@ App.Views.ForumSelect = Backbone.View.extend({
 
   initialize:function(){
     //TODO pick one to select
-    this.forum = App.user.subscriptions.first().makeForum();
+    var init = App.user.get("last_forum");
+    if(init){
+      init = App.user.subscriptions().get(init);
+    }else{
+      init = App.user.subscriptions().first();
+    }
+    this.forum = init;
   },
 
   render:function(){
-    this.$el.html(JST["forums/select"]({subscriptions:App.user.subscriptions, selected:this.forum.id}));
+    this.$el.html(JST["forums/select"]({subscriptions:App.user.subscriptions(), selected:this.forum.id}));
   },
 
   changeForum:function(){
