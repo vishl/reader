@@ -16,7 +16,7 @@ along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*global App Backbone _ JST*/
 App.Views.Comment = Backbone.View.extend({
-    postFrameEn:true,
+    postFrameEn:false,
 
     events:{
       "click .close":"deleteComment",
@@ -67,7 +67,7 @@ App.Views.Comment = Backbone.View.extend({
 });
 
 App.Views.Comments = Backbone.View.extend({
-    postFrame:true, //enable postframe
+    postFrame:false, //enable postframe
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.model.bind("reset", this.render, this);

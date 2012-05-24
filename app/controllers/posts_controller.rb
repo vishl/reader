@@ -79,7 +79,7 @@ class PostsController < ApplicationController
       else
         marker = Marker.find_by_user_id_and_post_id(current_user.id, @post.id)
         if(!marker)
-          Marker.create!(:user_id=>current_user, :post_id=>@post.id, :forum_id=>@post.forum_id, :is_read=>false, :is_starred=>false, :is_hidden=>false);
+          Marker.create!(:user_id=>current_user.id, :post_id=>@post.id, :forum_id=>@post.forum_id, :is_read=>false, :is_starred=>false, :is_hidden=>false);
         end
         marker.update_attributes(params.slice("is_read", "is_starred", "is_hidden"))
         render :json=>@post.as_json(:current_user=>current_user)

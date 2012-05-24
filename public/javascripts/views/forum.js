@@ -97,7 +97,9 @@ App.Views.Forum = Backbone.View.extend({
 
   handleRead:function(m){
     if(m.get("is_read")){
-      this.model.set("unread_count", this.model.get("unread_count")-1);
+      if(this.model.get("unread_count")>0){
+        this.model.set("unread_count", this.model.get("unread_count")-1);
+      }
     }else{
       this.model.set("unread_count", this.model.get("unread_count")+1);
     }

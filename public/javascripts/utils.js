@@ -184,7 +184,7 @@ function is_link(text){
 }
 function text_to_link(text) {
   if(text){
-    return text.replace(_linkExp,"<a href='$1' target='_top'>$1</a>");
+    return text.replace(_linkExp,"<a href='$1' target='_blank'>$1</a>");
   }else{
     return "";
   }

@@ -94,12 +94,13 @@ class Forum < ActiveRecord::Base
         #get unread posts
         if(options[:hide_read])
           m = Marker.where(:forum_id=>self.id, :user_id=>options[:current_user].id, :is_read=>false).order("created_at DESC").offset(offset).limit(limit).all
+          ret[:posts] = Post.where("id IN (?)", m.map{|k|k.post_id}).includes(:comments).as_json(options)
         else
           m = Marker.where(:forum_id=>self.id, :user_id=>options[:current_user].id).order("created_at DESC").offset(offset).limit(limit).all
 #        if(m.length<limit && !options[:hide_read])
 #          m+=Marker.where(:forum_id=>self.id, :user_id=>options[:current_user].id, :is_read=>true).offset([offset-m.length, 0].max).limit(limit-m.length).all
+          ret[:posts] = self.posts.order("updated_at DESC").offset(offset).limit(limit).includes(:comments).as_json(options)
         end
-        ret[:posts] = Post.where("id IN (?)", m.map{|k|k.post_id}).includes(:comments).as_json(options)
       else
         ret[:posts] = self.posts.order("updated_at DESC").offset(offset).limit(limit).includes(:comments).as_json(options)
       end

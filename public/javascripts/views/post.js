@@ -48,7 +48,7 @@ App.Views.Post = Backbone.View.extend({
       this.$el.find('.comment-area').append(this.commentsView.render().el);
       this.$el.find('.comment-area').append(this.commentCreateView.render().$el);
       Utils.embed(this.$el.find('.content .linkify').get(0));
-      this.postFrame(this.$el.find('.linkify a'));
+      //this.postFrame(this.$el.find('.linkify a'));
       return this;
     },
 
