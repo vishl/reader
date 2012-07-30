@@ -37,6 +37,11 @@ class SessionsController < ApplicationController
         render :json=>{"password"=>["Invalid password"]}, :status=>401
       end
     else
+      #successful login
+      #generate a token if current isn't valid
+      if(!@user.validate_password_token(@user.reset_token))
+        @user.generate_token(1.year)
+      end
       render :json=>@user.as_json(:private_data=>true, :current_user=>@user)
     end
 

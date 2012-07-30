@@ -37,6 +37,10 @@ class UsersController < ApplicationController
   def update
     @user = User.find_by_sid(params[:id])
     if(@user.update_attributes(params))
+      if(params[:password].present?)
+        #changed password, generate a new token
+        @user.generate_token(1.year)
+      end
       sign_in @user
       render :json=>@user.as_json(:private_data=>correct_user?(@user), :current_user=>current_user)
     else

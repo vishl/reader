@@ -129,9 +129,15 @@ class User < ActiveRecord::Base
   end
 
 
+  def generate_token(valid_time = 14.days)
+    self.reset_token = SecureRandom.urlsafe_base64
+    self.reset_token_date = Time.now+valid_time
+    self.save!
+  end
+
   def generate_reset
     self.reset_token = SecureRandom.urlsafe_base64
-    self.reset_token_date = Time.now
+    self.reset_token_date = Time.now+24.hours
     unless (self.save)
       logger.error("unable to generate reset token")
       logger.error(self.errors)
@@ -139,13 +145,13 @@ class User < ActiveRecord::Base
     else
       link = "users/#{id}/reset/#{reset_token}";
       logger.debug("Generated reset path #{link}")
-      Notifier.delay.password_reset(id)
+      Notifier.delay.password_reset(id) #TODO THIS IS BAD
       true
     end
   end
 
   def validate_password_token(token)
-    token.present? && token == self[:reset_token] && ((Time.now-self[:reset_token_date])<24.hours)
+    token.present? && token == self[:reset_token] && (Time.now<self[:reset_token_date])
   end
 
   def invalidate_password_token
@@ -166,7 +172,7 @@ class User < ActiveRecord::Base
     #TODO include posts?
     attrs =  {:id=>sid, :name=>name}
     if(options[:private_data])
-      attrs = attrs.merge({:email=>email, :subscriptions=>forums.as_json(options), :reminder_day=>reminder_day, :reminder_time=>reminder_time, :settings=>get_settings})
+      attrs = attrs.merge({:email=>email, :subscriptions=>forums.as_json(options), :reminder_day=>reminder_day, :reminder_time=>reminder_time, :settings=>get_settings, :token=>reset_token})
     end
     return attrs
   end
@@ -187,6 +193,16 @@ class User < ActiveRecord::Base
     else 
       nil
     end
+  end
+
+  def self.authenticate_with_token(token)
+    if(token.present?)
+      u = User.find_by_token(token)
+      if(u && u.validate_password_token(token))
+        return u
+      end
+    end
+    return nil
   end
 
   def self.find_by_email_lc(email)

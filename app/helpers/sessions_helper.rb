@@ -46,6 +46,7 @@ module SessionsHelper
 
   def current_user
     @current_user ||= user_from_remember_token
+    @current_user ||= user_from_url_token
   end
 
   def current_user?(user)
@@ -138,6 +139,10 @@ module SessionsHelper
 
     def user_from_remember_token
       User.authentiticate_with_salt(*remember_token)
+    end
+
+    def user_from_url_token
+      User.authenticate_with_token(params[:access_token])
     end
 
     def remember_token
