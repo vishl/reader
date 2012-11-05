@@ -19,7 +19,7 @@ App.Views.UserCredentials = Backbone.View.extend({
 
     initialize:function(){
       _.bindAll(this);
-      this.model.bind("sync", this.render);
+      this.model.bind("id", this.render);
     },
 
     render: function(){

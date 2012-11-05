@@ -1,13 +1,13 @@
 <div id='create-post-box'>
   <%if(signedIn){%>
     <%if(subscribed){%>
-      <h2>
+      <!--<h2>
         <a data-target='#create-post-area' data-toggle='collapse' id='postheader'>
           <div class="plus">+</div>
           Post something to <%=title%>
         </a>
-      </h2>
-      <div class='collapse' id='create-post-area'>
+      </h2>-->
+      <div class='' id='create-post-area'>
         <form>
           <fieldset>
             <div class="clearfix" id="post_content_input">
@@ -16,9 +16,14 @@
                   placeholder="Post something here" rows="3"><%=post.get('content')%></textarea>
               </div>
             </div>
-            <div class="clearfix" id="post_comment_input">
-              <div class="input">
-                <textarea cols="80" id="comment" name="post[comment]" placeholder="Add your comments here" rows="3"></textarea>
+            <div id="create-post-comment-area">
+              <div id="create-post-comment-name">
+                <%=App.user.escape("name")%>
+              </div>
+              <div class="clearfix post-comment-box" id="post_comment_input">
+                <div class="input">
+                  <textarea id="comment" name="post[comment]" placeholder="Your witty comment" rows="1"></textarea>
+                </div>
               </div>
             </div>
           </fieldset>

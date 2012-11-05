@@ -5,12 +5,10 @@
     <%if(!subscribed){%>
     <a href='#' id="subscribe">Subscribe</a> to post a comment...
     <%}else{%>
-      <a class='comment-post-header' href='#'>Post a comment...</a>
-      <div class='comment-post-form collapse'>
+      <!--<a class='comment-post-header' href='#'>Post a comment...</a>-->
+      <div class='comment-post-form'>
         <form>
-          <textarea class="span11" cols="80" id="content" name="comment[content]" placeholder="Post a comment" rows="3"></textarea>
-          <input class="btn" name="commit" type="submit" value="Post!" />
-          <img src="/images/loading.gif" id="load-img"></img>
+          <textarea id="content" name="comment[content]" placeholder="Post a comment"></textarea>
         </form>
       </div>
     <%}%>

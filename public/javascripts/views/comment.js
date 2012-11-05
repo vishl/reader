@@ -108,8 +108,17 @@ App.Views.Comments = Backbone.View.extend({
 App.Views.CommentCreate = Backbone.FormView.extend({
     post:null,
 
+    events: _.extend({
+      "keypress textarea": "handleKeyup",
+      "change textarea": "resize",
+      "keydown textarea": "delayResize",
+      "cut textarea": "delayResize",
+      "paste textarea": "delayResize",
+      "drop textarea": "delayResize",
+    }, Backbone.FormView.prototype.events),
+
     initialize:function(){
-      _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
+      _.bindAll(this); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.post = this.options.post;
       this.subscription = this.options.subscription;
       //if no subscription just assume we're subscribed and hope for the best
@@ -131,11 +140,15 @@ App.Views.CommentCreate = Backbone.FormView.extend({
           $(this).siblings('.comment-post-form').collapse('toggle');
       });
       this.delegateEvents(); //have to call this explicity if the form gets rerendered
+//      this.$('textarea')[0].onkeypress = this.handleKeyup;
       return this;
     },
 
-    beforePost:function(){
-      //validate the user name
+    beforePost:function(attrs){
+      if(!attrs.content){
+        return false;
+      }
+      this.$('textarea').prop('disabled', 'disabled');
       return true;
     },
 
@@ -144,7 +157,33 @@ App.Views.CommentCreate = Backbone.FormView.extend({
       this.model = new App.Models.Comment(null, {post:this.post});
       this.render();
       //App.notifier.notify("Comment posted");
+      this.$('textarea').prop('disabled', null);
       return this;
+    },
+
+    onError:function(){
+      this.$('textarea').prop('disabled', null);
+    },
+
+    handleKeyup:function(e){
+      //resize
+      this.resize();
+      //enter submit
+      //ctrl enter = enter
+      if(e.keyCode===13 && !e.ctrlKey){
+        this.$('form').submit();
+        return false;
+      }
+      return true;
+    },
+
+    resize:function(e){
+      this.$('textarea').height(0);
+      this.$('textarea').height(this.$('textarea')[0].scrollHeight);
+    },
+
+    delayResize:function(e){
+      setTimeout(this.resize, 0);
     }
 
 });

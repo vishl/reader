@@ -1,7 +1,15 @@
 <ul class="nav pull-right">
   <%if(model.signedIn()){%>
-    <li><a href="/#users/<%=model.id%>"><%=model.escape("name")%></a> </li>
-    <li><a href="/signout">Sign Out</a></li>
+    <li class="dropdown">
+      <a id="userdd" href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <%=model.escape("name")%>
+        <b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="userdd">
+        <li><a href="/#users/<%=model.id%>">Account</li>
+        <li><a href="/signout">Sign Out</a></li>
+      </ul>
+    </li>
   <%}else{%>
     <li><a href="/#">Sign in</a> </li>
   <%}%>

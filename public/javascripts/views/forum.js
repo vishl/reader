@@ -23,7 +23,6 @@ App.Views.Forum = Backbone.View.extend({
     "click #hide-read":"handleUnread",
     "click #mark-all-read":"markAllRead",
   },
-  className:"container",
 
   initialize:function(){
     _.bindAll(this, 'render', 'handleScroll'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
@@ -72,7 +71,7 @@ App.Views.Forum = Backbone.View.extend({
     console.log("render forum");
     this.$el.html(JST['forums/show']({title:this.model.get("title")}));
     this.render();
-    this.$('#post-create-hook').html(this.postCreateView.render().el);
+//    this.$('#post-create-hook').html(this.postCreateView.render().el);
     this.$('#posts-hook').html(this.postsView.render().el);
     this.$el.find('#users-modal .modal-body').html(this.forumUsersView.el);
     this.$el.find('#invite-modal .modal-body').html(this.forumInviteView.el);
@@ -182,9 +181,15 @@ App.Views.ForumSelect = Backbone.View.extend({
 
   initialize:function(){
     //TODO pick one to select
-    var init = App.user.get_setting("last_forum");
-    if(init){
-      init = App.user.subscriptions().get(init);
+    var forumId;
+    var init;
+    if(this.options.forumId){
+      forumId = this.options.forumId;
+    }else{
+      forumId = App.user.get_setting("last_forum");
+    }
+    if(forumId){
+      init = App.user.subscriptions().get(forumId);
     }else{
       init = App.user.subscriptions().first();
     }
@@ -193,6 +198,7 @@ App.Views.ForumSelect = Backbone.View.extend({
 
   render:function(){
     this.$el.html(JST["forums/select"]({subscriptions:App.user.subscriptions(), selected:this.forum.id}));
+    this.delegateEvents();
   },
 
   changeForum:function(){

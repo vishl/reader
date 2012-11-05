@@ -27,7 +27,7 @@ App.Views.PostMiniCreate = Backbone.View.extend({
        this.forum.fetch(); 
        */
 
-    this.forumSelectView = new App.Views.ForumSelect();
+    this.forumSelectView = new App.Views.ForumSelect(this.options.forumId);
 
     this.postCreateView = new App.Views.PostCreate({
       attributes:{content:url_parse().args['content']},
@@ -36,10 +36,15 @@ App.Views.PostMiniCreate = Backbone.View.extend({
     });
 
     this.forumSelectView.bind("change", this.changeForum, this);
-    this.postCreateView.bind("posted", function(){mpq.track("post", {source:"bookmarklet"});});
+    this.postCreateView.bind("posted", this.handlePost, this);
 
     $('#main-window').html(this.el);
     this.render();
+  },
+
+  beforeClose:function(){
+    this.forumSelectView.close();
+    this.postCreateView.close();
   },
 
   render:function(){
@@ -47,6 +52,7 @@ App.Views.PostMiniCreate = Backbone.View.extend({
     this.$('#forum-select-container').html(this.forumSelectView.el);
     this.forumSelectView.render();
     this.renderPostCreateView();
+    this.delegateEvents();
   },
 
   renderPostCreateView:function(){
@@ -62,7 +68,18 @@ App.Views.PostMiniCreate = Backbone.View.extend({
       forum:this.forumSelectView.forum,
       startOpen:true,
     });
+    this.postCreateView.bind("posted", this.handlePost, this);
     this.renderPostCreateView();
+  },
+
+  handlePost:function(model){
+    if(this.options.isBookmarklet){
+      mpq.track("post", {source:"bookmarklet"});
+    }else{
+      mpq.track("post", {source:"forum"});
+    }
+
+    this.trigger("posted", model, this.forumSelectView.forum.id);
   },
 });
 

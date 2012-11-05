@@ -12,19 +12,25 @@ javascripts:
     - public/javascripts/utils.js
     - public/javascripts/backbone.js
     - public/javascripts/backbone_extensions.js
-    - public/javascripts/bootstrap.js
+    - public/javascripts/lib/bootstrap/bootstrap-tooltip.js
+    - public/javascripts/lib/bootstrap/*.js
     - public/javascripts/reader_utils.js
     - public/javascripts/errors.js
     - public/javascripts/application.js
     - public/javascripts/models/comments.js #dependencies here, so order matters
     - public/javascripts/models/posts.js
-    - public/javascripts/*/*.js
+    - public/javascripts/models/*.js
+    - public/javascripts/views/*.js
+    - public/javascripts/routers/*.js
     - app/views/**/*.jst
 
 stylesheets:
+  common_less:
+#    - public/stylesheets/custom.css
   common:
-    - public/stylesheets/bootstrap.css
-    - public/stylesheets/bootstrap-responsive.css
-    - public/stylesheets/custom.css
+#    - public/stylesheets/bootstrap.css
+#    - public/stylesheets/bootstrap-responsive.css
+    - public/stylesheets/bootstrap/bootstrap-compiled.css
+#    - public/stylesheets/custom.css
   commentview:
     - public/stylesheets/commentview.css

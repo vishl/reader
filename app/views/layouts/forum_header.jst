@@ -1,48 +1,48 @@
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container-fluid">
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-
-      <a href="/" class="brand">Freader</a>
-      <%if(0&&title){%>
-        <ul class="nav">
-          <li class="active" id="forum-title"><a><%=title%></a></li>
-        </ul>
-      <%}%>
-      <div class="nav-collapse">
-        <ul class="nav">
-          <li>
-            <a class="forum-nav" href="/#new" title="New">
-              New
-            </a>
-          </li>
-          <%subscriptions.forEach(function(s){%>
-            <li class="<%=s.id==id?"active":""%>">
-            <a class="forum-nav" href="/#forums/<%=s.id%>" title="<%=s.escape("title")%>">
-              <%=s.escape("title")%>
-              <%if(s.get("unread_count")){%>
-                <span class="unread-count"><%=s.get("unread_count")%></span>
-              <%}%>
-            </a>
+      <%if(App.user.signedIn()){%>
+        <div class="dropdown pull-left">
+          <a id="freadsdd" class="brand dropdown-toggle" data-toggle="dropdown" href="#">Freader<b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="freadsdd">
+            <%subscriptions.forEach(function(s){%>
+              <li class="<%=s.id==id?"active":""%>">
+              <a class="" href="/#forums/<%=s.id%>" title="<%=s.escape("title")%>">
+                <%=s.escape("title")%>
+                <%if(s.get("unread_count")){%>
+                  <span class="unread-count"><%=s.get("unread_count")%></span>
+                <%}%>
+              </a>
+              </li>
+            <%});%>
+            <li class="divider"></li>
+            <li>
+              <a href="/#new" title="New">
+                New Fread
+              </a>
             </li>
-          <%});%>
-        </ul>
+          </ul>
+        </div>
+        <a id="post-create">
+          Share a link
+        </a>
+      <%}else{%>
+        <a class="brand"href="#">Freader</a>
+      <%}%>
+      <div class="navbar">
         <div class="" id="user-credentials"></div>
-        <ul class="nav pull-right">
-          <li>
-            <a href="#bookmarklet-modal" data-toggle="modal"> Get the bookmarklet </a>
-          </li>
-        </ul>
       </div>
     </div>
   </div>
 </div>
 
 <!-- hidden modal stuff -->
+<div id="post-modal" class="modal hide">
+  <div class="modal-body">
+    <div id="post-create-hook"></div>
+  </div>
+</div>
+
 <div id="bookmarklet-modal" class="modal hide fade in">
   <div class='modal-header'>
     <a class='close' data-dismiss='modal'> &times;</a>

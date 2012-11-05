@@ -5,7 +5,16 @@
       #{GlobalSettings.site_name}
     = csrf_meta_tag
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    = render 'layouts/stylesheets', :enable_mobile=>false
+    -#= render 'layouts/stylesheets', :enable_mobile=>false
+    -if GlobalSettings.deployment=="development" && GlobalSettings.use_less
+      <link rel="stylesheet/less" type="text/css" href="/stylesheets/bootstrap/less/bootstrap.less">
+      :javascript
+        less={};less.env="development"
+      = javascript_include_tag "lib/less.js"
+      =include_stylesheets :common_less, :media=>'all'
+    -else
+      =include_stylesheets :common, :media=>'all'
+    
     = render 'layouts/scripts'
     -#%link{:rel=>"shortcut icon", :type=>"image/x-icon", :href=>"/images/icons/favicon.png"}
   %body

@@ -207,13 +207,14 @@ App.Views.PostCreate = Backbone.FormView.extend({
           self.$el.removeModelErrors();
           $(this).siblings('#create-post-area').collapse('toggle');
       });
-      this.delegateEvents(); //have to call this explicity if the form gets rerendered
+      this.$('#comment').autoGrow();
+      this.delegateEvents(); 
       return this;
     },
 
     afterSave : function(){
       this.model = new App.Models.Post(null, {forum:this.forum});
-      this.$el.find('#create-post-area').collapse('hide');
+//      this.$el.find('#create-post-area').collapse('hide');
       this.$el.find('#content').val("");
       this.$el.find('#comment').val("");
       App.notifier.notify("Message posted");

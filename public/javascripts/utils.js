@@ -174,6 +174,20 @@ $.fn.convDate = function(){
   $this.html(convDate(datestr));
 };
 
+$.fn.autoGrow = function(){
+  var $self = this;
+  $self.css('overflow', 'hidden');
+  var resize = function(){
+    $self.height(0);
+    $self.height($self[0].scrollHeight);
+  };
+  var delayResize = function(){
+    setTimeout(resize, 0);
+  };
+  $self.on('keydown cut paste drop', delayResize);
+  $self.on('change', resize);
+};
+
 var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;()*%]*[-A-Z0-9+&@#\/%=~_|()*])/ig;
 function is_link(text){
   if(text.match(_linkExp)){

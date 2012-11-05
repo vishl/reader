@@ -18,18 +18,31 @@ along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 
 App.Views.ForumHeader = Backbone.View.extend({
 
+  events:{
+    "click #post-create":"launchPostCreate",
+  },
+
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.userCredentialsView = new App.Views.UserCredentials({model:App.user});
+      this.postMini = new App.Views.PostMiniCreate({forumId:(this.model?this.model.id:null)});
+
+      this.postMini.bind("posted", this.handlePost, this);
       if(this.model){
-        this.model.bind("change", this.render);
+        this.model.bind("change:id", this.render);
       }
-      App.user.subscriptions().bind("add remove reset change", this.render, this);
+      App.user.bind("change:id", this.render, this);
+      App.user.subscriptions().bind("add remove reset", this.render, this);
     },
 
     beforeClose:function(){
       this.userCredentialsView.close();
-      App.user.subscriptions().unbind("add remove reset change", this.render, this);
+      this.postMini.close();
+      if(this.model){
+        this.model.unbind("change:id", this.render);
+      }
+      App.user.unbind("change:id", this.render, this);
+      App.user.subscriptions().unbind("add remove reset", this.render, this);
     },
 
     render: function(){
@@ -53,6 +66,19 @@ App.Views.ForumHeader = Backbone.View.extend({
       }
       this.$el.find('#user-credentials').html(this.userCredentialsView.el);
       this.userCredentialsView.render();
+      this.$('#post-create-hook').html(this.postMini.el);
+      this.postMini.render();
       return this;
+    },
+
+    launchPostCreate:function(){
+      this.$('#post-modal').modal('show');
+    },
+
+    handlePost:function(models, id){
+      if(id === this.model.id){
+        this.model.posts().add(models);
+      }
+      this.$('#post-modal').modal('hide');
     },
 });
