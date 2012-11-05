@@ -109,7 +109,7 @@ App.Routers.Main = Backbone.Router.extend({
 
     postMini:function(sid){
       if(App.user.signedIn()){
-        this.postMiniView = new App.Views.PostMiniCreate();
+        this.postMiniView = new App.Views.PostMiniCreate({isBookmarklet:true});
       }else{
         $('#main-window').html('Please <a target="_blank" href="http://'+GlobalSettings.app_domain+'">sign in</a> and reload this page');
       }
