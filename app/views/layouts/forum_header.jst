@@ -23,9 +23,11 @@
             </li>
           </ul>
         </div>
-        <a id="post-create">
-          Share a link
-        </a>
+        <%if(App.user.subscriptions().length){%>
+          <a id="post-create">
+            Share a link
+          </a>
+        <%}%>
       <%}else{%>
         <a class="brand"href="#">Freader</a>
       <%}%>

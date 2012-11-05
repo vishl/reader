@@ -31,11 +31,17 @@ App.Views.SignIn = Backbone.FormView.extend({
   beforePost:function(){
     this.trigger("submitting");
     return true;
-  }, 
+  },
 
   afterSave:function(){
     this.model.clearPasswords();
     this.model.attributes.signup=false;
+    var last = App.user.get_setting("last_forum");
+    if(last){
+      App.router.navigate('forums/'+last, {trigger:true});
+    }else{
+      App.router.navigate('new');
+    }
   },
 
   onError:function(){

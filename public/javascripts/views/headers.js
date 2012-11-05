@@ -25,9 +25,13 @@ App.Views.ForumHeader = Backbone.View.extend({
     initialize:function(){
       _.bindAll(this,'render'); //this statement ensures that whenever 'render' is called 'this' is the current value of 'this'
       this.userCredentialsView = new App.Views.UserCredentials({model:App.user});
-      this.postMini = new App.Views.PostMiniCreate({forumId:(this.model?this.model.id:null)});
+      if(App.user.subscriptions().length){
+        this.postMini = new App.Views.PostMiniCreate({forumId:(this.model?this.model.id:null)});
+      }
 
-      this.postMini.bind("posted", this.handlePost, this);
+      if(this.postMini){
+        this.postMini.bind("posted", this.handlePost, this);
+      }
       if(this.model){
         this.model.bind("change:id", this.render);
       }
@@ -37,7 +41,9 @@ App.Views.ForumHeader = Backbone.View.extend({
 
     beforeClose:function(){
       this.userCredentialsView.close();
-      this.postMini.close();
+      if(this.postMini){
+        this.postMini.close();
+      }
       if(this.model){
         this.model.unbind("change:id", this.render);
       }
@@ -46,6 +52,9 @@ App.Views.ForumHeader = Backbone.View.extend({
     },
 
     render: function(){
+      if(!this.postMini && App.user.subscriptions().length){
+        this.postMini = new App.Views.PostMiniCreate({forumId:(this.model?this.model.id:null)});
+      }
       console.log("render forum header");
       if(this.model){
         this.$el.html(JST['layouts/forum_header'](
@@ -66,8 +75,10 @@ App.Views.ForumHeader = Backbone.View.extend({
       }
       this.$el.find('#user-credentials').html(this.userCredentialsView.el);
       this.userCredentialsView.render();
-      this.$('#post-create-hook').html(this.postMini.el);
-      this.postMini.render();
+      if(this.postMini){
+        this.$('#post-create-hook').html(this.postMini.el);
+        this.postMini.render();
+      }
       return this;
     },
 
