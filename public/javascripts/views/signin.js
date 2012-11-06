@@ -37,10 +37,13 @@ App.Views.SignIn = Backbone.FormView.extend({
     this.model.clearPasswords();
     this.model.attributes.signup=false;
     var last = App.user.get_setting("last_forum");
+    if(!last && App.user.subscriptions().length){
+      last = App.user.subscriptions().at(0).id;
+    }
     if(last){
       App.router.navigate('forums/'+last, {trigger:true});
     }else{
-      App.router.navigate('new');
+      App.router.navigate('new', {trigger:true});
     }
   },
 

@@ -25,17 +25,19 @@
 #  updated_at :datetime
 #  forum_id   :integer
 #  user_id    :integer
-#
+#  updatetime :datetime
 
 class Post < ActiveRecord::Base
   ################################### Attributes #################################
   attr_accessible :name, :content, :comment
 
   ################################### Validations ################################
+  before_validation {self.updatetime = Time.now}
   validates_presence_of :name
   validates_presence_of :content
   validates_presence_of :forum_id
   validates_presence_of :user_id
+  validates_presence_of :updatetime
 
   ################################### Associations ###############################
   has_many :comments, :dependent=>:destroy
@@ -46,7 +48,10 @@ class Post < ActiveRecord::Base
   scope :latest, order('updated_at DESC')
 
   def timestamp
-    updated_at.present? ? updated_at.tv_sec*1000 : ""
+    created_at.present? ? created_at.tv_sec*1000 : ""
+  end
+  def updatetimestamp
+    updatetime.present? ? updatetime.tv_sec*1000 : ""
   end
 
   def name
@@ -61,12 +66,16 @@ class Post < ActiveRecord::Base
     }
   end
 
+  def touch
+    self.update_attribute(:updatetime, Time.now)
+  end
+
   def as_json(options={})
     options||={}
     #TODO sid instead of id
     ret = attributes.slice("id", "content", "comment").merge({
       "name"=>name,
-      "forum_sid"=>forum.sid, "timestamp"=>timestamp, 
+      "forum_sid"=>forum.sid, "timestamp"=>timestamp, "updatetime"=>updatetimestamp,
       "comments"=>comments.order("updated_at").all,
       "owner_id"=>user.sid
     })
@@ -80,3 +89,4 @@ class Post < ActiveRecord::Base
     return ret
   end
 end
+

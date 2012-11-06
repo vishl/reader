@@ -92,17 +92,17 @@ class Forum < ActiveRecord::Base
       limit = options[:limit] || 20
       if(options[:current_user])
         #get unread posts
-        if(options[:hide_read])
+        if(false && options[:hide_read])
           m = Marker.where(:forum_id=>self.id, :user_id=>options[:current_user].id, :is_read=>false).order("created_at DESC").offset(offset).limit(limit).all
           ret[:posts] = Post.where("id IN (?)", m.map{|k|k.post_id}).includes(:comments).as_json(options)
         else
-          m = Marker.where(:forum_id=>self.id, :user_id=>options[:current_user].id).order("created_at DESC").offset(offset).limit(limit).all
+#          m = Marker.where(:forum_id=>self.id, :user_id=>options[:current_user].id).order("created_at DESC").offset(offset).limit(limit).all
 #        if(m.length<limit && !options[:hide_read])
 #          m+=Marker.where(:forum_id=>self.id, :user_id=>options[:current_user].id, :is_read=>true).offset([offset-m.length, 0].max).limit(limit-m.length).all
-          ret[:posts] = self.posts.order("updated_at DESC").offset(offset).limit(limit).includes(:comments).as_json(options)
+          ret[:posts] = self.posts.order("updatetime DESC").offset(offset).limit(limit).includes(:comments).as_json(options)
         end
       else
-        ret[:posts] = self.posts.order("updated_at DESC").offset(offset).limit(limit).includes(:comments).as_json(options)
+        ret[:posts] = self.posts.order("updatetime DESC").offset(offset).limit(limit).includes(:comments).as_json(options)
       end
     end
     return ret

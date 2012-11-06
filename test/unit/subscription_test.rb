@@ -6,3 +6,16 @@ class SubscriptionTest < ActiveSupport::TestCase
     assert true
   end
 end
+
+# == Schema Information
+#
+# Table name: subscriptions
+#
+#  id         :integer         not null, primary key
+#  user_id    :integer
+#  forum_id   :integer
+#  created_at :datetime
+#  updated_at :datetime
+#  status     :string(255)
+#
+

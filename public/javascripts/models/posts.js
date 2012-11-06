@@ -83,7 +83,7 @@ App.Collections.Posts = Backbone.Collection.extend({
 //      if(!x.get("is_read") && y.get("is_read")){
 //        return -1;
 //      }
-      return y.get("timestamp")-x.get("timestamp");
+      return y.get("updatetime")-x.get("updatetime");
     },
     forum:null,
     urlRoot:function(){return '/forums/'+this.forumSid+'/posts';},

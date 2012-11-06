@@ -90,6 +90,7 @@ class ForumsController < ApplicationController
       error="Forum not found"
     end
 
+    @forum.mark_all_read(current_user) if(current_user.present?)
     respond_to do |format|
       format.json do
         if(has_error)

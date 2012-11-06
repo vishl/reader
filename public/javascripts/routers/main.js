@@ -43,6 +43,9 @@ App.Routers.Main = Backbone.Router.extend({
     home:function(){
       console.log("route home");
       var last = App.user.get_setting("last_forum");
+      if(!last && App.user.subscriptions().length){
+        last = App.user.subscriptions().at(0).id;
+      }
       if(last){
         this.navigate('forums/'+last, {trigger:true});
       }else{

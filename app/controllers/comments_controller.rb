@@ -39,6 +39,7 @@ class CommentsController < ApplicationController
             render :json=>@comment.errors, :status=>400
           else
             #success
+            @post.touch
             render :json=>{'comment'=>@comment}
             #TODO delay this?
             @post.reset_markers(current_user)
