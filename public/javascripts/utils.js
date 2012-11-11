@@ -17,6 +17,8 @@ along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 /*globals _ */
 var Utils={}; //Utils global namespace object
 
+Utils.imageTypes="jpg jpeg gif png tiff".split(' ');
+
 String.prototype.format = function() {
   var args = arguments;
   return this.replace(/{(\d+)}/g, function(match, number) { 
@@ -89,7 +91,7 @@ Utils.keyupTimeout = function(f, delay){
   };
 };
 
-function url_parse(url){
+Utils.url_parse = function(url){
   if(url===undefined){
     url = document.location.href;
   }
@@ -101,6 +103,7 @@ function url_parse(url){
   ret.path = m[3];
   ret.args_full = m[4];
   ret.anchor=decodeURIComponent(m[5]);
+  ret.type = ret.path.match(/[^.]*\.(\w+)/);
 
   var s = ret.domain_full.split(".");
   ret.tld=s[s.length-1];
@@ -115,9 +118,8 @@ function url_parse(url){
         ret.args[decodeURIComponent(a[0])]=decodeURIComponent(a[1]);
     });
   }
-
   return ret;
-}
+};
 
 function getArg(a, s){
   var args = a.split("&");
@@ -174,9 +176,29 @@ $.fn.convDate = function(){
   $this.html(convDate(datestr));
 };
 
+$.fn.setHeight = function(){
+  this.each(function(){
+    var $this = $(this);
+    var windowHeight = window.innerHeight?window.innerHeight:$(window).height();
+    var top = $this.data("margin-top");
+    var bot = $this.data("margin-bottom");
+    var margin = 0;
+    if(top)margin+=top;
+    if(bot)margin+=bot;
+    var height = windowHeight-margin;
+    if($this.data("abs")){
+      $this.css("height", height+"px");
+    }else if($this.data("max")){
+      $this.css("max-height", height+"px");
+    }else{
+      $this.css("min-height", height+"px");
+    }
+  });
+};
+
 $.fn.autoGrow = function(){
   var $self = this;
-  $self.css('overflow', 'hidden');
+  $self.css({'overflow':'hidden', 'resize':'none', 'padding-bottom':'2px', 'padding-top':'2px'});
   var resize = function(){
     $self.height(0);
     $self.height($self[0].scrollHeight);
@@ -188,6 +210,7 @@ $.fn.autoGrow = function(){
   $self.on('change', resize);
 };
 
+
 var _linkExp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;()*%]*[-A-Z0-9+&@#\/%=~_|()*])/ig;
 function is_link(text){
   if(text.match(_linkExp)){
@@ -196,6 +219,7 @@ function is_link(text){
     return false;
   }
 }
+Utils.is_link = is_link;
 function text_to_link(text) {
   if(text){
     return text.replace(_linkExp,"<a href='$1' target='_blank'>$1</a>");
@@ -212,7 +236,7 @@ function linkify(t){
     .replace(/>/g, "&gt;")
     .replace(/'/g, "&#x27;")
     .replace(/"/g, "&quot;")
-    .replace(/\n/g, "<br>")
+    .replace(/\n/g, "<p>")
   );
 }
 

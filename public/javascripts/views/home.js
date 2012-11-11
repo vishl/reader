@@ -48,6 +48,7 @@ App.Views.Home = Backbone.View.extend({
             }else{
               //navigate to forum
               //trigger causes the router to route
+              App.user.subscriptions().add(model);
               App.router.navigate('forums/'+resp.forum.id, {trigger:true});
               mpq.track("create", {count:App.user.subscriptions.length});
             }

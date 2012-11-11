@@ -14,7 +14,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License        
 along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
 */
-/*global App Backbone _ JST url_parse mpq*/
+/*global App Backbone _ JST mpq*/
 
 //create and select
 App.Views.PostMiniCreate = Backbone.View.extend({
@@ -30,7 +30,7 @@ App.Views.PostMiniCreate = Backbone.View.extend({
     this.forumSelectView = new App.Views.ForumSelect(this.options.forumId);
 
     this.postCreateView = new App.Views.PostCreate({
-      attributes:{content:url_parse().args['content']},
+      attributes:{content:Utils.url_parse().args['content']},
       forum:this.forumSelectView.forum,
       startOpen:true,
     });

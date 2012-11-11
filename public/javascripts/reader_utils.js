@@ -24,6 +24,7 @@ Utils.embed = function(elt){
   var h=null;
   var m;
   var embedLoc = $(elt).siblings('.embed-hook');
+  var didEmbed=false;
   //youtube
   m = t.match(/youtube.com\/watch[^?]*?([^#]*)/);
   if(m){
@@ -34,13 +35,15 @@ Utils.embed = function(elt){
       h=315;
       */
      $(a).ytEmbed({target:embedLoc});
+     didEmbed=true;
     }
   }
   //image
-  if(!embedCode){
-    m = t.match(/http:\/\/\S*(\.jpg|\.gif|\.png|\.jpeg)/);
+  if(!didEmbed){
+    m = t.match(/https?:\/\/\S*(\.jpg|\.gif|\.png|\.jpeg)/);
     if(m){
       embedCode='<a href="'+m[0]+'"><img src="'+m[0]+'"></a>';
+      didEmbed = true;
     }
   }
   //TODO more embeds!
@@ -50,4 +53,5 @@ Utils.embed = function(elt){
     embedLoc.append(embedCode);
     if(h) embedLoc.css('height', h);
   }
+  return didEmbed;
 };

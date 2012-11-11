@@ -1,0 +1,23 @@
+<%if(model.get('meta')){%>
+  <%if(model.get('meta').title){%>
+    <div id="meta-title">
+      <a href="<%=_.escape(model.get('meta').url)%>" target="_blank">
+        <%=_.escape(model.get('meta').title)%>
+      </a>
+    </div>
+  <%}%>
+  <%if(model.get('meta').images){%>
+    <div id="meta-image-area">
+      <%_.each(model.get('meta').images, function(i){%>
+        <div class="image">
+          <img src="<%=_.escape(i)%>">
+        </div>
+      <%});%>
+    </div>
+  <%}%>
+  <%if(model.get('meta').text){%>
+    <div id="meta-text">
+      <%=linkify(model.get('meta').text)%>
+    </div>
+  <%}%>
+<%}%>

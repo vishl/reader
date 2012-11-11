@@ -13,6 +13,7 @@
 #You should have received a copy of the GNU General Public License
 #along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 
+
 # == Schema Information
 #
 # Table name: posts
@@ -26,10 +27,12 @@
 #  forum_id   :integer
 #  user_id    :integer
 #  updatetime :datetime
+#  meta       :text
+#
 
 class Post < ActiveRecord::Base
   ################################### Attributes #################################
-  attr_accessible :name, :content, :comment
+  attr_accessible :name, :content, :comment, :meta
 
   ################################### Validations ################################
   before_validation {self.updatetime = Time.now}
@@ -73,7 +76,7 @@ class Post < ActiveRecord::Base
   def as_json(options={})
     options||={}
     #TODO sid instead of id
-    ret = attributes.slice("id", "content", "comment").merge({
+    ret = attributes.slice("id", "content", "comment", "meta").merge({
       "name"=>name,
       "forum_sid"=>forum.sid, "timestamp"=>timestamp, "updatetime"=>updatetimestamp,
       "comments"=>comments.order("updated_at").all,

@@ -1,22 +1,30 @@
 <div class="post-area <%=post.get('is_read')? 'read' : ''%>">
   <div class="post">
-    <div id="controls-hook"></div>
-    <div class="name">
-      <span><%=post.escape("name")%></span>
-      <span class="date-delta"><%=convDate(parseInt(post.escape("timestamp")))%></span>
-    </div>
-    <%if(post.get("comment")){%>
-      <div class="comment post-comment-box">
-        <div class="linkify">
-          <%=linkify(post.get("comment"))%>
+    <div class="post-internal">
+      <div class="post-internal2">
+        <div id="controls-hook"></div>
+        <div class="name">
+          <span><%=post.escape("name")%></span>
+          <span class="date-delta"><%=convDate(parseInt(post.escape("timestamp")))%></span>
+        </div>
+        <%if(post.get("comment")){%>
+          <div class="comment post-comment-box">
+            <div class="linkify">
+              <%=linkify(post.get("comment"))%>
+            </div>
+          </div>
+        <%}%>
+        <div class="content">
+          <div class="linkify"> 
+            <%=linkify(post.get("content"))%>
+          </div>
+          <div class="embed-hook"></div>
+          <div id="meta-hook"></div>
         </div>
       </div>
-    <%}%>
-    <div class="content">
-      <div class="linkify"> 
-        <%=linkify(post.get("content"))%>
-      </div>
-      <div class="embed-hook"></div>
+    </div>
+    <div class="expand-area">
+      <a id="expand">More..</a>
     </div>
   </div>
   <div class="comment-area"></div>

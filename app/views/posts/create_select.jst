@@ -1,0 +1,28 @@
+<%if(db.title){%>
+  <div class="preview-title-area">
+    <input type="checkbox" checked=checked id="titlecb">
+    <span id="title"><%=db.title%></span>
+  </div>
+<%}%>
+<%if(db.images.length){%>
+  <div class="preview-image-controls">
+    <a id="allimages">All</a> <a id="noimages">None</a> Include images? (<span id="imgcount">1</span> selected) 
+  </div>
+<%}%>
+<div class="preview-image-area">
+  <%_.each(db.images, function(m){%>
+    <div class="preview-image">
+      <img src="<%=m.link%>">
+    </div>
+  <%});%>
+</div>
+<%if(db.text){%>
+  <div class="text">
+    <label for="textcb">
+      <input type="checkbox" checked=checked id="textcb" name="textcb"> Include text? (you can change it)
+    </label>
+    <textarea id="dbtext">
+      <%=db.text%>
+    </textarea>
+  </div>
+<%}%>

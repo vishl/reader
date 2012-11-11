@@ -1,20 +1,20 @@
 /*
-Copyright 2012 Vishal Parikh                                             
-This file is part of Freader.                                            
-Freader is free software: you can redistribute it and/or modify          
-it under the terms of the GNU General Public License as published by     
-the Free Software Foundation, either version 3 of the License, or        
-(at your option) any later version.                                      
-                                                                         
-Freader is distributed in the hope that it will be useful,               
-but WITHOUT ANY WARRANTY; without even the implied warranty of           
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            
-GNU General Public License for more details.                             
-                                                                         
-You should have received a copy of the GNU General Public License        
-along with Freader.  If not, see <http://www.gnu.org/licenses/>.         
+Copyright 2012 Vishal Parikh
+This file is part of Freader.
+Freader is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Freader is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Freader.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*global App Backbone _ JST Utils mpq*/
+/*global App Backbone _ JST Utils mpq JSON*/
 App.Views.Post = Backbone.View.extend({
     post:null,  //TODO what is this..
 
@@ -22,6 +22,7 @@ App.Views.Post = Backbone.View.extend({
       "click .post .close":"deletePost",
       "click #mark-unread":"markUnread",
       "click":"markRead",
+      "click #expand":"toggleExpand",
     },
 
     initialize:function(){
@@ -29,6 +30,7 @@ App.Views.Post = Backbone.View.extend({
       this.controlsView = new App.Views.PostControls({model:this.model});
       this.commentsView = new App.Views.Comments({model:this.model.comments});
       this.commentCreateView = new App.Views.CommentCreate({post:this.model, subscription:this.options.subscription});
+      this.postMeta = new App.Views.PostMeta({model:this.model});
       this.commentCreateView.bind("posted", this.createComment, this);
       this.model.bind("change:is_read", this.updateRead, this);
     },
@@ -36,6 +38,7 @@ App.Views.Post = Backbone.View.extend({
     beforeClose:function(){
       this.controlsView.close();
       this.commentsView.close();
+      this.postMeta.close();
       this.commentCreateView.unbind("posted", this.createComment, this);
       this.commentCreateView.close();
       this.model.bind("change:is_read", this.updateRead, this);
@@ -48,7 +51,16 @@ App.Views.Post = Backbone.View.extend({
       this.$el.find('.comment-area').append(this.commentsView.render().el);
       this.$el.find('.comment-area').append(this.commentCreateView.render().$el);
       Utils.embed(this.$el.find('.content .linkify').get(0));
+      this.$('#meta-hook').html(this.postMeta.el);
+      this.postMeta.render();
       //this.postFrame(this.$el.find('.linkify a'));
+      //need to let the render go through first
+      var self=this;
+      setTimeout(function(){
+        if(self.$('.post-internal2').height()>1000){
+          self.$('.expand-area').show();
+        }
+      },0);
       return this;
     },
 
@@ -87,6 +99,18 @@ App.Views.Post = Backbone.View.extend({
         this.$('.post-area').removeClass("read");
       }
       this.controlsView.render();
+    },
+
+    toggleExpand:function(){
+      if(this.expanded){
+        this.$('.post-internal').css('max-height', '1000px');
+        this.expanded=false;
+        this.$('#expand').text("More..");
+      }else{
+        this.$('.post-internal').css('max-height', 'inherit');
+        this.expanded=true;
+        this.$('#expand').text("Less..");
+      }
     },
 
 
@@ -141,7 +165,7 @@ App.Views.Posts = Backbone.View.extend({
       var self = this;
       this.postViews=[];
       _.each(this.model.models, function(post){
-        if(App.user.get_setting("hide_read") && post.get("is_read")){
+        if(false && App.user.get_setting("hide_read") && post.get("is_read")){
           //don't display
         }else{
           var p = new App.Views.Post({model:post, subscription:self.options.subscription});
@@ -157,7 +181,7 @@ App.Views.Posts = Backbone.View.extend({
       var i = options.index;
       console.log("insert post "+model.id+" at "+i);
       var elt = this.$el.find('.post-area')[i];
-      var view = new App.Views.Post({model:model, subscription:this.options.subscription}); 
+      var view = new App.Views.Post({model:model, subscription:this.options.subscription});
       view.render();
       view.$el.css('display','none');
       if(elt!==undefined){
@@ -175,6 +199,13 @@ App.Views.Posts = Backbone.View.extend({
 
 App.Views.PostCreate = Backbone.FormView.extend({
     forum:null,
+
+     events: _.extend({
+       "paste #content":"analyze",
+       "click .preview-image":"toggleImage",
+       "click #allimages":function(){this.$('.preview-image').addClass('selected'); this.updateImgCount();},
+       "click #noimages":function(){this.$('.preview-image').removeClass('selected'); this.updateImgCount();},
+     }, Backbone.FormView.prototype.events),
 
     initialize:function(){
       _.bindAll(this);  //all of my functions should be called with me as 'this'.. because javascript is retarded
@@ -208,16 +239,37 @@ App.Views.PostCreate = Backbone.FormView.extend({
           $(this).siblings('#create-post-area').collapse('toggle');
       });
       this.$('#comment').autoGrow();
-      this.delegateEvents(); 
+//      this.$('#content').autoGrow();
+      this.delegateEvents();
+      this.analyze();
       return this;
+    },
+
+    beforePost:function(attrs,error){
+      var meta = {};
+      if(this.$('#titlecb').prop('checked')){
+        meta.title = this.$('#title').text();
+      }
+      if(this.$('#textcb').prop('checked')){
+        meta.text = this.$('#dbtext').val();
+      }
+      meta.images=[];
+      this.$('.preview-image.selected').each(function(i, elt){
+        meta.images.push($(elt).find('img').attr('src'));
+      });
+      meta.url = this.meta.url;
+      //todo images
+      attrs.meta = meta;
+      return true;
     },
 
     afterSave : function(){
       this.model = new App.Models.Post(null, {forum:this.forum});
 //      this.$el.find('#create-post-area').collapse('hide');
-      this.$el.find('#content').val("");
-      this.$el.find('#comment').val("");
+//      this.$el.find('#content').val("");
+//      this.$el.find('#comment').val("");
       App.notifier.notify("Message posted");
+      this.render();
       return this;
     },
 
@@ -230,5 +282,66 @@ App.Views.PostCreate = Backbone.FormView.extend({
     getAttrs:function(){
       return {content:this.$('#content').val(), comment:this.$('#comment').val()};
     },
+
+    analyze:function(e){
+      var self=this;
+      setTimeout(function(){
+        var val = $('#content').val();
+        if(Utils.is_link(val)){
+          if(Utils.embed(self.$('#preview')[0])){
+            //can embed, don't diffbot
+          }else{
+            //diffbot
+            //create a preview
+            self.$('#preview').html(JST['posts/preview']({link:val}));
+            $.ajax({
+              url:'http://www.diffbot.com/api/article',
+              dataType:'jsonp',
+              data:{
+                token:'c0934df60a197366df0cfdb1b0797b6f',
+                url:val,
+              },
+              success:function(data){
+                self.handleDiffbot(data);
+              },
+            });
+          }
+        }
+      },0);
+    },
+
+    handleDiffbot:function(data)
+    {
+      console.log(data);
+      this.meta = data;
+      this.meta.images = _.filter(this.meta.media, function(m){
+        return m.type==="image";
+      });
+      this.$('#preview').html(JST['posts/create_select']({db:data}));
+      this.$('textarea').each(function(i,el){
+        var $el = $(el);
+        $el.height(el.scrollHeight);
+      });
+      $(this.$('.preview-image')[0]).addClass('selected');
+      this.updateImgCount();
+    },
+
+    toggleImage:function(e)
+    {
+      $(e.currentTarget).toggleClass('selected');
+      this.updateImgCount();
+    },
+
+    updateImgCount:function()
+    {
+      var c = this.$('.preview-image.selected').length;
+      this.$('#imgcount').text(c);
+    },
 });
 
+App.Views.PostMeta = Backbone.View.extend({
+
+  render:function(){
+    this.$el.html(JST['posts/meta']({model:this.model}));
+  },
+});

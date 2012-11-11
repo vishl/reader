@@ -52,7 +52,7 @@ App.Models.Post = Backbone.Model.extend({
     },
 
     validate:Validator(
-      { 
+      {
         content:{presence:true, message:"Please put your post here, comments are optional"}
       }),
 
@@ -62,14 +62,30 @@ App.Models.Post = Backbone.Model.extend({
       if(ret.post) ret = ret.post;  //possibly inside a container
       if(ret.comments && this.comments){
         //if there is already a comment object, add the comments; otherwise do it in the constructor
-        this.comments.merge(ret.comments); 
+        this.comments.merge(ret.comments);
         delete ret.comments;
+      }
+      if(ret.meta){
+        try{
+          ret.meta = JSON.parse(ret.meta);
+        }catch(err){
+          //invalid json
+          delete ret.meta;
+        }
       }
       return ret;
     },
 
     setMarkers:function(obj){
       this.save(obj, {url:this.url()+'/set_marker'});
+    },
+
+    toJSON:function(){
+      var ret = _.clone(this.attributes);
+      if(ret.meta){
+        ret.meta = JSON.stringify(ret.meta);
+      }
+      return ret;
     },
 
 });

@@ -76,6 +76,7 @@ App.Views.ForumHeader = Backbone.View.extend({
       this.$el.find('#user-credentials').html(this.userCredentialsView.el);
       this.userCredentialsView.render();
       if(this.postMini){
+        this.$('.auto-height').setHeight();
         this.$('#post-create-hook').html(this.postMini.el);
         this.postMini.render();
       }

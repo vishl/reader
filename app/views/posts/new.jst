@@ -12,8 +12,8 @@
           <fieldset>
             <div class="clearfix" id="post_content_input">
               <div class="input">
-                <textarea cols="80" id="content" name="post[content]"
-                  placeholder="Post something here" rows="3"><%=post.get('content')%></textarea>
+                <input type="text" cols="80" id="content" name="post[content]"
+                  placeholder="Paste a link" value=<%=post.escape('content')%>>
               </div>
             </div>
             <div id="create-post-comment-area">
@@ -32,6 +32,10 @@
             <img src="/images/loading.gif" id="load-img"></img>
           </div>
         </form>
+        <div id="preview-area">
+          <div id="preview">Magic preview area</div>
+          <div class="embed-hook"></div>
+        </div>
       </div>
     <%}else{%>
       <h2>

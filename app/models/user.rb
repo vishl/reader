@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
   end
 
   def set_settings(s)
-    self.settings = JSON.stringify(s)
+    self.settings = JSON.unparse(s)
     self.save!
   end
     

@@ -83,7 +83,7 @@ App.Views.Forum = Backbone.View.extend({
     var hr = !App.user.get_setting("hide_read");
     var self = this;
     App.user.set_setting("hide_read", hr, function(){console.log("fetch!");self.model.fetch();});
-    if(hr){
+    if(false && hr){
       this.$('#hide-read').addClass('active');
     }else{
       this.$('#hide-read').removeClass('active');

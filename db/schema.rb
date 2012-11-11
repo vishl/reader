@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121106062245) do
+ActiveRecord::Schema.define(:version => 20121110101336) do
 
   create_table "comments", :force => true do |t|
     t.string   "name"
@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(:version => 20121106062245) do
     t.integer  "forum_id"
     t.integer  "user_id"
     t.datetime "updatetime"
+    t.text     "meta"
   end
 
   add_index "posts", ["forum_id"], :name => "index_posts_on_forum_id"

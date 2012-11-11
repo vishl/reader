@@ -24,7 +24,7 @@ class PostsController < ApplicationController
       if(!@forum.permission(current_user,:post))
         render :json=>{"authorization"=>"Permission denied"}, :status=>401
       else
-        postparams = params[:post] || params.slice('content', 'comment')
+        postparams = params[:post] || params.slice('content', 'comment', 'meta')
         @post = @forum.posts.build(postparams)
         @post.user_id = current_user.id
         if(!@post.save)

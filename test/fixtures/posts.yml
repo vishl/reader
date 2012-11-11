@@ -10,6 +10,7 @@ two:
   content: MyText
   comment: MyText
 
+
 # == Schema Information
 #
 # Table name: posts
@@ -23,5 +24,6 @@ two:
 #  forum_id   :integer
 #  user_id    :integer
 #  updatetime :datetime
+#  meta       :text
 #
 
