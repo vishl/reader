@@ -247,19 +247,21 @@ App.Views.PostCreate = Backbone.FormView.extend({
 
     beforePost:function(attrs,error){
       var meta = {};
-      if(this.$('#titlecb').prop('checked')){
-        meta.title = this.$('#title').text();
+      if(this.meta){
+        if(this.$('#titlecb').prop('checked')){
+          meta.title = this.$('#title').text();
+        }
+        if(this.$('#textcb').prop('checked')){
+          meta.text = this.$('#dbtext').val();
+        }
+        meta.images=[];
+        this.$('.preview-image.selected').each(function(i, elt){
+          meta.images.push($(elt).find('img').attr('src'));
+        });
+        meta.url = this.meta.url;
+        //todo images
+        attrs.meta = meta;
       }
-      if(this.$('#textcb').prop('checked')){
-        meta.text = this.$('#dbtext').val();
-      }
-      meta.images=[];
-      this.$('.preview-image.selected').each(function(i, elt){
-        meta.images.push($(elt).find('img').attr('src'));
-      });
-      meta.url = this.meta.url;
-      //todo images
-      attrs.meta = meta;
       return true;
     },
 
