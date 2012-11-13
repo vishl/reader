@@ -288,12 +288,14 @@ App.Views.PostCreate = Backbone.FormView.extend({
       setTimeout(function(){
         var val = $('#content').val();
         if(Utils.is_link(val)){
+          self.$('#preview').html(JST['posts/preview']({link:val}));
+          self.$('.embed-hook').html("");
           if(Utils.embed(self.$('#preview')[0])){
             //can embed, don't diffbot
           }else{
             //diffbot
+            self.$('#loading').show();
             //create a preview
-            self.$('#preview').html(JST['posts/preview']({link:val}));
             $.ajax({
               url:'http://www.diffbot.com/api/article',
               dataType:'jsonp',
